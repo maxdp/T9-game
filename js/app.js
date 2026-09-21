@@ -7,9 +7,23 @@
   const badBtn = document.getElementById("guess-bad");
   const resultEl = document.getElementById("result");
   const explanationEl = document.getElementById("explanation");
+  const solutionEl = document.getElementById("solution");
   const nextBtn = document.getElementById("next");
   const scoreEl = document.getElementById("score");
   const streakEl = document.getElementById("streak");
+
+  // One color per merged group in a solution, so a letter/digit's color
+  // shows at a glance which final counting number it contributes to.
+  const GROUP_COLORS = [
+    "#7ea0ff",
+    "#6ee0a0",
+    "#ffcf6e",
+    "#ff8a8a",
+    "#c792ea",
+    "#6edede",
+    "#ff9f6e",
+    "#e06ec0",
+  ];
 
   let currentWord = "";
   let currentDigits = [];
@@ -34,21 +48,37 @@
     return word;
   }
 
-  function describeGrouping(word, grouping) {
-    const parts = grouping.groups.map((g) =>
-      g.indices.map((i) => word[i].toUpperCase()).join("")
-    );
-    const sumParts = grouping.groups.map((g) => {
-      if (g.indices.length === 1) return `${g.sum}`;
-      const vals = g.indices.map((i) => wordToDigits(word)[i]);
-      return `(${vals.join("+")}=${g.sum})`;
-    });
-    let text = `${parts.join("-")}  →  ${sumParts.join(", ")}`;
+  function groupingNotes(grouping) {
     const notes = [];
     if (grouping.direction === "decreasing") notes.push("counting down");
     if (grouping.wrapped) notes.push("wraps around");
-    if (notes.length) text += ` — ${notes.join(", ")}`;
-    return text;
+    return notes.join(", ");
+  }
+
+  // Colors the word's letters, and lays out its digits below them, by
+  // merged group — e.g. SPENT -> S P E (N T), with each token/letter tinted
+  // by which final counting number it contributes to.
+  function renderSolution(word, digits, grouping) {
+    wordEl.innerHTML = "";
+    word.split("").forEach((letter, i) => {
+      const groupIdx = grouping.groups.findIndex((g) =>
+        g.indices.includes(i)
+      );
+      const span = document.createElement("span");
+      span.textContent = letter.toUpperCase();
+      span.style.color = GROUP_COLORS[groupIdx % GROUP_COLORS.length];
+      wordEl.appendChild(span);
+    });
+
+    solutionEl.innerHTML = "";
+    grouping.groups.forEach((g, i) => {
+      const vals = g.indices.map((idx) => digits[idx]);
+      const span = document.createElement("span");
+      span.style.color = GROUP_COLORS[i % GROUP_COLORS.length];
+      span.textContent = vals.length > 1 ? `(${vals.join(" ")})` : `${vals[0]}`;
+      solutionEl.appendChild(span);
+      solutionEl.appendChild(document.createTextNode(" "));
+    });
   }
 
   function newRound() {
@@ -56,6 +86,7 @@
     resultEl.textContent = "";
     resultEl.className = "result";
     explanationEl.textContent = "";
+    solutionEl.textContent = "";
     nextBtn.hidden = true;
     goodBtn.disabled = false;
     badBtn.disabled = false;
@@ -90,8 +121,9 @@
     resultEl.className = "result " + (wasRight ? "right" : "wrong");
 
     if (actuallyGood) {
-      explanationEl.textContent =
-        "GOOD — " + describeGrouping(currentWord, grouping);
+      const notes = groupingNotes(grouping);
+      explanationEl.textContent = "GOOD" + (notes ? " — " + notes : "");
+      renderSolution(currentWord, currentDigits, grouping);
     } else {
       explanationEl.textContent =
         "NOT GOOD — no way to merge neighboring digits into a sequential run.";
