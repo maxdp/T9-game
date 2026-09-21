@@ -1,6 +1,6 @@
 (() => {
   const { wordToDigits, findSequentialGrouping } = window.T9;
-  const { WORDS_GOOD, WORDS_BAD } = window.T9_WORDS;
+  const { WORDS_CANDIDATE, WORDS_LONGSHOT } = window.T9_WORDS;
 
   const wordEl = document.getElementById("word");
   const digitsEl = document.getElementById("digits");
@@ -21,7 +21,9 @@
   const seen = new Set();
 
   function pickWord() {
-    const pool = Math.random() < 0.5 ? WORDS_GOOD : WORDS_BAD;
+    // 50/50 chance of drawing from words whose digit sum COULD be good
+    // (a triangular number) vs. words whose digit sum guarantees they can't be.
+    const pool = Math.random() < 0.5 ? WORDS_CANDIDATE : WORDS_LONGSHOT;
     let word;
     let attempts = 0;
     do {
@@ -29,7 +31,7 @@
       attempts++;
     } while (seen.has(word) && attempts < 20);
     seen.add(word);
-    if (seen.size > (WORDS_GOOD.length + WORDS_BAD.length) * 0.9) {
+    if (seen.size > (WORDS_CANDIDATE.length + WORDS_LONGSHOT.length) * 0.9) {
       seen.clear();
     }
     return word;
