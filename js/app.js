@@ -3,7 +3,6 @@
   const { WORDS_GOOD, WORDS_BAD } = window.T9_WORDS;
 
   const wordEl = document.getElementById("word");
-  const digitsEl = document.getElementById("digits");
   const goodBtn = document.getElementById("guess-good");
   const badBtn = document.getElementById("guess-bad");
   const resultEl = document.getElementById("result");
@@ -35,16 +34,6 @@
     return word;
   }
 
-  function renderDigits(word, digits) {
-    digitsEl.innerHTML = "";
-    word.split("").forEach((letter, i) => {
-      const cell = document.createElement("div");
-      cell.className = "cell";
-      cell.innerHTML = `<span class="letter">${letter.toUpperCase()}</span><span class="digit">${digits[i]}</span>`;
-      digitsEl.appendChild(cell);
-    });
-  }
-
   function describeGrouping(word, grouping) {
     const parts = grouping.groups.map((g) =>
       g.indices.map((i) => word[i].toUpperCase()).join("")
@@ -74,7 +63,6 @@
     currentWord = pickWord();
     currentDigits = wordToDigits(currentWord);
     wordEl.textContent = currentWord.toUpperCase();
-    renderDigits(currentWord, currentDigits);
   }
 
   function submitGuess(guessGood) {

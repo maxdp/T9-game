@@ -33,45 +33,35 @@
 
   #keypad {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 6px;
-    max-width: 360px;
+    grid-template-columns: repeat(3, 64px);
+    grid-auto-rows: 64px;
+    gap: 10px;
+    justify-content: center;
     margin: 0 0 28px;
-    font-size: 0.85rem;
-    color: #a0a0c0;
   }
-  #keypad div {
-    background: #262640;
-    border-radius: 6px;
-    padding: 6px 4px;
+  .key {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, #34345198, #262640);
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: #e4e4f5;
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.06);
   }
-  #keypad sup { color: #7ea0ff; font-size: 0.7em; }
+  .key.blank {
+    background: #1f1f33;
+    box-shadow: none;
+  }
 
   #word {
     font-size: 2.4rem;
     letter-spacing: 0.15em;
     font-weight: 700;
-    margin: 8px 0 16px;
+    margin: 8px 0 28px;
   }
-
-  #digits {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin-bottom: 28px;
-  }
-  .cell {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background: #262640;
-    border-radius: 10px;
-    padding: 10px 14px;
-    min-width: 40px;
-  }
-  .cell .letter { font-size: 1.1rem; font-weight: 600; }
-  .cell .digit { font-size: 1.4rem; color: #7ea0ff; margin-top: 4px; }
 
   #guess-row { display: flex; gap: 12px; margin-bottom: 8px; }
   button {
@@ -134,18 +124,21 @@
   </details>
 
   <div id="keypad">
-    <div>A<sup>1</sup> B<sup>2</sup> C<sup>3</sup></div>
-    <div>D<sup>1</sup> E<sup>2</sup> F<sup>3</sup></div>
-    <div>G<sup>1</sup> H<sup>2</sup> I<sup>3</sup></div>
-    <div>J<sup>1</sup> K<sup>2</sup> L<sup>3</sup></div>
-    <div>M<sup>1</sup> N<sup>2</sup> O<sup>3</sup></div>
-    <div>P<sup>1</sup> Q<sup>2</sup> R<sup>3</sup> S<sup>4</sup></div>
-    <div>T<sup>1</sup> U<sup>2</sup> V<sup>3</sup></div>
-    <div>W<sup>1</sup> X<sup>2</sup> Y<sup>3</sup> Z<sup>4</sup></div>
+    <div class="key blank"></div>
+    <div class="key">ABC</div>
+    <div class="key">DEF</div>
+    <div class="key">GHI</div>
+    <div class="key">JKL</div>
+    <div class="key">MNO</div>
+    <div class="key">PQRS</div>
+    <div class="key">TUV</div>
+    <div class="key">WXYZ</div>
+    <div class="key blank"></div>
+    <div class="key blank"></div>
+    <div class="key blank"></div>
   </div>
 
   <div id="word"></div>
-  <div id="digits"></div>
 
   <div id="guess-row">
     <button id="guess-good">✅ Good</button>
@@ -161,8 +154,8 @@
     <div>Streak<b id="streak">0</b></div>
   </div>
 
-  <script src="js/t9-logic.js?v=2"></script>
-  <script src="js/words.js?v=2"></script>
-  <script src="js/app.js?v=2"></script>
+  <script src="js/t9-logic.js?v=3"></script>
+  <script src="js/words.js?v=3"></script>
+  <script src="js/app.js?v=3"></script>
 </body>
 </html>
