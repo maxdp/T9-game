@@ -16,10 +16,28 @@ function wordToDigits(word) {
     .map((letter) => PRESS_COUNTS[letter]);
 }
 
+// A permutation of 1..k is a rotation of the increasing run 1,2,...,k if,
+// starting from wherever the 1 sits, reading forward (with wraparound) hits
+// 1,2,3,...,k in order.
+function isRotationOfIncreasing(sums) {
+  const k = sums.length;
+  const startIdx = sums.indexOf(1);
+  return sums.every((_, i) => sums[(startIdx + i) % k] === i + 1);
+}
+
+// Same idea, but for the decreasing run k,k-1,...,1 — starting from wherever
+// k sits, reading forward (with wraparound) hits k,k-1,...,1 in order.
+function isRotationOfDecreasing(sums) {
+  const k = sums.length;
+  const startIdx = sums.indexOf(k);
+  return sums.every((_, i) => sums[(startIdx + i) % k] === k - i);
+}
+
 // Tries every way of merging adjacent digits (by summing) and checks whether
-// any resulting sequence is a run of consecutive integers 1..k, allowing the
-// run to "wrap around" (e.g. 4,1,2,3 counts, since it's 1,2,3,4 rotated).
-// Returns the first working grouping it finds, or null if none works.
+// any resulting sequence is a run of consecutive integers, counting either up
+// (1,2,3,...) or down (...,3,2,1), allowing the run to "wrap around" (e.g.
+// 4,1,2,3 counts, since it's 1,2,3,4 rotated; 3,2,1,4 counts too, since it's
+// 4,3,2,1 rotated). Returns the first working grouping it finds, or null.
 function findSequentialGrouping(digits) {
   const n = digits.length;
 
@@ -47,13 +65,13 @@ function findSequentialGrouping(digits) {
     const isPermutationOf1ToK = sorted.every((v, i) => v === i + 1);
     if (!isPermutationOf1ToK) continue;
 
-    const startIdx = sums.indexOf(1);
-    const isSequentialRotation = sums.every(
-      (_, i) => sums[(startIdx + i) % k] === i + 1
-    );
+    const increasing = isRotationOfIncreasing(sums);
+    const decreasing = k > 1 && isRotationOfDecreasing(sums);
 
-    if (isSequentialRotation) {
-      return { groups, sums, wrapped: startIdx !== 0 };
+    if (increasing || decreasing) {
+      const direction = increasing ? "increasing" : "decreasing";
+      const startIdx = increasing ? sums.indexOf(1) : sums.indexOf(k);
+      return { groups, sums, direction, wrapped: startIdx !== 0 };
     }
   }
 

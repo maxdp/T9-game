@@ -55,9 +55,10 @@
       return `(${vals.join("+")}=${g.sum})`;
     });
     let text = `${parts.join("-")}  →  ${sumParts.join(", ")}`;
-    if (grouping.wrapped) {
-      text += " — sequential once you wrap around";
-    }
+    const notes = [];
+    if (grouping.direction === "decreasing") notes.push("counting down");
+    if (grouping.wrapped) notes.push("wraps around");
+    if (notes.length) text += ` — ${notes.join(", ")}`;
     return text;
   }
 
