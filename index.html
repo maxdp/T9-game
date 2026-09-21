@@ -3,128 +3,165 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hello World Game</title>
+<title>T9 Word Game</title>
 <style>
-  :root {
-    color-scheme: light dark;
-  }
+  :root { color-scheme: light dark; }
+  * { box-sizing: border-box; }
   body {
     font-family: system-ui, sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     min-height: 100vh;
     margin: 0;
     background: #1b1b2f;
     color: #f2f2f2;
     text-align: center;
-    padding: 16px;
-    box-sizing: border-box;
+    padding: 24px 16px 48px;
   }
-  h1 {
-    margin-bottom: 4px;
+  h1 { margin-bottom: 4px; }
+  p.subtitle { margin-top: 0; color: #a0a0c0; max-width: 480px; }
+
+  details {
+    max-width: 520px;
+    margin: 12px 0 24px;
+    color: #c8c8e0;
+    text-align: left;
   }
-  p.subtitle {
-    margin-top: 0;
+  summary { cursor: pointer; color: #a0a0c0; }
+  details p { line-height: 1.5; }
+
+  #keypad {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+    max-width: 360px;
+    margin: 0 0 28px;
+    font-size: 0.85rem;
     color: #a0a0c0;
   }
-  #board {
+  #keypad div {
+    background: #262640;
+    border-radius: 6px;
+    padding: 6px 4px;
+  }
+  #keypad sup { color: #7ea0ff; font-size: 0.7em; }
+
+  #word {
+    font-size: 2.4rem;
+    letter-spacing: 0.15em;
+    font-weight: 700;
+    margin: 8px 0 16px;
+  }
+
+  #digits {
     display: flex;
-    gap: 8px;
-    margin: 24px 0;
-    flex-wrap: wrap;
+    gap: 10px;
     justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
   }
-  input#guess {
-    font-size: 1.5rem;
-    width: 4ch;
-    text-align: center;
-    padding: 8px;
-    border-radius: 8px;
-    border: 2px solid #555;
+  .cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #262640;
+    border-radius: 10px;
+    padding: 10px 14px;
+    min-width: 40px;
   }
+  .cell .letter { font-size: 1.1rem; font-weight: 600; }
+  .cell .digit { font-size: 1.4rem; color: #7ea0ff; margin-top: 4px; }
+
+  #guess-row { display: flex; gap: 12px; margin-bottom: 8px; }
   button {
     font-size: 1rem;
-    padding: 10px 18px;
+    padding: 12px 22px;
     border-radius: 8px;
     border: none;
     background: #4f6df5;
     color: white;
     cursor: pointer;
-    margin: 4px;
   }
-  button:hover {
-    background: #3a54d6;
-  }
-  #message {
-    min-height: 1.5em;
-    font-size: 1.2rem;
+  button:hover:not(:disabled) { background: #3a54d6; }
+  button:disabled { opacity: 0.5; cursor: default; }
+  #guess-bad { background: #d1495b; }
+  #guess-bad:hover:not(:disabled) { background: #b13448; }
+  #next { background: #3a3a55; }
+  #next:hover { background: #4a4a6a; }
+
+  .result {
+    min-height: 1.6em;
+    font-size: 1.3rem;
     margin-top: 16px;
+    font-weight: 700;
   }
-  #attempts {
+  .result.right { color: #6ee0a0; }
+  .result.wrong { color: #ff8a8a; }
+
+  #explanation {
+    max-width: 480px;
+    min-height: 1.5em;
+    color: #c8c8e0;
+    margin-top: 6px;
+    font-size: 0.95rem;
+  }
+
+  #stats {
+    margin-top: 28px;
+    display: flex;
+    gap: 24px;
     color: #a0a0c0;
+    font-size: 0.9rem;
   }
+  #stats b { color: #f2f2f2; font-size: 1.1rem; display: block; }
 </style>
 </head>
 <body>
-  <h1>Hello, World!</h1>
-  <p class="subtitle">A tiny number-guessing game — the warm-up before the real one.</p>
+  <h1>T9 Word Game</h1>
+  <p class="subtitle">Is this word "good"? Add up neighboring digits until they read 1, 2, 3, 4… in order (wrapping around counts too).</p>
 
-  <div id="board">
-    <input type="number" id="guess" min="1" max="9" placeholder="?" autofocus>
-    <button id="submit">Guess</button>
-    <button id="reset">New game</button>
+  <details>
+    <summary>How it works</summary>
+    <p>
+      Every letter has a T9 press-count — how many times you'd tap its key on an old phone keypad
+      (A=1, B=2, C=3, D=1, E=2, F=3, …). A word is <b>good</b> if you can merge some of its
+      neighboring digits (by adding them together) so the sequence reads 1, 2, 3, 4, … with no gaps
+      or repeats. The run is also allowed to wrap around — e.g. 4, 1, 2, 3 counts, since it's
+      1, 2, 3, 4 starting partway through.
+    </p>
+  </details>
+
+  <div id="keypad">
+    <div>A<sup>1</sup> B<sup>2</sup> C<sup>3</sup></div>
+    <div>D<sup>1</sup> E<sup>2</sup> F<sup>3</sup></div>
+    <div>G<sup>1</sup> H<sup>2</sup> I<sup>3</sup></div>
+    <div>J<sup>1</sup> K<sup>2</sup> L<sup>3</sup></div>
+    <div>M<sup>1</sup> N<sup>2</sup> O<sup>3</sup></div>
+    <div>P<sup>1</sup> Q<sup>2</sup> R<sup>3</sup> S<sup>4</sup></div>
+    <div>T<sup>1</sup> U<sup>2</sup> V<sup>3</sup></div>
+    <div>W<sup>1</sup> X<sup>2</sup> Y<sup>3</sup> Z<sup>4</sup></div>
   </div>
 
-  <div id="message">I'm thinking of a number between 1 and 9.</div>
-  <div id="attempts"></div>
+  <div id="word"></div>
+  <div id="digits"></div>
 
-  <script>
-    let secret = pickSecret();
-    let tries = 0;
+  <div id="guess-row">
+    <button id="guess-good">✅ Good</button>
+    <button id="guess-bad">❌ Not good</button>
+  </div>
 
-    const guessInput = document.getElementById('guess');
-    const message = document.getElementById('message');
-    const attempts = document.getElementById('attempts');
+  <div id="result" class="result"></div>
+  <div id="explanation"></div>
+  <button id="next" hidden>Next word →</button>
 
-    function pickSecret() {
-      return Math.floor(Math.random() * 9) + 1;
-    }
+  <div id="stats">
+    <div>Score<b id="score">0 / 0</b></div>
+    <div>Streak<b id="streak">0</b></div>
+  </div>
 
-    function newGame() {
-      secret = pickSecret();
-      tries = 0;
-      guessInput.value = '';
-      message.textContent = "I'm thinking of a number between 1 and 9.";
-      attempts.textContent = '';
-      guessInput.disabled = false;
-      guessInput.focus();
-    }
-
-    function submitGuess() {
-      const value = Number(guessInput.value);
-      if (!value || value < 1 || value > 9) {
-        message.textContent = 'Enter a number from 1 to 9.';
-        return;
-      }
-      tries++;
-      if (value === secret) {
-        message.textContent = `🎉 Correct! It was ${secret}.`;
-        attempts.textContent = `Solved in ${tries} guess${tries === 1 ? '' : 'es'}.`;
-        guessInput.disabled = true;
-      } else if (value < secret) {
-        message.textContent = 'Higher ⬆️';
-      } else {
-        message.textContent = 'Lower ⬇️';
-      }
-    }
-
-    document.getElementById('submit').addEventListener('click', submitGuess);
-    document.getElementById('reset').addEventListener('click', newGame);
-    guessInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') submitGuess();
-    });
-  </script>
+  <script src="js/t9-logic.js"></script>
+  <script src="js/words.js"></script>
+  <script src="js/app.js"></script>
 </body>
 </html>
