@@ -1,15 +1,14 @@
 (() => {
-  const { wordToDigits, findSequentialGrouping, isGoodWord } = window.T9;
-  const { DICTIONARY } = window.T9_WORDS;
+  const { wordToDigits, findSequentialGrouping } = window.T9;
+  const { DICTIONARY, WORDS_GOOD } = window.T9_WORDS;
 
-  // Classify the whole dictionary against the current rules once at
-  // startup, instead of shipping separately pre-split word lists — so
-  // good/bad always matches t9-logic.js with no separate regeneration
-  // step, and hangman mode can check whether any typed guess is a real word.
+  // DICTIONARY lets hangman mode check whether a typed guess is a real word
+  // at all. WORDS_GOOD is precomputed (see words.js) rather than classified
+  // here at startup — deriving WORDS_BAD from it is just a set difference,
+  // no rule-checking needed, so it stays cheap.
   const DICTIONARY_SET = new Set(DICTIONARY);
-  const WORDS_GOOD = [];
-  const WORDS_BAD = [];
-  DICTIONARY.forEach((w) => (isGoodWord(w) ? WORDS_GOOD : WORDS_BAD).push(w));
+  const WORDS_GOOD_SET = new Set(WORDS_GOOD);
+  const WORDS_BAD = DICTIONARY.filter((w) => !WORDS_GOOD_SET.has(w));
 
   // One color per merged group in a solution, so a letter/digit's color
   // shows at a glance which final counting number it contributes to.

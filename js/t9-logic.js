@@ -33,11 +33,16 @@ function isRotationOfDecreasing(sums) {
   return sums.every((_, i) => sums[(startIdx + i) % k] === k - i);
 }
 
+// The run has to reach at least 1,2,3,4 — counting only up to 1,2 or 1,2,3
+// (or their reverse/wrapped equivalents) isn't enough to be "good".
+const MIN_RUN_LENGTH = 4;
+
 // Tries every way of merging adjacent digits (by summing) and checks whether
 // any resulting sequence is a run of consecutive integers, counting either up
 // (1,2,3,...) or down (...,3,2,1), allowing the run to "wrap around" (e.g.
 // 4,1,2,3 counts, since it's 1,2,3,4 rotated; 3,2,1,4 counts too, since it's
-// 4,3,2,1 rotated). Returns the first working grouping it finds, or null.
+// 4,3,2,1 rotated). The run must reach at least MIN_RUN_LENGTH. Returns the
+// first working grouping it finds, or null.
 function findSequentialGrouping(digits) {
   const n = digits.length;
 
@@ -60,13 +65,14 @@ function findSequentialGrouping(digits) {
 
     const sums = groups.map((g) => g.sum);
     const k = sums.length;
+    if (k < MIN_RUN_LENGTH) continue;
 
     const sorted = [...sums].sort((a, b) => a - b);
     const isPermutationOf1ToK = sorted.every((v, i) => v === i + 1);
     if (!isPermutationOf1ToK) continue;
 
     const increasing = isRotationOfIncreasing(sums);
-    const decreasing = k > 1 && isRotationOfDecreasing(sums);
+    const decreasing = isRotationOfDecreasing(sums);
 
     if (increasing || decreasing) {
       const direction = increasing ? "increasing" : "decreasing";
