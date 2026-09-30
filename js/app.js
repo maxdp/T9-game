@@ -1,6 +1,15 @@
 (() => {
-  const { wordToDigits, findSequentialGrouping } = window.T9;
-  const { WORDS_GOOD, WORDS_BAD } = window.T9_WORDS;
+  const { wordToDigits, findSequentialGrouping, isGoodWord } = window.T9;
+  const { DICTIONARY } = window.T9_WORDS;
+
+  // Classify the whole dictionary against the current rules once at
+  // startup, instead of shipping separately pre-split word lists — so
+  // good/bad always matches t9-logic.js with no separate regeneration
+  // step, and hangman mode can check whether any typed guess is a real word.
+  const DICTIONARY_SET = new Set(DICTIONARY);
+  const WORDS_GOOD = [];
+  const WORDS_BAD = [];
+  DICTIONARY.forEach((w) => (isGoodWord(w) ? WORDS_GOOD : WORDS_BAD).push(w));
 
   // One color per merged group in a solution, so a letter/digit's color
   // shows at a glance which final counting number it contributes to.
@@ -161,13 +170,16 @@
     const giveUpBtn = document.getElementById("hang-give-up");
     const feedbackEl = document.getElementById("hang-feedback");
     const solutionEl = document.getElementById("hang-solution");
+    const counterEl = document.getElementById("hang-counter");
     const nextBtn = document.getElementById("hang-next");
     const solvedEl = document.getElementById("hang-solved");
     const attemptsEl = document.getElementById("hang-attempts");
 
     let hiddenWord = "";
     let blanks = new Set();
-    let solved = false;
+    let validAnswers = [];
+    let found = new Set();
+    let complete = false;
     let attempts = 0;
     let solvedCount = 0;
     const seen = new Set();
@@ -199,6 +211,16 @@
       return new Set(positions.slice(0, count));
     }
 
+    // Every good, dictionary word of the same length that matches the
+    // revealed letters — the full set the player is trying to find.
+    function computeValidAnswers(word, blankSet) {
+      return WORDS_GOOD.filter(
+        (w) =>
+          w.length === word.length &&
+          [...w].every((ch, i) => blankSet.has(i) || ch === word[i])
+      );
+    }
+
     function renderTiles() {
       tilesEl.innerHTML = "";
       hiddenWord.split("").forEach((letter, i) => {
@@ -214,35 +236,49 @@
       });
     }
 
+    function updateCounter() {
+      counterEl.textContent = `${found.size} / ${validAnswers.length} found`;
+    }
+
     function normalize(raw) {
       return raw.trim().toLowerCase().replace(/[^a-z]/g, "");
     }
 
     function newPuzzle() {
-      solved = false;
+      complete = false;
       attempts = 0;
       attemptsEl.textContent = "0";
       feedbackEl.textContent = "";
       feedbackEl.className = "";
       solutionEl.textContent = "";
+      solutionEl.classList.remove("reveal-list");
       nextBtn.hidden = true;
       giveUpBtn.hidden = false;
       inputEl.disabled = false;
       submitBtn.disabled = false;
       inputEl.value = "";
+      found = new Set();
 
       hiddenWord = pickGoodWord();
       blanks = pickBlanks(hiddenWord);
+      validAnswers = computeValidAnswers(hiddenWord, blanks);
       inputEl.maxLength = hiddenWord.length;
       renderTiles();
+      updateCounter();
       inputEl.focus();
     }
 
-    function finishPuzzle(word) {
-      solved = true;
-      const grouping = findSequentialGrouping(wordToDigits(word));
-      renderColoredWord(tilesEl, word, grouping, true);
-      renderDigitLine(solutionEl, wordToDigits(word), grouping);
+    // Shows every valid answer as plain text (used on give-up and on
+    // finding them all) rather than a per-word colored breakdown, since
+    // there can be many of them.
+    function revealAllAnswers() {
+      solutionEl.classList.add("reveal-list");
+      solutionEl.textContent =
+        "Valid answers: " + validAnswers.map((w) => w.toUpperCase()).join(", ");
+    }
+
+    function completePuzzle() {
+      complete = true;
       inputEl.disabled = true;
       submitBtn.disabled = true;
       giveUpBtn.hidden = true;
@@ -250,7 +286,7 @@
     }
 
     function submitGuess() {
-      if (solved) return;
+      if (complete) return;
       const guess = normalize(inputEl.value);
 
       if (guess.length !== hiddenWord.length) {
@@ -270,25 +306,49 @@
       attempts++;
       attemptsEl.textContent = String(attempts);
 
-      const grouping = findSequentialGrouping(wordToDigits(guess));
-      if (!grouping) {
-        feedbackEl.textContent = `❌ "${guess.toUpperCase()}" isn't good — try again.`;
+      if (!DICTIONARY_SET.has(guess)) {
+        feedbackEl.textContent = `"${guess.toUpperCase()}" is not a real word.`;
         feedbackEl.className = "wrong";
         return;
       }
 
-      solvedCount++;
-      solvedEl.textContent = String(solvedCount);
+      const grouping = findSequentialGrouping(wordToDigits(guess));
+      if (!grouping) {
+        feedbackEl.textContent = `"${guess.toUpperCase()}" is a real word, but not good.`;
+        feedbackEl.className = "wrong";
+        return;
+      }
+
+      if (found.has(guess)) {
+        feedbackEl.textContent = `You already found "${guess.toUpperCase()}".`;
+        feedbackEl.className = "";
+        return;
+      }
+
+      found.add(guess);
+      updateCounter();
       feedbackEl.textContent = `✅ "${guess.toUpperCase()}" is good!`;
       feedbackEl.className = "right";
-      finishPuzzle(guess);
+      solutionEl.classList.remove("reveal-list");
+      renderDigitLine(solutionEl, wordToDigits(guess), grouping);
+
+      if (found.size === validAnswers.length) {
+        solvedCount++;
+        solvedEl.textContent = String(solvedCount);
+        feedbackEl.textContent = `🎉 Found all ${validAnswers.length}!`;
+        completePuzzle();
+      }
     }
 
     function giveUp() {
-      if (solved) return;
-      feedbackEl.textContent = `The word was "${hiddenWord.toUpperCase()}".`;
+      if (complete) return;
+      feedbackEl.textContent =
+        found.size > 0
+          ? `Found ${found.size} of ${validAnswers.length}.`
+          : "No answers found.";
       feedbackEl.className = "";
-      finishPuzzle(hiddenWord);
+      revealAllAnswers();
+      completePuzzle();
     }
 
     formEl.addEventListener("submit", (e) => {

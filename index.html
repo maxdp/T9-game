@@ -154,6 +154,13 @@
   #hang-give-up { background: #3a3a55; }
   #hang-give-up:hover:not(:disabled) { background: #4a4a6a; }
 
+  #hang-counter {
+    color: #c8c8e0;
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 14px;
+  }
+
   #hang-feedback {
     min-height: 1.6em;
     font-size: 1.1rem;
@@ -164,11 +171,19 @@
   #hang-feedback.wrong { color: #ff8a8a; }
 
   #hang-solution {
+    max-width: 480px;
     min-height: 1.8em;
     font-size: 1.5rem;
     font-weight: 700;
     letter-spacing: 0.1em;
     margin-top: 8px;
+  }
+  #hang-solution.reveal-list {
+    font-size: 1rem;
+    font-weight: 400;
+    letter-spacing: normal;
+    color: #c8c8e0;
+    line-height: 1.5;
   }
 
   #mode-switch { margin-top: 36px; }
@@ -234,8 +249,8 @@
 
   <div id="hangman-mode" hidden>
     <p class="subtitle">
-      Fill in the blanks with any word that makes the digits sequential —
-      it doesn't have to be the exact word we picked, just <b>a</b> good one.
+      Find every real word that fits the blanks and makes the digits
+      sequential — there may be more than one.
     </p>
 
     <div id="hang-tiles" class="hang-tiles"></div>
@@ -245,13 +260,15 @@
       <button id="hang-submit" type="submit">Guess</button>
     </form>
 
+    <div id="hang-counter">0 / 0 found</div>
+
     <button id="hang-give-up">Give up</button>
     <div id="hang-feedback"></div>
     <div id="hang-solution"></div>
     <button id="hang-next" hidden>New puzzle →</button>
 
     <div id="stats">
-      <div>Solved<b id="hang-solved">0</b></div>
+      <div>Puzzles solved<b id="hang-solved">0</b></div>
       <div>Attempts<b id="hang-attempts">0</b></div>
     </div>
   </div>
@@ -260,8 +277,8 @@
     <button id="mode-toggle"></button>
   </div>
 
-  <script src="js/t9-logic.js?v=5"></script>
-  <script src="js/words.js?v=5"></script>
-  <script src="js/app.js?v=5"></script>
+  <script src="js/t9-logic.js?v=6"></script>
+  <script src="js/words.js?v=6"></script>
+  <script src="js/app.js?v=6"></script>
 </body>
 </html>
