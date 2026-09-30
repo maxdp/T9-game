@@ -189,6 +189,8 @@
     const solvedEl = document.getElementById("hang-solved");
     const attemptsEl = document.getElementById("hang-attempts");
 
+    const MIN_VALID_ANSWERS = 3;
+
     let hiddenWord = "";
     let blanks = new Set();
     let validAnswers = [];
@@ -273,9 +275,17 @@
       inputEl.value = "";
       found = new Set();
 
-      hiddenWord = pickGoodWord();
-      blanks = pickBlanks(hiddenWord);
-      validAnswers = computeValidAnswers(hiddenWord, blanks);
+      // Only offer puzzles with at least MIN_VALID_ANSWERS valid answers —
+      // about 28% of random word+blank combinations qualify, so this
+      // usually takes a few tries, capped so it can't loop forever.
+      let tries = 0;
+      do {
+        hiddenWord = pickGoodWord();
+        blanks = pickBlanks(hiddenWord);
+        validAnswers = computeValidAnswers(hiddenWord, blanks);
+        tries++;
+      } while (validAnswers.length < MIN_VALID_ANSWERS && tries < 200);
+
       inputEl.maxLength = hiddenWord.length;
       renderTiles();
       updateCounter();
