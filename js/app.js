@@ -184,6 +184,7 @@
     const feedbackEl = document.getElementById("hang-feedback");
     const solutionEl = document.getElementById("hang-solution");
     const counterEl = document.getElementById("hang-counter");
+    const foundListEl = document.getElementById("hang-found-list");
     const difficultyEl = document.getElementById("hang-difficulty");
     const nextBtn = document.getElementById("hang-next");
     const solvedEl = document.getElementById("hang-solved");
@@ -256,6 +257,10 @@
       counterEl.textContent = `${found.size} / ${validAnswers.length} found`;
     }
 
+    function renderFoundList() {
+      foundListEl.textContent = [...found].map((w) => w.toUpperCase()).join(", ");
+    }
+
     function normalize(raw) {
       return raw.trim().toLowerCase().replace(/[^a-z]/g, "");
     }
@@ -274,6 +279,7 @@
       submitBtn.disabled = false;
       inputEl.value = "";
       found = new Set();
+      renderFoundList();
 
       // Only offer puzzles with at least MIN_VALID_ANSWERS valid answers —
       // about 28% of random word+blank combinations qualify, so this
@@ -361,6 +367,7 @@
 
       found.add(guess);
       updateCounter();
+      renderFoundList();
       feedbackEl.textContent = `✅ "${guess.toUpperCase()}" is good!`;
       feedbackEl.className = "right";
       solutionEl.classList.remove("reveal-list");
