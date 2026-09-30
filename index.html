@@ -114,6 +114,20 @@
   }
   #stats b { color: #f2f2f2; font-size: 1.1rem; display: block; }
 
+  #hang-difficulty {
+    display: inline-block;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 999px;
+    margin-top: 4px;
+  }
+  #hang-difficulty.difficulty-easy { background: #1f3a2c; color: #6ee0a0; }
+  #hang-difficulty.difficulty-medium { background: #3a3620; color: #ffcf6e; }
+  #hang-difficulty.difficulty-hard { background: #3a2024; color: #ff8a8a; }
+
   .hang-tiles {
     display: flex;
     gap: 6px;
@@ -254,6 +268,7 @@
       sequential — there may be more than one.
     </p>
 
+    <div id="hang-difficulty"></div>
     <div id="hang-tiles" class="hang-tiles"></div>
 
     <form id="hang-form">
@@ -278,8 +293,8 @@
     <button id="mode-toggle"></button>
   </div>
 
-  <script src="js/t9-logic.js?v=8"></script>
-  <script src="js/words.js?v=8"></script>
-  <script src="js/app.js?v=8"></script>
+  <script src="js/t9-logic.js?v=9"></script>
+  <script src="js/words.js?v=9"></script>
+  <script src="js/app.js?v=9"></script>
 </body>
 </html>

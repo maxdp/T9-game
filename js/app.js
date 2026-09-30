@@ -1,6 +1,6 @@
 (() => {
   const { wordToDigits, findSequentialGrouping } = window.T9;
-  const { DICTIONARY, WORDS_GOOD } = window.T9_WORDS;
+  const { DICTIONARY, WORDS_GOOD, WORDS_GOOD_RANK } = window.T9_WORDS;
 
   // DICTIONARY lets hangman mode check whether a typed guess is a real word
   // at all. WORDS_GOOD is precomputed (see words.js) rather than classified
@@ -9,6 +9,20 @@
   const DICTIONARY_SET = new Set(DICTIONARY);
   const WORDS_GOOD_SET = new Set(WORDS_GOOD);
   const WORDS_BAD = DICTIONARY.filter((w) => !WORDS_GOOD_SET.has(w));
+
+  // Word -> frequency rank (1 = most common, higher = rarer), for gauging
+  // hangman puzzle difficulty from its rarest valid answer.
+  const WORD_RANK = new Map(WORDS_GOOD.map((w, i) => [w, WORDS_GOOD_RANK[i]]));
+
+  // Thresholds picked by simulating 20,000 random puzzles (same word-pick +
+  // blank-pick algorithm as below) and taking roughly the 33rd/66th
+  // percentiles of each puzzle's rarest-valid-answer rank, so the three
+  // labels come up about equally often in practice.
+  function difficultyForRank(rarestRank) {
+    if (rarestRank <= 18000) return "Easy";
+    if (rarestRank <= 35000) return "Medium";
+    return "Hard";
+  }
 
   // One color per merged group in a solution, so a letter/digit's color
   // shows at a glance which final counting number it contributes to.
@@ -170,6 +184,7 @@
     const feedbackEl = document.getElementById("hang-feedback");
     const solutionEl = document.getElementById("hang-solution");
     const counterEl = document.getElementById("hang-counter");
+    const difficultyEl = document.getElementById("hang-difficulty");
     const nextBtn = document.getElementById("hang-next");
     const solvedEl = document.getElementById("hang-solved");
     const attemptsEl = document.getElementById("hang-attempts");
@@ -264,7 +279,15 @@
       inputEl.maxLength = hiddenWord.length;
       renderTiles();
       updateCounter();
+      renderDifficulty();
       inputEl.focus();
+    }
+
+    function renderDifficulty() {
+      const rarestRank = Math.max(...validAnswers.map((w) => WORD_RANK.get(w)));
+      const difficulty = difficultyForRank(rarestRank);
+      difficultyEl.textContent = difficulty;
+      difficultyEl.className = "difficulty-" + difficulty.toLowerCase();
     }
 
     // Shows every valid answer as plain text (used on give-up and on
