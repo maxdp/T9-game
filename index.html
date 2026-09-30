@@ -165,8 +165,9 @@
     text-align: center;
   }
   #hang-input:disabled { opacity: 0.6; }
-  #hang-give-up { background: #3a3a55; }
+  #hang-give-up { background: #3a3a55; margin-top: 10px; }
   #hang-give-up:hover:not(:disabled) { background: #4a4a6a; }
+  #hang-next { margin-top: 10px; }
 
   #hang-counter {
     color: #c8c8e0;
@@ -178,7 +179,7 @@
   #hang-found-list {
     max-width: 480px;
     min-height: 1.3em;
-    color: #6ee0a0;
+    color: #a0a0c0;
     font-size: 0.95rem;
     line-height: 1.5;
     margin: 0 auto 14px;
@@ -290,9 +291,9 @@
     <div id="hang-counter">0 / 0 found</div>
     <div id="hang-found-list"></div>
 
-    <button id="hang-give-up">Give up</button>
     <div id="hang-feedback"></div>
     <div id="hang-solution"></div>
+    <button id="hang-give-up">Give up</button>
     <button id="hang-next" hidden>New puzzle →</button>
 
     <div id="stats">
