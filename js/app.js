@@ -2,16 +2,6 @@
   const { wordToDigits, findSequentialGrouping } = window.T9;
   const { WORDS_GOOD, WORDS_BAD } = window.T9_WORDS;
 
-  const wordEl = document.getElementById("word");
-  const goodBtn = document.getElementById("guess-good");
-  const badBtn = document.getElementById("guess-bad");
-  const resultEl = document.getElementById("result");
-  const explanationEl = document.getElementById("explanation");
-  const solutionEl = document.getElementById("solution");
-  const nextBtn = document.getElementById("next");
-  const scoreEl = document.getElementById("score");
-  const streakEl = document.getElementById("streak");
-
   // One color per merged group in a solution, so a letter/digit's color
   // shows at a glance which final counting number it contributes to.
   const GROUP_COLORS = [
@@ -25,27 +15,8 @@
     "#e06ec0",
   ];
 
-  let currentWord = "";
-  let currentDigits = [];
-  let answered = false;
-  let correct = 0;
-  let total = 0;
-  let streak = 0;
-  const seen = new Set();
-
-  function pickWord() {
-    const pool = Math.random() < 0.5 ? WORDS_GOOD : WORDS_BAD;
-    let word;
-    let attempts = 0;
-    do {
-      word = pool[Math.floor(Math.random() * pool.length)];
-      attempts++;
-    } while (seen.has(word) && attempts < 20);
-    seen.add(word);
-    if (seen.size > (WORDS_GOOD.length + WORDS_BAD.length) * 0.9) {
-      seen.clear();
-    }
-    return word;
+  function groupIndexForLetter(grouping, letterIndex) {
+    return grouping.groups.findIndex((g) => g.indices.includes(letterIndex));
   }
 
   function groupingNotes(grouping) {
@@ -55,84 +26,315 @@
     return notes.join(", ");
   }
 
-  // Colors the word's letters, and lays out its digits below them, by
-  // merged group — e.g. SPENT -> S P E (N T), with each token/letter tinted
-  // by which final counting number it contributes to.
-  function renderSolution(word, digits, grouping) {
-    wordEl.innerHTML = "";
+  // Colors a word's letters by merged group. In tile mode, each letter is
+  // rendered as its own box (matching the hangman blank tiles); otherwise
+  // as plain inline spans (matching the big yes/no word display).
+  function renderColoredWord(container, word, grouping, tileMode) {
+    container.innerHTML = "";
     word.split("").forEach((letter, i) => {
-      const groupIdx = grouping.groups.findIndex((g) =>
-        g.indices.includes(i)
-      );
-      const span = document.createElement("span");
-      span.textContent = letter.toUpperCase();
-      span.style.color = GROUP_COLORS[groupIdx % GROUP_COLORS.length];
-      wordEl.appendChild(span);
+      const color = GROUP_COLORS[groupIndexForLetter(grouping, i) % GROUP_COLORS.length];
+      const el = document.createElement(tileMode ? "div" : "span");
+      if (tileMode) el.className = "hang-tile revealed";
+      el.textContent = letter.toUpperCase();
+      el.style.color = color;
+      if (tileMode) el.style.borderBottomColor = color;
+      container.appendChild(el);
     });
+  }
 
-    solutionEl.innerHTML = "";
+  // Lays out a word's digits by merged group, e.g. SPENT -> 4 1 2 (2 1),
+  // colored to match renderColoredWord's letter colors.
+  function renderDigitLine(container, digits, grouping) {
+    container.innerHTML = "";
     grouping.groups.forEach((g, i) => {
       const vals = g.indices.map((idx) => digits[idx]);
       const span = document.createElement("span");
       span.style.color = GROUP_COLORS[i % GROUP_COLORS.length];
       span.textContent = vals.length > 1 ? `(${vals.join(" ")})` : `${vals[0]}`;
-      solutionEl.appendChild(span);
-      solutionEl.appendChild(document.createTextNode(" "));
+      container.appendChild(span);
+      container.appendChild(document.createTextNode(" "));
     });
   }
 
-  function newRound() {
-    answered = false;
-    resultEl.textContent = "";
-    resultEl.className = "result";
-    explanationEl.textContent = "";
-    solutionEl.textContent = "";
-    nextBtn.hidden = true;
-    goodBtn.disabled = false;
-    badBtn.disabled = false;
+  // ---------------------------------------------------------------------
+  // Yes/No quiz mode
+  // ---------------------------------------------------------------------
+  (() => {
+    const wordEl = document.getElementById("word");
+    const goodBtn = document.getElementById("guess-good");
+    const badBtn = document.getElementById("guess-bad");
+    const resultEl = document.getElementById("result");
+    const explanationEl = document.getElementById("explanation");
+    const solutionEl = document.getElementById("solution");
+    const nextBtn = document.getElementById("next");
+    const scoreEl = document.getElementById("score");
+    const streakEl = document.getElementById("streak");
 
-    currentWord = pickWord();
-    currentDigits = wordToDigits(currentWord);
-    wordEl.textContent = currentWord.toUpperCase();
+    let currentWord = "";
+    let currentDigits = [];
+    let answered = false;
+    let correct = 0;
+    let total = 0;
+    let streak = 0;
+    const seen = new Set();
+
+    function pickWord() {
+      const pool = Math.random() < 0.5 ? WORDS_GOOD : WORDS_BAD;
+      let word;
+      let attempts = 0;
+      do {
+        word = pool[Math.floor(Math.random() * pool.length)];
+        attempts++;
+      } while (seen.has(word) && attempts < 20);
+      seen.add(word);
+      if (seen.size > (WORDS_GOOD.length + WORDS_BAD.length) * 0.9) {
+        seen.clear();
+      }
+      return word;
+    }
+
+    function newRound() {
+      answered = false;
+      resultEl.textContent = "";
+      resultEl.className = "result";
+      explanationEl.textContent = "";
+      solutionEl.textContent = "";
+      nextBtn.hidden = true;
+      goodBtn.disabled = false;
+      badBtn.disabled = false;
+
+      currentWord = pickWord();
+      currentDigits = wordToDigits(currentWord);
+      wordEl.textContent = currentWord.toUpperCase();
+    }
+
+    function submitGuess(guessGood) {
+      if (answered) return;
+      answered = true;
+      goodBtn.disabled = true;
+      badBtn.disabled = true;
+      nextBtn.hidden = false;
+
+      const grouping = findSequentialGrouping(currentDigits);
+      const actuallyGood = grouping !== null;
+      const wasRight = guessGood === actuallyGood;
+
+      total++;
+      if (wasRight) {
+        correct++;
+        streak++;
+      } else {
+        streak = 0;
+      }
+      scoreEl.textContent = `${correct} / ${total}`;
+      streakEl.textContent = streak;
+
+      resultEl.textContent = wasRight ? "✅ Correct!" : "❌ Not quite";
+      resultEl.className = "result " + (wasRight ? "right" : "wrong");
+
+      if (actuallyGood) {
+        const notes = groupingNotes(grouping);
+        explanationEl.textContent = "GOOD" + (notes ? " — " + notes : "");
+        renderColoredWord(wordEl, currentWord, grouping, false);
+        renderDigitLine(solutionEl, currentDigits, grouping);
+      } else {
+        explanationEl.textContent =
+          "NOT GOOD — no way to merge neighboring digits into a sequential run.";
+      }
+    }
+
+    goodBtn.addEventListener("click", () => submitGuess(true));
+    badBtn.addEventListener("click", () => submitGuess(false));
+    nextBtn.addEventListener("click", newRound);
+
+    newRound();
+  })();
+
+  // ---------------------------------------------------------------------
+  // Hangman mode
+  // ---------------------------------------------------------------------
+  const hangman = (() => {
+    const tilesEl = document.getElementById("hang-tiles");
+    const formEl = document.getElementById("hang-form");
+    const inputEl = document.getElementById("hang-input");
+    const submitBtn = document.getElementById("hang-submit");
+    const giveUpBtn = document.getElementById("hang-give-up");
+    const feedbackEl = document.getElementById("hang-feedback");
+    const solutionEl = document.getElementById("hang-solution");
+    const nextBtn = document.getElementById("hang-next");
+    const solvedEl = document.getElementById("hang-solved");
+    const attemptsEl = document.getElementById("hang-attempts");
+
+    let hiddenWord = "";
+    let blanks = new Set();
+    let solved = false;
+    let attempts = 0;
+    let solvedCount = 0;
+    const seen = new Set();
+    let started = false;
+
+    function pickGoodWord() {
+      let word;
+      let tries = 0;
+      do {
+        word = WORDS_GOOD[Math.floor(Math.random() * WORDS_GOOD.length)];
+        tries++;
+      } while (seen.has(word) && tries < 20);
+      seen.add(word);
+      if (seen.size > WORDS_GOOD.length * 0.9) seen.clear();
+      return word;
+    }
+
+    // At least 2 letters blanked, and at least 2 letters left revealed.
+    function pickBlanks(word) {
+      const n = word.length;
+      const minBlanks = 2;
+      const maxBlanks = n - 2;
+      const count = minBlanks + Math.floor(Math.random() * (maxBlanks - minBlanks + 1));
+      const positions = [...Array(n).keys()];
+      for (let i = positions.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [positions[i], positions[j]] = [positions[j], positions[i]];
+      }
+      return new Set(positions.slice(0, count));
+    }
+
+    function renderTiles() {
+      tilesEl.innerHTML = "";
+      hiddenWord.split("").forEach((letter, i) => {
+        const tile = document.createElement("div");
+        tile.className = "hang-tile";
+        if (blanks.has(i)) {
+          tile.classList.add("blank");
+          tile.textContent = "";
+        } else {
+          tile.textContent = letter.toUpperCase();
+        }
+        tilesEl.appendChild(tile);
+      });
+    }
+
+    function normalize(raw) {
+      return raw.trim().toLowerCase().replace(/[^a-z]/g, "");
+    }
+
+    function newPuzzle() {
+      solved = false;
+      attempts = 0;
+      attemptsEl.textContent = "0";
+      feedbackEl.textContent = "";
+      feedbackEl.className = "";
+      solutionEl.textContent = "";
+      nextBtn.hidden = true;
+      giveUpBtn.hidden = false;
+      inputEl.disabled = false;
+      submitBtn.disabled = false;
+      inputEl.value = "";
+
+      hiddenWord = pickGoodWord();
+      blanks = pickBlanks(hiddenWord);
+      inputEl.maxLength = hiddenWord.length;
+      renderTiles();
+      inputEl.focus();
+    }
+
+    function finishPuzzle(word) {
+      solved = true;
+      const grouping = findSequentialGrouping(wordToDigits(word));
+      renderColoredWord(tilesEl, word, grouping, true);
+      renderDigitLine(solutionEl, wordToDigits(word), grouping);
+      inputEl.disabled = true;
+      submitBtn.disabled = true;
+      giveUpBtn.hidden = true;
+      nextBtn.hidden = false;
+    }
+
+    function submitGuess() {
+      if (solved) return;
+      const guess = normalize(inputEl.value);
+
+      if (guess.length !== hiddenWord.length) {
+        feedbackEl.textContent = `Enter a ${hiddenWord.length}-letter word.`;
+        feedbackEl.className = "wrong";
+        return;
+      }
+
+      for (let i = 0; i < hiddenWord.length; i++) {
+        if (!blanks.has(i) && guess[i] !== hiddenWord[i]) {
+          feedbackEl.textContent = "Doesn't match the revealed letters.";
+          feedbackEl.className = "wrong";
+          return;
+        }
+      }
+
+      attempts++;
+      attemptsEl.textContent = String(attempts);
+
+      const grouping = findSequentialGrouping(wordToDigits(guess));
+      if (!grouping) {
+        feedbackEl.textContent = `❌ "${guess.toUpperCase()}" isn't good — try again.`;
+        feedbackEl.className = "wrong";
+        return;
+      }
+
+      solvedCount++;
+      solvedEl.textContent = String(solvedCount);
+      feedbackEl.textContent = `✅ "${guess.toUpperCase()}" is good!`;
+      feedbackEl.className = "right";
+      finishPuzzle(guess);
+    }
+
+    function giveUp() {
+      if (solved) return;
+      feedbackEl.textContent = `The word was "${hiddenWord.toUpperCase()}".`;
+      feedbackEl.className = "";
+      finishPuzzle(hiddenWord);
+    }
+
+    formEl.addEventListener("submit", (e) => {
+      e.preventDefault();
+      submitGuess();
+    });
+    giveUpBtn.addEventListener("click", giveUp);
+    nextBtn.addEventListener("click", newPuzzle);
+
+    return {
+      startIfNeeded() {
+        if (!started) {
+          started = true;
+          newPuzzle();
+        }
+      },
+    };
+  })();
+
+  // ---------------------------------------------------------------------
+  // Mode toggle
+  // ---------------------------------------------------------------------
+  const yesnoSection = document.getElementById("yesno-mode");
+  const hangmanSection = document.getElementById("hangman-mode");
+  const modeToggleBtn = document.getElementById("mode-toggle");
+
+  let mode = "yesno";
+
+  function renderModeToggle() {
+    modeToggleBtn.textContent =
+      mode === "yesno"
+        ? "Mode: Yes/No Quiz  (switch to Hangman)"
+        : "Mode: Hangman  (switch to Yes/No Quiz)";
   }
 
-  function submitGuess(guessGood) {
-    if (answered) return;
-    answered = true;
-    goodBtn.disabled = true;
-    badBtn.disabled = true;
-    nextBtn.hidden = false;
-
-    const grouping = findSequentialGrouping(currentDigits);
-    const actuallyGood = grouping !== null;
-    const wasRight = guessGood === actuallyGood;
-
-    total++;
-    if (wasRight) {
-      correct++;
-      streak++;
-    } else {
-      streak = 0;
-    }
-    scoreEl.textContent = `${correct} / ${total}`;
-    streakEl.textContent = streak;
-
-    resultEl.textContent = wasRight ? "✅ Correct!" : "❌ Not quite";
-    resultEl.className = "result " + (wasRight ? "right" : "wrong");
-
-    if (actuallyGood) {
-      const notes = groupingNotes(grouping);
-      explanationEl.textContent = "GOOD" + (notes ? " — " + notes : "");
-      renderSolution(currentWord, currentDigits, grouping);
-    } else {
-      explanationEl.textContent =
-        "NOT GOOD — no way to merge neighboring digits into a sequential run.";
-    }
+  function setMode(newMode) {
+    mode = newMode;
+    yesnoSection.hidden = mode !== "yesno";
+    hangmanSection.hidden = mode !== "hangman";
+    renderModeToggle();
+    if (mode === "hangman") hangman.startIfNeeded();
   }
 
-  goodBtn.addEventListener("click", () => submitGuess(true));
-  badBtn.addEventListener("click", () => submitGuess(false));
-  nextBtn.addEventListener("click", newRound);
+  modeToggleBtn.addEventListener("click", () => {
+    setMode(mode === "yesno" ? "hangman" : "yesno");
+  });
 
-  newRound();
+  renderModeToggle();
 })();

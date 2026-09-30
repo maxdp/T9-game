@@ -113,11 +113,78 @@
     font-size: 0.9rem;
   }
   #stats b { color: #f2f2f2; font-size: 1.1rem; display: block; }
+
+  .hang-tiles {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 8px 0 20px;
+  }
+  .hang-tile {
+    width: clamp(28px, 8.5vw, 42px);
+    height: clamp(38px, 11vw, 54px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(1.1rem, 4vw, 1.7rem);
+    font-weight: 700;
+    border-bottom: 3px solid #4f4f70;
+  }
+  .hang-tile.blank { border-bottom-color: #7ea0ff; }
+
+  #hang-form {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 8px;
+  }
+  #hang-input {
+    font-size: 1.1rem;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 2px solid #3a3a55;
+    background: #1f1f33;
+    color: #f2f2f2;
+    text-transform: uppercase;
+    width: 9ch;
+    text-align: center;
+  }
+  #hang-input:disabled { opacity: 0.6; }
+  #hang-give-up { background: #3a3a55; }
+  #hang-give-up:hover:not(:disabled) { background: #4a4a6a; }
+
+  #hang-feedback {
+    min-height: 1.6em;
+    font-size: 1.1rem;
+    margin-top: 12px;
+    font-weight: 700;
+  }
+  #hang-feedback.right { color: #6ee0a0; }
+  #hang-feedback.wrong { color: #ff8a8a; }
+
+  #hang-solution {
+    min-height: 1.8em;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    margin-top: 8px;
+  }
+
+  #mode-switch { margin-top: 36px; }
+  #mode-toggle {
+    background: #262640;
+    color: #c8c8e0;
+    font-size: 0.85rem;
+    padding: 10px 18px;
+    border: 1px solid #3a3a55;
+  }
+  #mode-toggle:hover { background: #2f2f4d; }
 </style>
 </head>
 <body>
   <h1>T9 Word Game</h1>
-  <p class="subtitle">Is this word "good"? Add up neighboring digits until they read 1, 2, 3, 4… in order (wrapping around counts too).</p>
+  <p class="subtitle">Add up neighboring digits until they read 1, 2, 3, 4… in order (wrapping around counts too).</p>
 
   <details>
     <summary>How it works</summary>
@@ -146,25 +213,55 @@
     <div class="key blank"></div>
   </div>
 
-  <div id="word"></div>
+  <div id="yesno-mode">
+    <div id="word"></div>
 
-  <div id="guess-row">
-    <button id="guess-good">✅ Good</button>
-    <button id="guess-bad">❌ Not good</button>
+    <div id="guess-row">
+      <button id="guess-good">✅ Good</button>
+      <button id="guess-bad">❌ Not good</button>
+    </div>
+
+    <div id="result" class="result"></div>
+    <div id="explanation"></div>
+    <div id="solution"></div>
+    <button id="next" hidden>Next word →</button>
+
+    <div id="stats">
+      <div>Score<b id="score">0 / 0</b></div>
+      <div>Streak<b id="streak">0</b></div>
+    </div>
   </div>
 
-  <div id="result" class="result"></div>
-  <div id="explanation"></div>
-  <div id="solution"></div>
-  <button id="next" hidden>Next word →</button>
+  <div id="hangman-mode" hidden>
+    <p class="subtitle">
+      Fill in the blanks with any word that makes the digits sequential —
+      it doesn't have to be the exact word we picked, just <b>a</b> good one.
+    </p>
 
-  <div id="stats">
-    <div>Score<b id="score">0 / 0</b></div>
-    <div>Streak<b id="streak">0</b></div>
+    <div id="hang-tiles" class="hang-tiles"></div>
+
+    <form id="hang-form">
+      <input id="hang-input" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" />
+      <button id="hang-submit" type="submit">Guess</button>
+    </form>
+
+    <button id="hang-give-up">Give up</button>
+    <div id="hang-feedback"></div>
+    <div id="hang-solution"></div>
+    <button id="hang-next" hidden>New puzzle →</button>
+
+    <div id="stats">
+      <div>Solved<b id="hang-solved">0</b></div>
+      <div>Attempts<b id="hang-attempts">0</b></div>
+    </div>
   </div>
 
-  <script src="js/t9-logic.js?v=4"></script>
-  <script src="js/words.js?v=4"></script>
-  <script src="js/app.js?v=4"></script>
+  <div id="mode-switch">
+    <button id="mode-toggle"></button>
+  </div>
+
+  <script src="js/t9-logic.js?v=5"></script>
+  <script src="js/words.js?v=5"></script>
+  <script src="js/app.js?v=5"></script>
 </body>
 </html>
