@@ -287,6 +287,8 @@
     function submitGuess() {
       if (complete) return;
       const guess = normalize(inputEl.value);
+      inputEl.value = "";
+      inputEl.focus();
 
       if (guess.length !== hiddenWord.length) {
         feedbackEl.textContent = `Enter a ${hiddenWord.length}-letter word.`;
