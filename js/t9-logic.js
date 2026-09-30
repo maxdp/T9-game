@@ -37,13 +37,14 @@ function isRotationOfDecreasing(sums) {
 // (or their reverse/wrapped equivalents) isn't enough to be "good".
 const MIN_RUN_LENGTH = 4;
 
-// Tries every way of merging adjacent digits (by summing) and checks whether
-// any resulting sequence is a run of consecutive integers, counting either up
-// (1,2,3,...) or down (...,3,2,1), allowing the run to "wrap around" (e.g.
-// 4,1,2,3 counts, since it's 1,2,3,4 rotated; 3,2,1,4 counts too, since it's
-// 4,3,2,1 rotated). The run must reach at least MIN_RUN_LENGTH. Returns the
-// first working grouping it finds, or null.
-function findSequentialGrouping(digits) {
+// Tries every way of merging ADJACENT digits in a plain left-to-right line
+// (no wraparound in the merging itself — see findSequentialGrouping for
+// that) and checks whether the resulting sequence is a run of consecutive
+// integers, counting either up (1,2,3,...) or down (...,3,2,1), allowing the
+// *reading* of that run to start mid-way through (e.g. 4,1,2,3 counts, since
+// it's 1,2,3,4 rotated). The run must reach at least MIN_RUN_LENGTH. Returns
+// the first working grouping it finds, or null.
+function findLinearGrouping(digits) {
   const n = digits.length;
 
   for (let mask = 0; mask < 1 << (n - 1); mask++) {
@@ -79,6 +80,39 @@ function findSequentialGrouping(digits) {
       const startIdx = increasing ? sums.indexOf(1) : sums.indexOf(k);
       return { groups, sums, direction, wrapped: startIdx !== 0 };
     }
+  }
+
+  return null;
+}
+
+// Merging adjacent digits is itself allowed to wrap around the ends of the
+// word — e.g. hindu = 2,3,2,1,2 is good because the first and last digits
+// (both 2) are "adjacent" once you wrap around, merging into 4. To find
+// this, try every rotation of the digits and look for a plain left-to-right
+// grouping in each: any wraparound merge becomes a plain adjacent merge in
+// some rotation (the one that starts right after the wrap point), so
+// checking all n rotations covers every circular grouping. Returns the
+// first working grouping, with group indices mapped back to the original
+// (unrotated) positions, or null.
+function findSequentialGrouping(digits) {
+  const n = digits.length;
+
+  for (let rot = 0; rot < n; rot++) {
+    const rotated = digits.slice(rot).concat(digits.slice(0, rot));
+    const result = findLinearGrouping(rotated);
+    if (!result) continue;
+
+    const groups = result.groups.map((g) => ({
+      indices: g.indices.map((i) => (i + rot) % n),
+      sum: g.sum,
+    }));
+
+    return {
+      groups,
+      sums: result.sums,
+      direction: result.direction,
+      wrapped: result.wrapped || rot !== 0,
+    };
   }
 
   return null;

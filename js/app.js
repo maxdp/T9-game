@@ -66,16 +66,30 @@
 
   // Lays out a word's digits by merged group, e.g. SPENT -> 4 1 2 (2 1),
   // colored to match renderColoredWord's letter colors.
+  // Walks the digits left to right (not grouping.groups in whatever order
+  // they were built) so a group that wraps around the ends of the word —
+  // e.g. hindu's first and last digits merging into one group — renders as
+  // two separate parenthesized pieces in their actual positions, sharing
+  // one color, rather than one piece jumping out of position.
   function renderDigitLine(container, digits, grouping) {
     container.innerHTML = "";
-    grouping.groups.forEach((g, i) => {
-      const vals = g.indices.map((idx) => digits[idx]);
+    const n = digits.length;
+    let i = 0;
+    while (i < n) {
+      const gi = groupIndexForLetter(grouping, i);
+      const groupSize = grouping.groups[gi].indices.length;
+      let j = i;
+      while (j < n && groupIndexForLetter(grouping, j) === gi) j++;
+
+      const runDigits = digits.slice(i, j);
       const span = document.createElement("span");
-      span.style.color = GROUP_COLORS[i % GROUP_COLORS.length];
-      span.textContent = vals.length > 1 ? `(${vals.join(" ")})` : `${vals[0]}`;
+      span.style.color = GROUP_COLORS[gi % GROUP_COLORS.length];
+      span.textContent =
+        groupSize > 1 ? `(${runDigits.join(" ")})` : `${runDigits[0]}`;
       container.appendChild(span);
       container.appendChild(document.createTextNode(" "));
-    });
+      i = j;
+    }
   }
 
   // ---------------------------------------------------------------------
