@@ -19,8 +19,8 @@
   // percentiles of each puzzle's rarest-valid-answer rank, so the three
   // labels come up about equally often in practice.
   function difficultyForRank(rarestRank) {
-    if (rarestRank <= 6500) return "Easy";
-    if (rarestRank <= 14500) return "Medium";
+    if (rarestRank <= 10000) return "Easy";
+    if (rarestRank <= 21500) return "Medium";
     return "Hard";
   }
 
