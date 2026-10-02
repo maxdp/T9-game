@@ -51,10 +51,6 @@
     color: #e4e4f5;
     box-shadow: 0 2px 0 rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.06);
   }
-  .key.blank {
-    background: #1f1f33;
-    box-shadow: none;
-  }
   .tap-key {
     border: none;
     padding: 0;
@@ -93,6 +89,10 @@
     border: none;
     background: #4f6df5;
     color: white;
+    /* Without this, iOS Safari treats rapid taps on the same button (the
+       multi-tap cycling the T9 keypad relies on) as a double-tap-to-zoom
+       gesture, which hijacks the input. */
+    touch-action: manipulation;
     cursor: pointer;
   }
   button:hover:not(:disabled) { background: #3a54d6; }
@@ -300,9 +300,6 @@
       <button type="button" class="key tap-key" data-letters="pqrs"><span class="letter-opt">P</span><span class="letter-opt">Q</span><span class="letter-opt">R</span><span class="letter-opt">S</span></button>
       <button type="button" class="key tap-key" data-letters="tuv"><span class="letter-opt">T</span><span class="letter-opt">U</span><span class="letter-opt">V</span></button>
       <button type="button" class="key tap-key" data-letters="wxyz"><span class="letter-opt">W</span><span class="letter-opt">X</span><span class="letter-opt">Y</span><span class="letter-opt">Z</span></button>
-      <div class="key blank"></div>
-      <div class="key blank"></div>
-      <div class="key blank"></div>
     </div>
 
     <div id="hang-counter">0 / 0 found</div>
@@ -323,8 +320,8 @@
     <button id="mode-toggle"></button>
   </div>
 
-  <script src="js/t9-logic.js?v=26"></script>
-  <script src="js/words.js?v=26"></script>
-  <script src="js/app.js?v=26"></script>
+  <script src="js/t9-logic.js?v=27"></script>
+  <script src="js/words.js?v=27"></script>
+  <script src="js/app.js?v=27"></script>
 </body>
 </html>
