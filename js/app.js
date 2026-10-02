@@ -1,5 +1,5 @@
 (() => {
-  const { wordToDigits, findSequentialGrouping } = window.T9;
+  const { wordToDigits, findSequentialGrouping, PRESS_COUNTS } = window.T9;
   const { DICTIONARY, WORDS_GOOD, WORDS_GOOD_RANK } = window.T9_WORDS;
 
   // DICTIONARY lets hangman mode check whether a typed guess is a real word
@@ -191,9 +191,8 @@
   // ---------------------------------------------------------------------
   const hangman = (() => {
     const tilesEl = document.getElementById("hang-tiles");
-    const formEl = document.getElementById("hang-form");
-    const inputEl = document.getElementById("hang-input");
-    const submitBtn = document.getElementById("hang-submit");
+    const tapKeypadEl = document.getElementById("keypad");
+    const backspaceBtn = document.getElementById("tap-backspace");
     const giveUpBtn = document.getElementById("hang-give-up");
     const feedbackEl = document.getElementById("hang-feedback");
     const solutionEl = document.getElementById("hang-solution");
@@ -216,6 +215,17 @@
     let solvedCount = 0;
     const seen = new Set();
     let started = false;
+
+    // Tap-input state: which blank (in left-to-right order) is next to
+    // fill, what's been filled so far, and the in-progress multi-tap cycle
+    // (which key is held and how many times it's been tapped) on the key
+    // that hasn't committed a letter yet.
+    let activeBlankPositions = [];
+    let filledMap = new Map();
+    let activePos = 0;
+    let pendingKey = null;
+    let pendingCount = 0;
+    let pendingTimer = null;
 
     function pickGoodWord() {
       let word;
@@ -253,19 +263,154 @@
       );
     }
 
+    // Renders each tile's letter (revealed, already tap-filled, or a dimmed
+    // preview of the in-progress multi-tap cycle) plus the small press-count
+    // digit underneath it, and boxes whichever blank is next to fill.
     function renderTiles() {
       tilesEl.innerHTML = "";
+      const activeTarget = activeBlankPositions[activePos];
       hiddenWord.split("").forEach((letter, i) => {
         const tile = document.createElement("div");
         tile.className = "hang-tile";
-        if (blanks.has(i)) {
-          tile.classList.add("blank");
-          tile.textContent = "";
-        } else {
-          tile.textContent = letter.toUpperCase();
+        const isBlank = blanks.has(i);
+        if (isBlank) tile.classList.add("blank");
+        if (i === activeTarget) tile.classList.add("active");
+
+        let shown = null;
+        let isPreview = false;
+        if (!isBlank) {
+          shown = letter;
+        } else if (filledMap.has(i)) {
+          shown = filledMap.get(i);
+        } else if (i === activeTarget && pendingKey) {
+          shown = groupLetterAt(pendingKey, pendingCount);
+          isPreview = true;
         }
+
+        if (shown) {
+          const letterSpan = document.createElement("span");
+          letterSpan.className = "hang-letter" + (isPreview ? " pending-letter" : "");
+          letterSpan.textContent = shown.toUpperCase();
+          tile.appendChild(letterSpan);
+
+          const numSpan = document.createElement("span");
+          numSpan.className = "hang-pressnum";
+          numSpan.textContent = String(PRESS_COUNTS[shown]);
+          tile.appendChild(numSpan);
+        }
+
         tilesEl.appendChild(tile);
       });
+    }
+
+    // Highlights which letter a mid-cycle key is currently on, dimming the
+    // rest of that key's letters; every other key shows its letters plainly.
+    function renderKeypadHighlight() {
+      tapKeypadEl.querySelectorAll(".tap-key[data-letters]").forEach((btn) => {
+        const group = btn.dataset.letters;
+        const isPending = pendingKey === group;
+        btn.classList.toggle("pending", isPending);
+        btn.querySelectorAll(".letter-opt").forEach((span, idx) => {
+          span.classList.toggle(
+            "active-letter",
+            isPending && idx === (pendingCount - 1) % group.length
+          );
+        });
+      });
+    }
+
+    function render() {
+      renderTiles();
+      renderKeypadHighlight();
+    }
+
+    function groupLetterAt(group, count) {
+      return group[(count - 1) % group.length];
+    }
+
+    function clearPendingTimer() {
+      if (pendingTimer) {
+        clearTimeout(pendingTimer);
+        pendingTimer = null;
+      }
+    }
+
+    function setKeypadDisabled(disabled) {
+      tapKeypadEl.querySelectorAll("button").forEach((b) => {
+        b.disabled = disabled;
+      });
+    }
+
+    // Commits whichever letter the pending key's cycle is currently on into
+    // the active blank (called after a 1s pause or when a different key is
+    // tapped), then advances to the next blank — or, if that was the last
+    // one, submits the assembled word as a guess.
+    function commitPending() {
+      clearPendingTimer();
+      if (!pendingKey || complete) {
+        pendingKey = null;
+        pendingCount = 0;
+        return;
+      }
+      const letter = groupLetterAt(pendingKey, pendingCount);
+      const pos = activeBlankPositions[activePos];
+      filledMap.set(pos, letter);
+      pendingKey = null;
+      pendingCount = 0;
+      activePos++;
+      render();
+      if (activePos === activeBlankPositions.length) {
+        submitGuess();
+      }
+    }
+
+    function handleKeyClick(group) {
+      if (complete || activePos >= activeBlankPositions.length) return;
+
+      if (pendingKey && pendingKey !== group) {
+        commitPending();
+      }
+      if (complete || activePos >= activeBlankPositions.length) return;
+
+      pendingCount = pendingKey === group ? pendingCount + 1 : 1;
+      pendingKey = group;
+      clearPendingTimer();
+      render();
+      pendingTimer = setTimeout(commitPending, 1000);
+    }
+
+    function handleBackspace() {
+      if (complete) return;
+      if (pendingKey) {
+        // Cancel the in-progress cycle rather than committing then
+        // immediately deleting it.
+        clearPendingTimer();
+        pendingKey = null;
+        pendingCount = 0;
+        render();
+        return;
+      }
+      if (activePos > 0) {
+        activePos--;
+        filledMap.delete(activeBlankPositions[activePos]);
+        render();
+      }
+    }
+
+    function assembleGuess() {
+      return hiddenWord
+        .split("")
+        .map((ch, i) => (blanks.has(i) ? filledMap.get(i) : ch))
+        .join("");
+    }
+
+    function resetGuessInProgress() {
+      filledMap = new Map();
+      activePos = 0;
+      pendingKey = null;
+      pendingCount = 0;
+      clearPendingTimer();
+      render();
     }
 
     function updateCounter() {
@@ -274,10 +419,6 @@
 
     function renderFoundList() {
       foundListEl.textContent = [...found].map((w) => w.toUpperCase()).join(", ");
-    }
-
-    function normalize(raw) {
-      return raw.trim().toLowerCase().replace(/[^a-z]/g, "");
     }
 
     function newPuzzle() {
@@ -290,9 +431,7 @@
       solutionEl.classList.remove("reveal-list");
       nextBtn.hidden = true;
       giveUpBtn.hidden = false;
-      inputEl.disabled = false;
-      submitBtn.disabled = false;
-      inputEl.value = "";
+      setKeypadDisabled(false);
       found = new Set();
       renderFoundList();
 
@@ -311,11 +450,10 @@
         tries < 200
       );
 
-      inputEl.maxLength = hiddenWord.length;
-      renderTiles();
+      activeBlankPositions = [...blanks].sort((a, b) => a - b);
+      resetGuessInProgress();
       updateCounter();
       renderDifficulty();
-      inputEl.focus();
     }
 
     function renderDifficulty() {
@@ -336,31 +474,22 @@
 
     function completePuzzle() {
       complete = true;
-      inputEl.disabled = true;
-      submitBtn.disabled = true;
+      clearPendingTimer();
+      pendingKey = null;
+      pendingCount = 0;
+      setKeypadDisabled(true);
       giveUpBtn.hidden = true;
       nextBtn.hidden = false;
+      renderKeypadHighlight();
     }
 
+    // Every blank is filled by construction (tap input can't produce a
+    // wrong-length guess or one that disagrees with a revealed letter), so
+    // there's nothing to validate before checking realness/goodness below.
     function submitGuess() {
       if (complete) return;
-      const guess = normalize(inputEl.value);
-      inputEl.value = "";
-      inputEl.focus();
-
-      if (guess.length !== hiddenWord.length) {
-        feedbackEl.textContent = `Enter a ${hiddenWord.length}-letter word.`;
-        feedbackEl.className = "wrong";
-        return;
-      }
-
-      for (let i = 0; i < hiddenWord.length; i++) {
-        if (!blanks.has(i) && guess[i] !== hiddenWord[i]) {
-          feedbackEl.textContent = "Doesn't match the revealed letters.";
-          feedbackEl.className = "wrong";
-          return;
-        }
-      }
+      const guess = assembleGuess();
+      resetGuessInProgress();
 
       attempts++;
       attemptsEl.textContent = String(attempts);
@@ -411,10 +540,10 @@
       completePuzzle();
     }
 
-    formEl.addEventListener("submit", (e) => {
-      e.preventDefault();
-      submitGuess();
+    tapKeypadEl.querySelectorAll(".tap-key[data-letters]").forEach((btn) => {
+      btn.addEventListener("click", () => handleKeyClick(btn.dataset.letters));
     });
+    backspaceBtn.addEventListener("click", handleBackspace);
     giveUpBtn.addEventListener("click", giveUp);
     nextBtn.addEventListener("click", newPuzzle);
 

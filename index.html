@@ -55,6 +55,28 @@
     background: #1f1f33;
     box-shadow: none;
   }
+  .tap-key {
+    border: none;
+    padding: 0;
+    margin: 0;
+    font-family: inherit;
+    cursor: pointer;
+  }
+  .tap-key:disabled {
+    opacity: 0.35;
+    cursor: default;
+  }
+  .tap-key .letter-opt {
+    transition: opacity 0.15s ease, color 0.15s ease;
+  }
+  .tap-key.pending .letter-opt {
+    opacity: 0.35;
+  }
+  .tap-key.pending .letter-opt.active-letter {
+    opacity: 1;
+    color: #ffd27e;
+  }
+  .backspace-key { font-size: 1.3rem; }
 
   #word {
     font-size: 2.4rem;
@@ -137,34 +159,33 @@
   }
   .hang-tile {
     width: clamp(28px, 8.5vw, 42px);
-    height: clamp(38px, 11vw, 54px);
+    height: clamp(46px, 13vw, 64px);
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 2px;
     font-size: clamp(1.1rem, 4vw, 1.7rem);
     font-weight: 700;
     border-bottom: 3px solid #4f4f70;
   }
   .hang-tile.blank { border-bottom-color: #7ea0ff; }
+  .hang-tile.active {
+    border: 2px solid #7ea0ff;
+    border-bottom-width: 3px;
+    border-radius: 6px;
+    background: rgba(126, 160, 255, 0.12);
+  }
+  .hang-letter { line-height: 1; }
+  .hang-letter.pending-letter { opacity: 0.55; font-style: italic; }
+  .hang-pressnum {
+    font-size: 0.6rem;
+    font-weight: 600;
+    color: #8a8aa8;
+    line-height: 1;
+  }
 
-  #hang-form {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    margin-bottom: 8px;
-  }
-  #hang-input {
-    font-size: 1.1rem;
-    padding: 10px 14px;
-    border-radius: 8px;
-    border: 2px solid #3a3a55;
-    background: #1f1f33;
-    color: #f2f2f2;
-    text-transform: uppercase;
-    width: 9ch;
-    text-align: center;
-  }
-  #hang-input:disabled { opacity: 0.6; }
+  #keypad { margin-bottom: 8px; }
   #hang-give-up { background: #3a3a55; margin-top: 10px; }
   #hang-give-up:hover:not(:disabled) { background: #4a4a6a; }
   #hang-next { margin-top: 10px; }
@@ -240,21 +261,6 @@
     </p>
   </details>
 
-  <div id="keypad">
-    <div class="key blank"></div>
-    <div class="key">ABC</div>
-    <div class="key">DEF</div>
-    <div class="key">GHI</div>
-    <div class="key">JKL</div>
-    <div class="key">MNO</div>
-    <div class="key">PQRS</div>
-    <div class="key">TUV</div>
-    <div class="key">WXYZ</div>
-    <div class="key blank"></div>
-    <div class="key blank"></div>
-    <div class="key blank"></div>
-  </div>
-
   <div id="yesno-mode" hidden>
     <div id="word"></div>
 
@@ -277,16 +283,27 @@
   <div id="hangman-mode">
     <p class="subtitle">
       Find every real word that fits the blanks and makes the digits
-      sequential — there may be more than one.
+      sequential — there may be more than one. Tap a key repeatedly to
+      cycle its letters, same as an old T9 phone.
     </p>
 
     <div id="hang-difficulty"></div>
     <div id="hang-tiles" class="hang-tiles"></div>
 
-    <form id="hang-form">
-      <input id="hang-input" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" />
-      <button id="hang-submit" type="submit">Guess</button>
-    </form>
+    <div id="keypad">
+      <button type="button" class="key tap-key" data-letters="abc"><span class="letter-opt">A</span><span class="letter-opt">B</span><span class="letter-opt">C</span></button>
+      <button type="button" class="key tap-key" data-letters="def"><span class="letter-opt">D</span><span class="letter-opt">E</span><span class="letter-opt">F</span></button>
+      <button type="button" id="tap-backspace" class="key tap-key backspace-key" aria-label="Backspace">⌫</button>
+      <button type="button" class="key tap-key" data-letters="ghi"><span class="letter-opt">G</span><span class="letter-opt">H</span><span class="letter-opt">I</span></button>
+      <button type="button" class="key tap-key" data-letters="jkl"><span class="letter-opt">J</span><span class="letter-opt">K</span><span class="letter-opt">L</span></button>
+      <button type="button" class="key tap-key" data-letters="mno"><span class="letter-opt">M</span><span class="letter-opt">N</span><span class="letter-opt">O</span></button>
+      <button type="button" class="key tap-key" data-letters="pqrs"><span class="letter-opt">P</span><span class="letter-opt">Q</span><span class="letter-opt">R</span><span class="letter-opt">S</span></button>
+      <button type="button" class="key tap-key" data-letters="tuv"><span class="letter-opt">T</span><span class="letter-opt">U</span><span class="letter-opt">V</span></button>
+      <button type="button" class="key tap-key" data-letters="wxyz"><span class="letter-opt">W</span><span class="letter-opt">X</span><span class="letter-opt">Y</span><span class="letter-opt">Z</span></button>
+      <div class="key blank"></div>
+      <div class="key blank"></div>
+      <div class="key blank"></div>
+    </div>
 
     <div id="hang-counter">0 / 0 found</div>
     <div id="hang-found-list"></div>
@@ -306,8 +323,8 @@
     <button id="mode-toggle"></button>
   </div>
 
-  <script src="js/t9-logic.js?v=23"></script>
-  <script src="js/words.js?v=23"></script>
-  <script src="js/app.js?v=23"></script>
+  <script src="js/t9-logic.js?v=24"></script>
+  <script src="js/words.js?v=24"></script>
+  <script src="js/app.js?v=24"></script>
 </body>
 </html>
