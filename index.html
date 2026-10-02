@@ -31,18 +31,19 @@
   summary { cursor: pointer; color: #a0a0c0; }
   details p { line-height: 1.5; }
 
-  #keypad {
+  .keypad-grid {
     display: grid;
     grid-template-columns: repeat(3, 64px);
     grid-auto-rows: 64px;
     gap: 10px;
     justify-content: center;
-    margin: 0 0 28px;
+    margin: 0 0 8px;
   }
   .key {
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 4px;
     background: linear-gradient(180deg, #34345198, #262640);
     border-radius: 12px;
     font-size: 0.95rem;
@@ -50,6 +51,22 @@
     letter-spacing: 0.04em;
     color: #e4e4f5;
     box-shadow: 0 2px 0 rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+  .key-letter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1;
+  }
+  .key-letter-num {
+    font-size: 0.5rem;
+    font-weight: 600;
+    color: #8a8aa8;
+    margin-top: 2px;
+  }
+  .key.blank {
+    background: #1f1f33;
+    box-shadow: none;
   }
   .tap-key {
     border: none;
@@ -75,10 +92,26 @@
   .backspace-key { font-size: 1.3rem; }
 
   #word {
+    display: flex;
+    justify-content: center;
+    gap: 0.15em;
+    margin: 8px 0 20px;
+  }
+  .word-letter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1;
+  }
+  .word-letter-text {
     font-size: 2.4rem;
-    letter-spacing: 0.15em;
     font-weight: 700;
-    margin: 8px 0 28px;
+  }
+  .word-letter-num {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #8a8aa8;
+    margin-top: 4px;
   }
 
   #guess-row { display: flex; gap: 12px; margin-bottom: 8px; }
@@ -185,7 +218,6 @@
     line-height: 1;
   }
 
-  #keypad { margin-bottom: 8px; }
   #hang-give-up { background: #3a3a55; margin-top: 10px; }
   #hang-give-up:hover:not(:disabled) { background: #4a4a6a; }
   #hang-next { margin-top: 10px; }
@@ -264,6 +296,18 @@
   <div id="yesno-mode" hidden>
     <div id="word"></div>
 
+    <div class="keypad-grid">
+      <div class="key"><span class="key-letter"><span>A</span><span class="key-letter-num">1</span></span><span class="key-letter"><span>B</span><span class="key-letter-num">2</span></span><span class="key-letter"><span>C</span><span class="key-letter-num">3</span></span></div>
+      <div class="key"><span class="key-letter"><span>D</span><span class="key-letter-num">1</span></span><span class="key-letter"><span>E</span><span class="key-letter-num">2</span></span><span class="key-letter"><span>F</span><span class="key-letter-num">3</span></span></div>
+      <div class="key blank"></div>
+      <div class="key"><span class="key-letter"><span>G</span><span class="key-letter-num">1</span></span><span class="key-letter"><span>H</span><span class="key-letter-num">2</span></span><span class="key-letter"><span>I</span><span class="key-letter-num">3</span></span></div>
+      <div class="key"><span class="key-letter"><span>J</span><span class="key-letter-num">1</span></span><span class="key-letter"><span>K</span><span class="key-letter-num">2</span></span><span class="key-letter"><span>L</span><span class="key-letter-num">3</span></span></div>
+      <div class="key"><span class="key-letter"><span>M</span><span class="key-letter-num">1</span></span><span class="key-letter"><span>N</span><span class="key-letter-num">2</span></span><span class="key-letter"><span>O</span><span class="key-letter-num">3</span></span></div>
+      <div class="key"><span class="key-letter"><span>P</span><span class="key-letter-num">1</span></span><span class="key-letter"><span>Q</span><span class="key-letter-num">2</span></span><span class="key-letter"><span>R</span><span class="key-letter-num">3</span></span><span class="key-letter"><span>S</span><span class="key-letter-num">4</span></span></div>
+      <div class="key"><span class="key-letter"><span>T</span><span class="key-letter-num">1</span></span><span class="key-letter"><span>U</span><span class="key-letter-num">2</span></span><span class="key-letter"><span>V</span><span class="key-letter-num">3</span></span></div>
+      <div class="key"><span class="key-letter"><span>W</span><span class="key-letter-num">1</span></span><span class="key-letter"><span>X</span><span class="key-letter-num">2</span></span><span class="key-letter"><span>Y</span><span class="key-letter-num">3</span></span><span class="key-letter"><span>Z</span><span class="key-letter-num">4</span></span></div>
+    </div>
+
     <div id="guess-row">
       <button id="guess-good">✅ Good</button>
       <button id="guess-bad">❌ Not good</button>
@@ -290,7 +334,7 @@
     <div id="hang-difficulty"></div>
     <div id="hang-tiles" class="hang-tiles"></div>
 
-    <div id="keypad">
+    <div id="keypad" class="keypad-grid">
       <button type="button" class="key tap-key" data-letters="abc"><span class="letter-opt">A</span><span class="letter-opt">B</span><span class="letter-opt">C</span></button>
       <button type="button" class="key tap-key" data-letters="def"><span class="letter-opt">D</span><span class="letter-opt">E</span><span class="letter-opt">F</span></button>
       <button type="button" id="tap-backspace" class="key tap-key backspace-key" aria-label="Backspace">⌫</button>
@@ -320,8 +364,8 @@
     <button id="mode-toggle"></button>
   </div>
 
-  <script src="js/t9-logic.js?v=30"></script>
-  <script src="js/words.js?v=30"></script>
-  <script src="js/app.js?v=30"></script>
+  <script src="js/t9-logic.js?v=31"></script>
+  <script src="js/words.js?v=31"></script>
+  <script src="js/app.js?v=31"></script>
 </body>
 </html>

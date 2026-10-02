@@ -48,24 +48,38 @@
     return notes.join(", ");
   }
 
-  // Colors a word's letters by merged group. In tile mode, each letter is
-  // rendered as its own box (matching the hangman blank tiles); otherwise
-  // as plain inline spans (matching the big yes/no word display).
-  function renderColoredWord(container, word, grouping, tileMode) {
+  // Renders a word as one column per letter (its letter, with its
+  // press-count digit small and gray underneath), for the practice-mode
+  // word display. With a grouping, each letter is colored by merged group
+  // (matching the colored digit-line breakdown); without one (the
+  // not-yet-answered or "not good" case), letters show in the default
+  // color and only the digits are didactic.
+  function renderWordDigits(container, word, grouping) {
     container.innerHTML = "";
     word.split("").forEach((letter, i) => {
-      const color = GROUP_COLORS[groupIndexForLetter(grouping, i) % GROUP_COLORS.length];
-      const el = document.createElement(tileMode ? "div" : "span");
-      if (tileMode) el.className = "hang-tile revealed";
-      el.textContent = letter.toUpperCase();
-      el.style.color = color;
-      if (tileMode) el.style.borderBottomColor = color;
-      container.appendChild(el);
+      const wrap = document.createElement("span");
+      wrap.className = "word-letter";
+
+      const letterSpan = document.createElement("span");
+      letterSpan.className = "word-letter-text";
+      letterSpan.textContent = letter.toUpperCase();
+      if (grouping) {
+        letterSpan.style.color =
+          GROUP_COLORS[groupIndexForLetter(grouping, i) % GROUP_COLORS.length];
+      }
+      wrap.appendChild(letterSpan);
+
+      const numSpan = document.createElement("span");
+      numSpan.className = "word-letter-num";
+      numSpan.textContent = String(PRESS_COUNTS[letter]);
+      wrap.appendChild(numSpan);
+
+      container.appendChild(wrap);
     });
   }
 
   // Lays out a word's digits by merged group, e.g. SPENT -> 4 1 2 (2 1),
-  // colored to match renderColoredWord's letter colors.
+  // colored to match renderWordDigits's letter colors.
   // Walks the digits left to right (not grouping.groups in whatever order
   // they were built) so a group that wraps around the ends of the word —
   // e.g. hindu's first and last digits merging into one group — renders as
@@ -141,7 +155,7 @@
 
       currentWord = pickWord();
       currentDigits = wordToDigits(currentWord);
-      wordEl.textContent = currentWord.toUpperCase();
+      renderWordDigits(wordEl, currentWord, null);
     }
 
     function submitGuess(guessGood) {
@@ -171,7 +185,7 @@
       if (actuallyGood) {
         const notes = groupingNotes(grouping);
         explanationEl.textContent = "GOOD" + (notes ? " — " + notes : "");
-        renderColoredWord(wordEl, currentWord, grouping, false);
+        renderWordDigits(wordEl, currentWord, grouping);
         renderDigitLine(solutionEl, currentDigits, grouping);
       } else {
         explanationEl.textContent =
