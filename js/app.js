@@ -93,7 +93,7 @@
   }
 
   // ---------------------------------------------------------------------
-  // Yes/No quiz mode
+  // Practice mode (yes/no quiz)
   // ---------------------------------------------------------------------
   (() => {
     const wordEl = document.getElementById("word");
@@ -435,13 +435,13 @@
   const hangmanSection = document.getElementById("hangman-mode");
   const modeToggleBtn = document.getElementById("mode-toggle");
 
-  let mode = "yesno";
+  let mode = "hangman";
 
   function renderModeToggle() {
     modeToggleBtn.textContent =
       mode === "yesno"
-        ? "Mode: Yes/No Quiz  (switch to Hangman)"
-        : "Mode: Hangman  (switch to Yes/No Quiz)";
+        ? "Mode: Practice  (switch to Hangman)"
+        : "Mode: Hangman  (switch to Practice)";
   }
 
   function setMode(newMode) {
@@ -456,5 +456,5 @@
     setMode(mode === "yesno" ? "hangman" : "yesno");
   });
 
-  renderModeToggle();
+  setMode(mode);
 })();

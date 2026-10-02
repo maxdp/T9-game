@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>T9 Word Game</title>
+<title>T9 Tangle</title>
 <style>
   :root { color-scheme: light dark; }
   * { box-sizing: border-box; }
@@ -222,7 +222,7 @@
 </style>
 </head>
 <body>
-  <h1>T9 Word Game</h1>
+  <h1>T9 Tangle</h1>
   <p class="subtitle">Add up neighboring digits until they read 1, 2, 3, 4… in order (wrapping around counts too).</p>
 
   <details>
@@ -255,7 +255,7 @@
     <div class="key blank"></div>
   </div>
 
-  <div id="yesno-mode">
+  <div id="yesno-mode" hidden>
     <div id="word"></div>
 
     <div id="guess-row">
@@ -274,7 +274,7 @@
     </div>
   </div>
 
-  <div id="hangman-mode" hidden>
+  <div id="hangman-mode">
     <p class="subtitle">
       Find every real word that fits the blanks and makes the digits
       sequential — there may be more than one.
@@ -306,8 +306,8 @@
     <button id="mode-toggle"></button>
   </div>
 
-  <script src="js/t9-logic.js?v=20"></script>
-  <script src="js/words.js?v=20"></script>
-  <script src="js/app.js?v=20"></script>
+  <script src="js/t9-logic.js?v=21"></script>
+  <script src="js/words.js?v=21"></script>
+  <script src="js/app.js?v=21"></script>
 </body>
 </html>
