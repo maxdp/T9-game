@@ -205,7 +205,7 @@
     const attemptsEl = document.getElementById("hang-attempts");
 
     const MIN_VALID_ANSWERS = 3;
-    const MAX_VALID_ANSWERS = 10;
+    const MAX_VALID_ANSWERS = 8;
 
     let hiddenWord = "";
     let blanks = new Set();
