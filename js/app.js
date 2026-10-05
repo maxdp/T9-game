@@ -183,6 +183,22 @@
     renderExampleWord(container, word, grouping || findSequentialGrouping(wordToDigits(word)));
   });
 
+  // Colors the title's "Tangle" the same way as the TANGLE example above,
+  // letter-for-letter, while keeping the title's own capitalization.
+  (function colorTitle() {
+    const el = document.getElementById("title-tangle");
+    if (!el) return;
+    const displayText = el.textContent;
+    const grouping = findSequentialGrouping(wordToDigits(displayText));
+    el.innerHTML = "";
+    displayText.split("").forEach((ch, i) => {
+      const span = document.createElement("span");
+      span.textContent = ch;
+      span.style.color = GROUP_COLORS[groupIndexForLetter(grouping, i) % GROUP_COLORS.length];
+      el.appendChild(span);
+    });
+  })();
+
   // ---------------------------------------------------------------------
   // Practice mode (yes/no quiz)
   // ---------------------------------------------------------------------
