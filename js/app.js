@@ -586,7 +586,7 @@
       feedbackEl.textContent = "";
       feedbackEl.className = "";
       solutionEl.textContent = "";
-      solutionEl.classList.remove("reveal-list");
+      solutionEl.classList.remove("reveal-list", "word-row");
       nextBtn.hidden = true;
       giveUpBtn.hidden = false;
       setKeypadDisabled(false);
@@ -625,6 +625,7 @@
     // finding them all) rather than a per-word colored breakdown, since
     // there can be many of them.
     function revealAllAnswers() {
+      solutionEl.classList.remove("word-row");
       solutionEl.classList.add("reveal-list");
       solutionEl.textContent =
         "Valid answers: " + validAnswers.map((w) => w.toUpperCase()).join(", ");
@@ -648,6 +649,14 @@
       if (complete) return;
       const guess = assembleGuess();
       resetGuessInProgress();
+
+      // Clear the previous guess's response before deciding this one's, so
+      // e.g. an old success's colored word doesn't linger under a new
+      // guess that turns out wrong.
+      feedbackEl.textContent = "";
+      feedbackEl.className = "";
+      solutionEl.textContent = "";
+      solutionEl.classList.remove("reveal-list", "word-row");
 
       attempts++;
       attemptsEl.textContent = String(attempts);
@@ -674,10 +683,10 @@
       found.add(guess);
       updateCounter();
       renderFoundList();
-      feedbackEl.textContent = `✅ "${guess.toUpperCase()}" is good!`;
+      feedbackEl.textContent = "Nice!";
       feedbackEl.className = "right";
-      solutionEl.classList.remove("reveal-list");
-      renderDigitLine(solutionEl, wordToDigits(guess), grouping);
+      solutionEl.classList.add("word-row");
+      renderExampleWord(solutionEl, guess, grouping);
 
       if (found.size === validAnswers.length) {
         solvedCount++;
