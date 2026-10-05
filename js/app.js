@@ -107,6 +107,83 @@
   }
 
   // ---------------------------------------------------------------------
+  // Top-of-page rule examples
+  // ---------------------------------------------------------------------
+
+  // Like renderWordDigits, but a multi-letter group's digits get split
+  // parentheses around the first/last letter of each contiguous run it
+  // occupies — e.g. PUNTS's merged N+T shows "(2" / "1)" — the same
+  // convention a wraparound merge needs (two separate "(x)" pieces in
+  // their actual positions, per renderDigitLine) generalized to any
+  // group. Scoped to the examples so it doesn't change how Practice/
+  // Hangman already render their own (unparenthesized) per-letter digits.
+  function renderExampleWord(container, word, grouping) {
+    container.innerHTML = "";
+    const n = word.length;
+    const marks = Array.from({ length: n }, () => ({ open: false, close: false }));
+    let i = 0;
+    while (i < n) {
+      const gi = groupIndexForLetter(grouping, i);
+      let j = i;
+      while (j < n && groupIndexForLetter(grouping, j) === gi) j++;
+      if (grouping.groups[gi].indices.length > 1) {
+        marks[i].open = true;
+        marks[j - 1].close = true;
+      }
+      i = j;
+    }
+
+    word.split("").forEach((letter, idx) => {
+      const wrap = document.createElement("span");
+      wrap.className = "word-letter";
+
+      const letterSpan = document.createElement("span");
+      letterSpan.className = "word-letter-text";
+      letterSpan.textContent = letter.toUpperCase();
+      letterSpan.style.color =
+        GROUP_COLORS[groupIndexForLetter(grouping, idx) % GROUP_COLORS.length];
+      wrap.appendChild(letterSpan);
+
+      const numSpan = document.createElement("span");
+      numSpan.className = "word-letter-num";
+      let numText = String(PRESS_COUNTS[letter]);
+      if (marks[idx].open) numText = "(" + numText;
+      if (marks[idx].close) numText = numText + ")";
+      numSpan.textContent = numText;
+      wrap.appendChild(numSpan);
+
+      container.appendChild(wrap);
+    });
+  }
+
+  // PUNTS's own findSequentialGrouping result merges P+U (1+2=3) instead
+  // of N+T — just as valid, but it wouldn't match the "2+1=3" explanation
+  // text, so that grouping is specified directly rather than computed.
+  const PUNTS_GROUPING = {
+    groups: [
+      { indices: [0], sum: 1 },
+      { indices: [1], sum: 2 },
+      { indices: [2, 3], sum: 3 },
+      { indices: [4], sum: 4 },
+    ],
+    sums: [1, 2, 3, 4],
+    direction: "increasing",
+    wrapped: false,
+  };
+
+  [
+    { id: "ex-purs", word: "purs" },
+    { id: "ex-spur", word: "spur" },
+    { id: "ex-punts", word: "punts", grouping: PUNTS_GROUPING },
+    { id: "ex-soup", word: "soup" },
+    { id: "ex-tangle", word: "tangle" },
+  ].forEach(({ id, word, grouping }) => {
+    const container = document.getElementById(id);
+    if (!container) return;
+    renderExampleWord(container, word, grouping || findSequentialGrouping(wordToDigits(word)));
+  });
+
+  // ---------------------------------------------------------------------
   // Practice mode (yes/no quiz)
   // ---------------------------------------------------------------------
   (() => {

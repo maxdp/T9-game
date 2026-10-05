@@ -22,14 +22,35 @@
   h1 { margin-bottom: 4px; }
   p.subtitle { margin-top: 0; color: #a0a0c0; max-width: 480px; }
 
-  details {
-    max-width: 520px;
-    margin: 12px 0 24px;
-    color: #c8c8e0;
+  #examples {
+    max-width: 480px;
+    margin: 16px 0 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .example-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
     text-align: left;
   }
-  summary { cursor: pointer; color: #a0a0c0; }
-  details p { line-height: 1.5; }
+  .example-word {
+    display: flex;
+    flex-shrink: 0;
+    gap: 0.12em;
+  }
+  .example-word .word-letter-text { font-size: 1.6rem; }
+  .example-word .word-letter-num { font-size: 0.6rem; margin-top: 2px; }
+  .example-text {
+    margin: 0;
+    color: #c8c8e0;
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+  @media (max-width: 480px) {
+    .example-row { flex-direction: column; align-items: flex-start; gap: 6px; }
+  }
 
   .keypad-grid {
     display: grid;
@@ -286,20 +307,28 @@
   <h1>T9 Tangle</h1>
   <p class="subtitle">Add up neighboring digits until they read 1, 2, 3, 4… in order (wrapping around counts too).</p>
 
-  <details>
-    <summary>How it works</summary>
-    <p>
-      Every letter has a T9 press-count — how many times you'd tap its key on an old phone keypad
-      (A=1, B=2, C=3, D=1, E=2, F=3, …). A word is <b>good</b> if you can merge some of its
-      neighboring digits (by adding them together) so the sequence counts up (1, 2, 3, 4, …) or
-      counts down (…, 4, 3, 2, 1) with no gaps or repeats, reaching <b>at least 1, 2, 3, 4</b> —
-      counting only up to 1, 2, 3 isn't enough. The count is also allowed to wrap around —
-      e.g. 4, 1, 2, 3 counts (1, 2, 3, 4 starting partway through), and so does 3, 2, 1, 4
-      (4, 3, 2, 1 starting partway through). Merging itself can wrap around too: the first
-      and last letters count as neighbors, so HINDU (2, 3, 2, 1, 2) is good — the first and
-      last 2's merge into 4, giving 3, 2, 1, 4.
-    </p>
-  </details>
+  <div id="examples">
+    <div class="example-row">
+      <div class="example-word" id="ex-purs"></div>
+      <p class="example-text">Each letter has a value based on the T9 keyboard used on flip phones. The goal is to find words that make a number sequence like 1 2 3 4</p>
+    </div>
+    <div class="example-row">
+      <div class="example-word" id="ex-spur"></div>
+      <p class="example-text">The sequence can wrap around</p>
+    </div>
+    <div class="example-row">
+      <div class="example-word" id="ex-punts"></div>
+      <p class="example-text">Numbers can add together such as 2+1=3</p>
+    </div>
+    <div class="example-row">
+      <div class="example-word" id="ex-soup"></div>
+      <p class="example-text">Backwards sequences are allowed</p>
+    </div>
+    <div class="example-row">
+      <div class="example-word" id="ex-tangle"></div>
+      <p class="example-text">Combine these rules and get creative!</p>
+    </div>
+  </div>
 
   <div id="yesno-mode" hidden>
     <div id="word"></div>
@@ -374,8 +403,8 @@
     <button id="mode-toggle"></button>
   </div>
 
-  <script src="js/t9-logic.js?v=32"></script>
-  <script src="js/words.js?v=32"></script>
-  <script src="js/app.js?v=32"></script>
+  <script src="js/t9-logic.js?v=33"></script>
+  <script src="js/words.js?v=33"></script>
+  <script src="js/app.js?v=33"></script>
 </body>
 </html>
