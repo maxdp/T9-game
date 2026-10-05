@@ -176,15 +176,15 @@
     { id: "ex-spur", word: "spur" },
     { id: "ex-punts", word: "punts", grouping: PUNTS_GROUPING },
     { id: "ex-soup", word: "soup" },
-    { id: "ex-tangle", word: "tangle" },
+    { id: "ex-whiskies", word: "whiskies" },
   ].forEach(({ id, word, grouping }) => {
     const container = document.getElementById(id);
     if (!container) return;
     renderExampleWord(container, word, grouping || findSequentialGrouping(wordToDigits(word)));
   });
 
-  // Colors the title's "Tangle" the same way as the TANGLE example above,
-  // letter-for-letter, while keeping the title's own capitalization.
+  // Colors the title's "TANGLE" letter-for-letter by its own merge
+  // grouping, the same convention the examples above use.
   (function colorTitle() {
     const el = document.getElementById("title-tangle");
     if (!el) return;
