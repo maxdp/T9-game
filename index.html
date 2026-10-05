@@ -90,6 +90,14 @@
     color: #ffd27e;
   }
   .backspace-key { font-size: 1.3rem; }
+  .enter-key {
+    grid-column: 1 / -1;
+    background: #4f6df5;
+    color: white;
+    font-size: 1.05rem;
+    letter-spacing: 0.02em;
+  }
+  .enter-key:hover:not(:disabled) { background: #3a54d6; }
 
   #word {
     display: flex;
@@ -202,7 +210,7 @@
     font-weight: 700;
     border-bottom: 3px solid #4f4f70;
   }
-  .hang-tile.blank { border-bottom-color: #7ea0ff; }
+  .hang-tile.blank { border-bottom-color: #7ea0ff; cursor: pointer; }
   .hang-tile.active {
     border: 2px solid #7ea0ff;
     border-bottom-width: 3px;
@@ -328,7 +336,8 @@
     <p class="subtitle">
       Find every real word that fits the blanks and makes the digits
       sequential — there may be more than one. Tap a key repeatedly to
-      cycle its letters, same as an old T9 phone.
+      cycle its letters, same as an old T9 phone, or tap a blank to jump
+      to it. Tap Enter to submit your guess.
     </p>
 
     <div id="hang-difficulty"></div>
@@ -344,6 +353,7 @@
       <button type="button" class="key tap-key" data-letters="pqrs"><span class="letter-opt">P</span><span class="letter-opt">Q</span><span class="letter-opt">R</span><span class="letter-opt">S</span></button>
       <button type="button" class="key tap-key" data-letters="tuv"><span class="letter-opt">T</span><span class="letter-opt">U</span><span class="letter-opt">V</span></button>
       <button type="button" class="key tap-key" data-letters="wxyz"><span class="letter-opt">W</span><span class="letter-opt">X</span><span class="letter-opt">Y</span><span class="letter-opt">Z</span></button>
+      <button type="button" id="hang-enter" class="key tap-key enter-key">Enter</button>
     </div>
 
     <div id="hang-counter">0 / 0 found</div>
@@ -364,8 +374,8 @@
     <button id="mode-toggle"></button>
   </div>
 
-  <script src="js/t9-logic.js?v=31"></script>
-  <script src="js/words.js?v=31"></script>
-  <script src="js/app.js?v=31"></script>
+  <script src="js/t9-logic.js?v=32"></script>
+  <script src="js/words.js?v=32"></script>
+  <script src="js/app.js?v=32"></script>
 </body>
 </html>

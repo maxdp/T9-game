@@ -207,6 +207,7 @@
     const tilesEl = document.getElementById("hang-tiles");
     const tapKeypadEl = document.getElementById("keypad");
     const backspaceBtn = document.getElementById("tap-backspace");
+    const enterBtn = document.getElementById("hang-enter");
     const giveUpBtn = document.getElementById("hang-give-up");
     const feedbackEl = document.getElementById("hang-feedback");
     const solutionEl = document.getElementById("hang-solution");
@@ -230,13 +231,20 @@
     const seen = new Set();
     let started = false;
 
-    // Tap-input state: which blank (in left-to-right order) is next to
-    // fill, what's been filled so far, and the in-progress multi-tap cycle
-    // (which key is held and how many times it's been tapped) on the key
-    // that hasn't committed a letter yet.
+    // Tap-input state: every blank position in the puzzle, which one (if
+    // any) is active, what's been filled so far, and the in-progress
+    // multi-tap cycle (which key is held and how many times it's been
+    // tapped) on the key that hasn't committed a letter yet. activeTarget
+    // is a word-position index (not an index into activeBlankPositions),
+    // since tapping a blank directly can jump it anywhere; it's null once
+    // every blank is filled and nothing new has been tapped. fillHistory
+    // is a stack of filled positions in commit order, so backspace always
+    // undoes whatever was typed most recently, even if blanks were filled
+    // out of left-to-right order.
     let activeBlankPositions = [];
     let filledMap = new Map();
-    let activePos = 0;
+    let fillHistory = [];
+    let activeTarget = null;
     let pendingKey = null;
     let pendingCount = 0;
     let pendingTimer = null;
@@ -282,12 +290,14 @@
     // digit underneath it, and boxes whichever blank is next to fill.
     function renderTiles() {
       tilesEl.innerHTML = "";
-      const activeTarget = activeBlankPositions[activePos];
       hiddenWord.split("").forEach((letter, i) => {
         const tile = document.createElement("div");
         tile.className = "hang-tile";
         const isBlank = blanks.has(i);
-        if (isBlank) tile.classList.add("blank");
+        if (isBlank) {
+          tile.classList.add("blank");
+          tile.addEventListener("click", () => handleTileClick(i));
+        }
         if (i === activeTarget) tile.classList.add("active");
 
         let shown = null;
@@ -355,36 +365,49 @@
       });
     }
 
-    // Commits whichever letter the pending key's cycle is currently on into
-    // the active blank (called after a 1s pause or when a different key is
-    // tapped), then advances to the next blank — or, if that was the last
-    // one, submits the assembled word as a guess.
+    // The blank to land on after filling `pos`: the next still-empty blank
+    // to its right, or — if there is none — the leftmost still-empty
+    // blank (wrapping around), or null if every blank is now filled.
+    function nextTargetAfter(pos) {
+      const idx = activeBlankPositions.indexOf(pos);
+      for (let i = idx + 1; i < activeBlankPositions.length; i++) {
+        if (!filledMap.has(activeBlankPositions[i])) return activeBlankPositions[i];
+      }
+      for (let i = 0; i < activeBlankPositions.length; i++) {
+        if (!filledMap.has(activeBlankPositions[i])) return activeBlankPositions[i];
+      }
+      return null;
+    }
+
+    // Commits whichever letter the pending key's cycle is currently on
+    // into the active blank (called after a 1s pause, when a different
+    // key is tapped, or when the player taps a different blank or Enter),
+    // then advances to the next blank per nextTargetAfter. Submission is
+    // no longer automatic — the player taps Enter when ready.
     function commitPending() {
       clearPendingTimer();
-      if (!pendingKey || complete) {
+      if (!pendingKey || complete || activeTarget === null) {
         pendingKey = null;
         pendingCount = 0;
         return;
       }
       const letter = groupLetterAt(pendingKey, pendingCount);
-      const pos = activeBlankPositions[activePos];
+      const pos = activeTarget;
       filledMap.set(pos, letter);
+      fillHistory.push(pos);
       pendingKey = null;
       pendingCount = 0;
-      activePos++;
+      activeTarget = nextTargetAfter(pos);
       render();
-      if (activePos === activeBlankPositions.length) {
-        submitGuess();
-      }
     }
 
     function handleKeyClick(group) {
-      if (complete || activePos >= activeBlankPositions.length) return;
+      if (complete || activeTarget === null) return;
 
       if (pendingKey && pendingKey !== group) {
         commitPending();
       }
-      if (complete || activePos >= activeBlankPositions.length) return;
+      if (complete || activeTarget === null) return;
 
       pendingCount = pendingKey === group ? pendingCount + 1 : 1;
       pendingKey = group;
@@ -393,6 +416,19 @@
       pendingTimer = setTimeout(commitPending, 1000);
     }
 
+    // Jumping to a blank commits whatever was mid-cycle first (same as
+    // switching to a different letter key), so a tap elsewhere never
+    // silently drops an in-progress letter.
+    function handleTileClick(pos) {
+      if (complete || !blanks.has(pos)) return;
+      if (pendingKey) commitPending();
+      activeTarget = pos;
+      render();
+    }
+
+    // Always undoes whatever was filled most recently (by commit order,
+    // not position), so it stays correct even after jumping around with
+    // tile clicks.
     function handleBackspace() {
       if (complete) return;
       if (pendingKey) {
@@ -404,11 +440,25 @@
         render();
         return;
       }
-      if (activePos > 0) {
-        activePos--;
-        filledMap.delete(activeBlankPositions[activePos]);
-        render();
+      if (fillHistory.length === 0) return;
+      const pos = fillHistory.pop();
+      filledMap.delete(pos);
+      activeTarget = pos;
+      render();
+    }
+
+    function handleEnter() {
+      if (complete) return;
+      if (pendingKey) commitPending();
+      if (complete) return;
+
+      const allFilled = activeBlankPositions.every((pos) => filledMap.has(pos));
+      if (!allFilled) {
+        feedbackEl.textContent = `Fill in all ${activeBlankPositions.length} blanks first.`;
+        feedbackEl.className = "wrong";
+        return;
       }
+      submitGuess();
     }
 
     function assembleGuess() {
@@ -420,7 +470,8 @@
 
     function resetGuessInProgress() {
       filledMap = new Map();
-      activePos = 0;
+      fillHistory = [];
+      activeTarget = activeBlankPositions.length > 0 ? activeBlankPositions[0] : null;
       pendingKey = null;
       pendingCount = 0;
       clearPendingTimer();
@@ -558,6 +609,7 @@
       btn.addEventListener("click", () => handleKeyClick(btn.dataset.letters));
     });
     backspaceBtn.addEventListener("click", handleBackspace);
+    enterBtn.addEventListener("click", handleEnter);
     giveUpBtn.addEventListener("click", giveUp);
     nextBtn.addEventListener("click", newPuzzle);
 
