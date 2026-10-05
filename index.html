@@ -303,6 +303,18 @@
   #hang-solution.word-row .word-letter-num { font-size: 0.7rem; }
 
   #mode-switch { margin-top: 36px; }
+
+  /* Visible proof a deploy actually landed — bump this on every change
+     (see the versioning note in the git commit convention). */
+  #version-label {
+    position: fixed;
+    bottom: 6px;
+    right: 8px;
+    font-size: 0.7rem;
+    color: #45455f;
+    pointer-events: none;
+    user-select: none;
+  }
   #mode-toggle {
     background: #262640;
     color: #c8c8e0;
@@ -407,8 +419,10 @@
     <button id="mode-toggle"></button>
   </div>
 
-  <script src="js/t9-logic.js?v=38"></script>
-  <script src="js/words.js?v=38"></script>
-  <script src="js/app.js?v=38"></script>
+  <div id="version-label">v0.1</div>
+
+  <script src="js/t9-logic.js?v=39"></script>
+  <script src="js/words.js?v=39"></script>
+  <script src="js/app.js?v=39"></script>
 </body>
 </html>
