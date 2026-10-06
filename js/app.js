@@ -28,13 +28,17 @@
   //
   // Summing gives 3-9 points, classified 3-5 Easy / 6-7 Medium / 8-9 Hard.
   // Left on its own this skews heavily towards Medium (random word+blank
-  // combdraws land there about half the time, Hard well under a fifth —
+  // draws land there about half the time, Hard well under a fifth —
   // confirmed by simulating 50,000 draws), so newPuzzle() doesn't just
   // draw randomly: it picks a target label first and retries until a
   // drawn puzzle actually lands on it, which a second simulation (of that
   // exact retry loop, 20,000 runs) confirmed yields Easy/Medium/Hard in
-  // close to equal thirds (33/34/33%) at a trivial retry cost (worst case
-  // seen: 252 tries, far under the cap below).
+  // close to equal thirds (33.6/33.0/33.4%) at a trivial retry cost (worst
+  // case seen: 217 tries, far under the cap below). Re-verified against
+  // the enlarged (1,908-word) WORDS_GOOD pool from the en_full.txt/100k-
+  // cutoff rebuild — the balance held (32.8/49.4/17.7% raw, 33.6/33.0/
+  // 33.4% after retry, worst case 217) without needing to touch the point
+  // thresholds below.
   const RARITY_QUARTILES = (() => {
     const sortedRanks = [...WORDS_GOOD_RANK].sort((a, b) => a - b);
     const n = sortedRanks.length;
