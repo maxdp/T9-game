@@ -221,7 +221,7 @@
     { id: "ex-this", word: "this" },
     { id: "ex-spur", word: "spur" },
     { id: "ex-punts", word: "punts", grouping: PUNTS_GROUPING },
-    { id: "ex-soup", word: "soup" },
+    { id: "ex-song", word: "song" },
     { id: "ex-whiskies", word: "whiskies" },
   ].forEach(({ id, word, grouping }) => {
     const container = document.getElementById(id);
