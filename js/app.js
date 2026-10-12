@@ -218,7 +218,7 @@
   };
 
   [
-    { id: "ex-purs", word: "purs" },
+    { id: "ex-this", word: "this" },
     { id: "ex-spur", word: "spur" },
     { id: "ex-punts", word: "punts", grouping: PUNTS_GROUPING },
     { id: "ex-soup", word: "soup" },
