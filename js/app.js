@@ -369,6 +369,7 @@
     let solvedCount = 0;
     const seen = new Set();
     let started = false;
+    let isFirstPuzzle = true;
 
     // Tap-input state: every blank position in the puzzle, which one (if
     // any) is active, what's been filled so far, and the in-progress
@@ -645,11 +646,17 @@
       // on it (rather than just accepting whatever a random draw gives)
       // is what keeps Easy/Medium/Hard roughly equally likely despite the
       // natural skew toward Medium. Simulating this exact loop 20,000
-      // times found a worst case of 252 tries, so the cap below has very
+      // times found a worst case of 272 tries, so the cap below has very
       // generous headroom while still being in no danger of looping for
       // long even if it's ever hit.
-      const targetDifficulty =
-        DIFFICULTY_LABELS[Math.floor(Math.random() * DIFFICULTY_LABELS.length)];
+      // The very first puzzle a page load ever shows is always Easy
+      // (a gentler landing than a random label that could come up Hard),
+      // regardless of mode-switching — every puzzle after that goes back
+      // to picking a random target as usual.
+      const targetDifficulty = isFirstPuzzle
+        ? "Easy"
+        : DIFFICULTY_LABELS[Math.floor(Math.random() * DIFFICULTY_LABELS.length)];
+      isFirstPuzzle = false;
       let tries = 0;
       let difficulty;
       do {
