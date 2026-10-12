@@ -20,9 +20,9 @@
   //    quartiles by rank (cutoffs are the actual 25th/50th/75th percentile
   //    rank values of the current WORDS_GOOD pool, recomputed here rather
   //    than hardcoded so they stay correct whenever the word list
-  //    changes); the two most-common quartiles are worth 1 point, the
-  //    third 2, the rarest 3.
-  // 2. Number of blanks (2-6): 2 is worth 1 point, 3-4 worth 2, 5-6 worth 3.
+  //    changes); the bottom (most-common) quartile is worth 1 point, the
+  //    2nd 2, the 3rd and 4th (rarest half) 3.
+  // 2. Number of blanks (2-6): 2 is worth 1 point, 3 worth 2, 4-6 worth 3.
   // 3. Number of valid answers (3-8, the MIN/MAX_VALID_ANSWERS range
   //    below): 3-4 is worth 1 point, 5-6 worth 2, 7-8 worth 3.
   //
@@ -33,12 +33,12 @@
   // draw randomly: it picks a target label first and retries until a
   // drawn puzzle actually lands on it, which a second simulation (of that
   // exact retry loop, 20,000 runs) confirmed yields Easy/Medium/Hard in
-  // close to equal thirds (33.6/33.0/33.4%) at a trivial retry cost (worst
-  // case seen: 217 tries, far under the cap below). Re-verified against
-  // the enlarged (1,908-word) WORDS_GOOD pool from the en_full.txt/100k-
-  // cutoff rebuild — the balance held (32.8/49.4/17.7% raw, 33.6/33.0/
-  // 33.4% after retry, worst case 217) without needing to touch the point
-  // thresholds below.
+  // close to equal thirds. Re-verified against the current (1,908-word)
+  // WORDS_GOOD pool with both the rarity and blank-count point thresholds
+  // as they stand now: raw draws skew 17.9/55.2/26.9% Easy/Medium/Hard,
+  // but the target-and-retry loop still lands on 33.5/33.1/33.5% at a
+  // trivial retry cost (worst case seen: 272 tries, far under the cap
+  // below).
   const RARITY_QUARTILES = (() => {
     const sortedRanks = [...WORDS_GOOD_RANK].sort((a, b) => a - b);
     const n = sortedRanks.length;
@@ -48,13 +48,12 @@
 
   function rarityPoints(rarestRank) {
     if (rarestRank <= RARITY_QUARTILES.q1) return 1;
-    if (rarestRank <= RARITY_QUARTILES.q2) return 1;
-    if (rarestRank <= RARITY_QUARTILES.q3) return 2;
+    if (rarestRank <= RARITY_QUARTILES.q2) return 2;
     return 3;
   }
   function blankPoints(blankCount) {
     if (blankCount <= 2) return 1;
-    if (blankCount <= 4) return 2;
+    if (blankCount <= 3) return 2;
     return 3;
   }
   function answerPoints(answerCount) {
