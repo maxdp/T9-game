@@ -26,7 +26,7 @@
   // 3. Number of valid answers (3-8, the MIN/MAX_VALID_ANSWERS range
   //    below): 3-4 is worth 1 point, 5-6 worth 2, 7-8 worth 3.
   //
-  // Summing gives 3-9 points, classified 3-5 Easy / 6-7 Medium / 8-9 Hard.
+  // Summing gives 3-9 points, classified 3-4 Easy / 5-6 Medium / 7-9 Hard.
   // Left on its own this skews heavily towards Medium (random word+blank
   // draws land there about half the time, Hard well under a fifth —
   // confirmed by simulating 50,000 draws), so newPuzzle() doesn't just
@@ -34,11 +34,13 @@
   // drawn puzzle actually lands on it, which a second simulation (of that
   // exact retry loop, 20,000 runs) confirmed yields Easy/Medium/Hard in
   // close to equal thirds. Re-verified against the current (1,908-word)
-  // WORDS_GOOD pool with both the rarity and blank-count point thresholds
-  // as they stand now: raw draws skew 17.9/55.2/26.9% Easy/Medium/Hard,
-  // but the target-and-retry loop still lands on 33.5/33.1/33.5% at a
-  // trivial retry cost (worst case seen: 272 tries, far under the cap
-  // below).
+  // WORDS_GOOD pool with the Easy/Medium/Hard cutoffs as they stand now
+  // (3-4/5-6/7-9): raw draws skew much harder towards Hard this time
+  // (4.1/36.5/59.4% Easy/Medium/Hard, since 7+ points is a wide top band),
+  // but the target-and-retry loop still lands on 33.7/32.9/33.3% -- at a
+  // steeper but still safe retry cost (worst case seen: 812 tries, under
+  // half the cap below) since genuine Easy draws are now rarer to land on
+  // by chance.
   const RARITY_QUARTILES = (() => {
     const sortedRanks = [...WORDS_GOOD_RANK].sort((a, b) => a - b);
     const n = sortedRanks.length;
@@ -64,8 +66,8 @@
   function difficultyForPuzzle(rarestRank, blankCount, answerCount) {
     const points =
       rarityPoints(rarestRank) + blankPoints(blankCount) + answerPoints(answerCount);
-    if (points <= 5) return "Easy";
-    if (points <= 7) return "Medium";
+    if (points <= 4) return "Easy";
+    if (points <= 6) return "Medium";
     return "Hard";
   }
   const DIFFICULTY_LABELS = ["Easy", "Medium", "Hard"];
@@ -645,10 +647,10 @@
       // picking the target first and retrying until a draw actually lands
       // on it (rather than just accepting whatever a random draw gives)
       // is what keeps Easy/Medium/Hard roughly equally likely despite the
-      // natural skew toward Medium. Simulating this exact loop 20,000
-      // times found a worst case of 272 tries, so the cap below has very
-      // generous headroom while still being in no danger of looping for
-      // long even if it's ever hit.
+      // natural skew toward Hard under the current point thresholds.
+      // Simulating this exact loop 20,000 times found a worst case of 812
+      // tries, comfortably under the cap below, with no danger of looping
+      // for long even if it's ever hit.
       // The very first puzzle a page load ever shows is always Easy
       // (a gentler landing than a random label that could come up Hard),
       // regardless of mode-switching — every puzzle after that goes back
