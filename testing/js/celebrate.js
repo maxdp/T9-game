@@ -7,6 +7,8 @@
   // Start time (ms) of each buzz burst, and how long each lasts.
   const BURSTS = [0, 460, 920];
   const BURST_MS = 300;
+  // Every flying icon is drawn at this one size (px).
+  const ICON_SIZE = 72;
 
   // Each icon is a function of a per-copy id: copies fly at the same time
   // and are removed independently, so gradient ids must be unique per copy
@@ -50,8 +52,7 @@
       <g fill="none" stroke-width="7" opacity=".5"><circle cx="32" cy="32" r="21" stroke="#ff8ad1" stroke-dasharray="18 114"/><circle cx="32" cy="32" r="21" stroke="#ffe36e" stroke-dasharray="14 118" stroke-dashoffset="-18"/><circle cx="32" cy="32" r="21" stroke="#7fe0ff" stroke-dasharray="18 114" stroke-dashoffset="-32"/><circle cx="32" cy="32" r="21" stroke="#a6ff9e" stroke-dasharray="14 118" stroke-dashoffset="-50"/><circle cx="32" cy="32" r="21" stroke="#ff8ad1" stroke-dasharray="18 114" stroke-dashoffset="-66"/><circle cx="32" cy="32" r="21" stroke="#ffe36e" stroke-dasharray="14 118" stroke-dashoffset="-84"/><circle cx="32" cy="32" r="21" stroke="#7fe0ff" stroke-dasharray="18 114" stroke-dashoffset="-98"/><circle cx="32" cy="32" r="21" stroke="#a6ff9e" stroke-dasharray="14 118" stroke-dashoffset="-116"/></g>
       <circle cx="32" cy="32" r="11" fill="#f7f9fb" stroke="#b5bdc6" stroke-width="1"/>
       <circle cx="32" cy="32" r="7.5" fill="none" stroke="#cfd5db" stroke-width="1"/>
-      <circle cx="32" cy="32" r="4" fill="#1b1b2f"/>
-      <path d="M13 46 q3 -5 7 -1 t7 -2 t7 1" stroke="#2b2f8f" stroke-width="2" fill="none" stroke-linecap="round"/></svg>`,
+      <circle cx="32" cy="32" r="4" fill="#1b1b2f"/></svg>`,
     // :-) text bubble
     (u) => `<svg viewBox="0 0 64 64"><defs><linearGradient id="sb${u}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#dce4ff"/></linearGradient></defs>
       <path d="M8 10 h48 a5 5 0 0 1 5 5 v24 a5 5 0 0 1 -5 5 h-30 l-11 10 v-10 h-7 a5 5 0 0 1 -5 -5 v-24 a5 5 0 0 1 5 -5 z" fill="url(#sb${u})" stroke="#4f6df5" stroke-width="2.5" stroke-linejoin="round"/>
@@ -83,21 +84,29 @@
       <g fill="#241855"><polygon points="11,42.5 15,44.5 15,47 11,45"/><polygon points="16.5,45.25 20.5,47.25 20.5,49.75 16.5,47.75"/><polygon points="22,48 26,50 26,52.5 22,50.5"/><polygon points="27.5,50.75 31.5,52.75 31.5,55.25 27.5,53.25"/></g>
       <ellipse cx="45" cy="39" rx="2.4" ry="2.8" fill="#241855" transform="rotate(-25 45 39)"/>
       <ellipse cx="45" cy="39" rx="1" ry="1.2" fill="#8f7be8" transform="rotate(-25 45 39)"/></svg>`,
-    // wrapped chocolate roll
-    (u) => `<svg viewBox="0 0 64 64"><defs><linearGradient id="tr${u}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#94623f"/><stop offset=".45" stop-color="#5c3621"/><stop offset="1" stop-color="#3a1f0f"/></linearGradient></defs>
+    // wrapped chocolate roll: white twisted tips, red stripes, brown middle
+    (u) => `<svg viewBox="0 0 64 64"><defs><linearGradient id="tb${u}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7d4627"/><stop offset=".45" stop-color="#5a2e16"/><stop offset="1" stop-color="#3a1b0a"/></linearGradient><linearGradient id="tw${u}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#dcd7cc"/></linearGradient></defs>
       <g transform="rotate(-20 32 32)">
-      <path d="M14 32 L2 21 L6 26 L3 32 L6 38 L2 43 Z" fill="#f4efe2" stroke="#cfc6b0" stroke-width="1" stroke-linejoin="round"/>
-      <path d="M50 32 L62 21 L58 26 L61 32 L58 38 L62 43 Z" fill="#f4efe2" stroke="#cfc6b0" stroke-width="1" stroke-linejoin="round"/>
-      <rect x="11" y="24" width="42" height="16" rx="7" fill="#f8f4ea" stroke="#cfc6b0" stroke-width="1"/>
-      <rect x="15.5" y="24" width="3.2" height="16" fill="#d8323a"/><rect x="45.3" y="24" width="3.2" height="16" fill="#d8323a"/>
-      <rect x="19.5" y="24" width="1.6" height="16" fill="#2b4fb5"/><rect x="42.9" y="24" width="1.6" height="16" fill="#2b4fb5"/>
-      <rect x="22.5" y="25" width="19" height="14" rx="6" fill="url(#tr${u})"/>
-      <rect x="25" y="27" width="14" height="2.6" rx="1.3" fill="#c08c62" opacity=".7"/></g></svg>`,
-    // jawbreaker
-    (u) => `<svg viewBox="0 0 64 64"><defs><radialGradient id="jb${u}" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="#ffffff"/><stop offset=".35" stop-color="#fff0f8"/><stop offset="1" stop-color="#ffb3dc"/></radialGradient></defs>
-      <circle cx="32" cy="32" r="27" fill="url(#jb${u})" stroke="#e58bbd" stroke-width="1.5"/>
-      <g><circle cx="20" cy="30" r="3" fill="#ff5a5a"/><circle cx="31" cy="22" r="2.5" fill="#34a8ff"/><circle cx="42" cy="27" r="3.2" fill="#ffb020"/><circle cx="27" cy="40" r="2.8" fill="#4cd964"/><circle cx="38" cy="44" r="3" fill="#9b6bff"/><circle cx="47" cy="38" r="2.4" fill="#ff6ad5"/><circle cx="17" cy="42" r="2.2" fill="#ffe14d"/><circle cx="33" cy="33" r="2.6" fill="#ff6ad5"/><circle cx="24" cy="51" r="2.2" fill="#34a8ff"/><circle cx="44" cy="15" r="2" fill="#4cd964"/><circle cx="50" cy="26" r="1.8" fill="#ff5a5a"/><circle cx="36" cy="54" r="2" fill="#ffb020"/><circle cx="13" cy="33" r="1.6" fill="#9b6bff"/><circle cx="41" cy="35" r="1.6" fill="#4cd964"/><circle cx="29" cy="48" r="1.5" fill="#ff5a5a"/><circle cx="23" cy="20" r="1.7" fill="#ffe14d"/></g>
-      <ellipse cx="22" cy="18" rx="8" ry="4.5" fill="#fff" opacity=".75" transform="rotate(-30 22 18)"/></svg>`,
+      <path d="M13 32 L2 21 L6 26.5 L3 32 L6 37.5 L2 43 Z" fill="url(#tw${u})" stroke="#c4bdaf" stroke-width="1" stroke-linejoin="round"/>
+      <path d="M51 32 L62 21 L58 26.5 L61 32 L58 37.5 L62 43 Z" fill="url(#tw${u})" stroke="#c4bdaf" stroke-width="1" stroke-linejoin="round"/>
+      <g stroke="#c4bdaf" stroke-width=".8"><line x1="5" y1="26" x2="11" y2="31"/><line x1="5" y1="38" x2="11" y2="33"/><line x1="59" y1="26" x2="53" y2="31"/><line x1="59" y1="38" x2="53" y2="33"/></g>
+      <rect x="11" y="24" width="42" height="16" rx="6" fill="url(#tw${u})" stroke="#c4bdaf" stroke-width="1"/>
+      <rect x="21" y="24" width="22" height="16" fill="url(#tb${u})"/>
+      <g fill="#d61f26"><rect x="15" y="24" width="2.4" height="16"/><rect x="18.6" y="24" width="2.4" height="16"/><rect x="43" y="24" width="2.4" height="16"/><rect x="46.6" y="24" width="2.4" height="16"/></g>
+      <rect x="12" y="26" width="40" height="2.6" rx="1.3" fill="#fff" opacity=".3"/></g></svg>`,
+    // jawbreaker: white, shaded like a ball, with messy paint splotches
+    (u) => `<svg viewBox="0 0 64 64"><defs><radialGradient id="jw${u}" cx=".36" cy=".3" r=".78"><stop offset="0" stop-color="#ffffff"/><stop offset=".5" stop-color="#f4f2ec"/><stop offset=".82" stop-color="#d8d3c8"/><stop offset="1" stop-color="#aaa396"/></radialGradient><radialGradient id="jd${u}" cx=".36" cy=".3" r=".78"><stop offset=".55" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".32"/></radialGradient><clipPath id="jc${u}"><circle cx="32" cy="32" r="27"/></clipPath></defs>
+      <circle cx="32" cy="32" r="27" fill="url(#jw${u})"/>
+      <g clip-path="url(#jc${u})">
+      <path d="M13 24 C14 17 22 15 25 19 C28 22 26 27 22 28 C19 29 20 33 16 32 C12 31 12 28 13 24 Z" fill="#e8433f"/><circle cx="27.5" cy="15" r="1.2" fill="#e8433f"/><circle cx="10.5" cy="29" r=".9" fill="#e8433f"/>
+      <path d="M36 36 C39 32 47 33 48 38 C49 43 44 47 40 45 C37 44 34 46 33 42 C32 39 34 38 36 36 Z" fill="#2f86e8"/><circle cx="50.5" cy="44" r="1.1" fill="#2f86e8"/><circle cx="31" cy="47.5" r=".8" fill="#2f86e8"/>
+      <path d="M34 12 C38 9 44 11 43 15 C42 19 37 18 35 20 C32 22 29 18 30 15 C31 13 32 13 34 12 Z" fill="#f5c71a"/><circle cx="46" cy="10.5" r=".9" fill="#f5c71a"/>
+      <path d="M17 41 C20 38 26 40 26 44 C26 48 22 51 18 50 C15 49 13 46 14 44 C15 42 15 42 17 41 Z" fill="#3cbf5a"/><circle cx="28" cy="51" r="1" fill="#3cbf5a"/>
+      <path d="M51 22 C54 21 57 25 56 29 C55 32 52 31 51 28 C50 26 49 23 51 22 Z" fill="#9b5de5"/>
+      <circle cx="32" cy="32" r="27" fill="url(#jd${u})"/></g>
+      <circle cx="32" cy="32" r="27" fill="none" stroke="#9e978a" stroke-width="1"/>
+      <ellipse cx="22" cy="18" rx="7.5" ry="4" fill="#fff" opacity=".9" transform="rotate(-32 22 18)"/>
+      <circle cx="31" cy="12.5" r="1.4" fill="#fff" opacity=".8"/></svg>`,
   ];
 
   function buzzPhone(phone) {
@@ -137,7 +146,7 @@
       const el = document.createElement("div");
       el.className = "celebrate-flyer";
       el.innerHTML = deck[i]("c" + ++flyerCount);
-      const size = 51 + Math.random() * 39;
+      const size = ICON_SIZE;
       el.style.width = el.style.height = size + "px";
       el.style.top = 4 + Math.random() * 84 + "vh";
       const leftToRight = i % 2 === 0;

@@ -7,6 +7,7 @@
   // here at startup — deriving WORDS_BAD from it is just a set difference,
   // no rule-checking needed, so it stays cheap.
   const DICTIONARY_SET = new Set(DICTIONARY);
+  const INAPPROPRIATE_SET = new Set(window.T9_INAPPROPRIATE);
   const WORDS_GOOD_SET = new Set(WORDS_GOOD);
   const WORDS_BAD = DICTIONARY.filter((w) => !WORDS_GOOD_SET.has(w));
 
@@ -716,6 +717,11 @@
       attempts++;
       attemptsEl.textContent = String(attempts);
 
+      if (INAPPROPRIATE_SET.has(guess)) {
+        showScreenMessage("See me after class", "scold");
+        return;
+      }
+
       const grouping = DICTIONARY_SET.has(guess)
         ? findSequentialGrouping(wordToDigits(guess))
         : null;
@@ -759,7 +765,7 @@
     // play, the missed answers after giving up, or "Got 'em all!".
     function clearScreenMessage() {
       missedEl.textContent = "";
-      missedEl.classList.remove("incorrect", "success", "note");
+      missedEl.classList.remove("incorrect", "success", "note", "scold");
     }
 
     function showScreenMessage(text, kind) {
