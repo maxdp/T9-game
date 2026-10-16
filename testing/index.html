@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>T9 Tangle (testing)</title>
+<style>
+  :root { color-scheme: light dark; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: system-ui, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    background: #1b1b2f;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 24px 16px 48px;
+  }
+  h1 { margin-bottom: 4px; }
+  .title-t9 { color: #ffffff; font-style: italic; }
+  p.subtitle { margin-top: 0; color: #a0a0c0; max-width: 480px; }
+
+  #examples {
+    max-width: 480px;
+    margin: 16px auto 28px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 22px;
+    text-align: center;
+  }
+  .example-row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .example-word {
+    display: flex;
+    justify-content: center;
+    gap: 0.12em;
+  }
+  .example-word .word-letter-text { font-size: 1.6rem; }
+  .example-word .word-letter-num { font-size: 0.6rem; margin-top: 2px; }
+  .key-demo-row { display: flex; gap: 10px; justify-content: center; }
+  .key-demo-row .key { width: 64px; height: 64px; }
+  .key-letter.highlight > span:first-child { color: #8c5ce6; font-weight: 700; }
+  .example-text {
+    margin: 0;
+    max-width: 320px;
+    color: #c8c8e0;
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+
+  .keypad-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 64px);
+    grid-auto-rows: 64px;
+    gap: 10px;
+    justify-content: center;
+    margin: 0 0 8px;
+  }
+  .key {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    background: linear-gradient(180deg, #34345198, #262640);
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: #e4e4f5;
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+  .key-letter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1;
+  }
+  .key-letter-num {
+    font-size: 0.5rem;
+    font-weight: 600;
+    color: #8a8aa8;
+    margin-top: 2px;
+  }
+  .key.blank {
+    background: #1f1f33;
+    box-shadow: none;
+  }
+  .tap-key {
+    border: none;
+    padding: 0;
+    margin: 0;
+    font-family: inherit;
+    cursor: pointer;
+  }
+  .tap-key:disabled {
+    opacity: 0.35;
+    cursor: default;
+  }
+  .tap-key .letter-opt {
+    transition: opacity 0.15s ease, color 0.15s ease;
+  }
+  .tap-key.pending .letter-opt {
+    opacity: 0.35;
+  }
+  .tap-key.pending .letter-opt.active-letter {
+    opacity: 1;
+    color: #8c5ce6;
+  }
+  .backspace-key { font-size: 1.3rem; }
+  .enter-key {
+    grid-column: 1 / -1;
+    background: #4f6df5;
+    color: white;
+    font-size: 1.05rem;
+    letter-spacing: 0.02em;
+  }
+  .enter-key:hover:not(:disabled) { background: #3a54d6; }
+
+  #word {
+    display: flex;
+    justify-content: center;
+    gap: 0.15em;
+    margin: 8px 0 20px;
+  }
+  .word-letter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1;
+  }
+  .word-letter-text {
+    font-size: 2.4rem;
+    font-weight: 700;
+  }
+  .word-letter-num {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #8a8aa8;
+    margin-top: 4px;
+  }
+
+  #guess-row { display: flex; justify-content: center; gap: 12px; margin-bottom: 8px; }
+  button {
+    font-size: 1rem;
+    padding: 12px 22px;
+    border-radius: 8px;
+    border: none;
+    background: #4f6df5;
+    color: white;
+    /* Without this, iOS Safari treats rapid taps on the same button (the
+       multi-tap cycling the T9 keypad relies on) as a double-tap-to-zoom
+       gesture, which hijacks the input. */
+    touch-action: manipulation;
+    cursor: pointer;
+  }
+  button:hover:not(:disabled) { background: #3a54d6; }
+  button:disabled { opacity: 0.5; cursor: default; }
+  #guess-bad { background: #d1495b; }
+  #guess-bad:hover:not(:disabled) { background: #b13448; }
+  #next { background: #3a3a55; }
+  #next:hover { background: #4a4a6a; }
+
+  .result {
+    min-height: 1.6em;
+    font-size: 1.3rem;
+    margin-top: 16px;
+    font-weight: 700;
+  }
+  .result.right { color: #6ee0a0; }
+  .result.wrong { color: #ff8a8a; }
+
+  #explanation {
+    max-width: 480px;
+    min-height: 1.3em;
+    color: #c8c8e0;
+    margin-top: 6px;
+    font-size: 0.95rem;
+  }
+
+  #solution {
+    min-height: 1.8em;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    margin-top: 8px;
+  }
+
+  #stats {
+    margin-top: 28px;
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    color: #a0a0c0;
+    font-size: 0.9rem;
+  }
+  #stats b { color: #f2f2f2; font-size: 1.1rem; display: block; }
+
+  #hang-difficulty {
+    display: inline-block;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 999px;
+    margin-top: 4px;
+  }
+  #hang-difficulty.difficulty-easy { background: #1f3a2c; color: #6ee0a0; }
+  #hang-difficulty.difficulty-medium { background: #3a3620; color: #ffcf6e; }
+  #hang-difficulty.difficulty-hard { background: #3a2024; color: #ff8a8a; }
+
+  .hang-tiles {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 8px 0 20px;
+  }
+  .hang-tile {
+    width: clamp(28px, 8.5vw, 42px);
+    height: clamp(46px, 13vw, 64px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    font-size: clamp(1.1rem, 4vw, 1.7rem);
+    font-weight: 700;
+    border-bottom: 3px solid #4f4f70;
+  }
+  .hang-tile.blank { border-bottom-color: #7ea0ff; cursor: pointer; }
+  .hang-tile.active {
+    border: 2px solid #7ea0ff;
+    border-bottom-width: 3px;
+    border-radius: 6px;
+    background: rgba(126, 160, 255, 0.12);
+  }
+  .hang-letter { line-height: 1; }
+  .hang-letter.pending-letter { opacity: 0.55; font-style: italic; }
+  .hang-pressnum {
+    font-size: 0.6rem;
+    font-weight: 600;
+    color: #8a8aa8;
+    line-height: 1;
+  }
+
+  #hang-give-up { background: #3a3a55; margin-top: 10px; }
+  #hang-give-up:hover:not(:disabled) { background: #4a4a6a; }
+  #hang-next { margin-top: 10px; }
+
+  #hang-counter {
+    color: #c8c8e0;
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  #hang-found-list {
+    max-width: 480px;
+    min-height: 1.3em;
+    color: #a0a0c0;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin: 0 auto 14px;
+  }
+
+  #hang-feedback {
+    min-height: 1.6em;
+    font-size: 1.1rem;
+    margin-top: 12px;
+    font-weight: 700;
+  }
+  #hang-feedback.right { color: #6ee0a0; }
+  #hang-feedback.wrong { color: #ff8a8a; }
+
+  #hang-solution {
+    max-width: 480px;
+    min-height: 1.8em;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    margin-top: 8px;
+  }
+  #hang-solution.reveal-list {
+    font-size: 1rem;
+    font-weight: 400;
+    letter-spacing: normal;
+    color: #c8c8e0;
+    line-height: 1.5;
+  }
+  #hang-solution.word-row {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.12em;
+  }
+  #hang-solution.word-row .word-letter-text { font-size: 1.8rem; }
+  #hang-solution.word-row .word-letter-num { font-size: 0.7rem; }
+
+  #mode-switch { margin-top: 36px; }
+
+  /* Visible proof a deploy actually landed — bump this on every change
+     (see the versioning note in the git commit convention). */
+  #version-label {
+    position: fixed;
+    bottom: 6px;
+    right: 8px;
+    font-size: 0.7rem;
+    color: #45455f;
+    pointer-events: none;
+    user-select: none;
+  }
+  #mode-toggle {
+    background: #262640;
+    color: #c8c8e0;
+    font-size: 0.85rem;
+    padding: 10px 18px;
+    border: 1px solid #3a3a55;
+  }
+  #mode-toggle:hover { background: #2f2f4d; }
+
+  /* ---- Silver flip phone (open, facing the player) ---------------------
+     Built in CSS rather than from a photo; the keypad sits in the real
+     handset layout: Send / nav / End row above the number keys, a blank
+     where the "1" key would be, and inert * 0 # keys along the bottom. */
+  .phone {
+    width: min(340px, 94vw);
+    margin: 4px auto 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    filter: drop-shadow(0 18px 26px rgba(0, 0, 0, 0.55));
+  }
+  .phone-lid,
+  .phone-base {
+    width: 100%;
+    background:
+      linear-gradient(100deg, rgba(255, 255, 255, 0) 8%, rgba(255, 255, 255, 0.55) 20%, rgba(255, 255, 255, 0) 34%),
+      linear-gradient(180deg, #eef0f2 0%, #c6cbd1 42%, #e2e5e8 68%, #b3b9c0 100%);
+    box-shadow:
+      inset 0 2px 1px rgba(255, 255, 255, 0.95),
+      inset 2px 0 2px rgba(255, 255, 255, 0.5),
+      inset -2px 0 3px rgba(0, 0, 0, 0.18),
+      inset 0 -3px 4px rgba(0, 0, 0, 0.25);
+  }
+  .phone-lid {
+    padding: 14px 18px 10px;
+    border-radius: 42px 42px 16px 16px;
+  }
+  .phone-earpiece {
+    width: 56px;
+    height: 7px;
+    margin: 0 auto 10px;
+    border-radius: 4px;
+    background: repeating-linear-gradient(90deg, #26292d 0 3px, #565b62 3px 5px);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.7), 0 1px 0 rgba(255, 255, 255, 0.8);
+  }
+  .phone-bezel {
+    padding: 10px;
+    border-radius: 14px;
+    background: linear-gradient(160deg, #2c2f34 0%, #0c0d0f 60%, #1e2024 100%);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08), 0 1px 0 rgba(255, 255, 255, 0.75);
+  }
+  .phone-screen {
+    position: relative;
+    overflow: hidden;
+    min-height: 176px;
+    display: flex;
+    flex-direction: column;
+    padding: 5px 8px 10px;
+    border-radius: 6px;
+    background: radial-gradient(circle at 30% 0%, #3f74bd 0%, #1e4178 45%, #0d2143 100%);
+    color: #f4f8ff;
+    box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.6);
+  }
+  /* Glass glare across the screen. */
+  .phone-screen::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(125deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.04) 36%, transparent 37%);
+    pointer-events: none;
+  }
+  .phone-status {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    opacity: 0.85;
+  }
+  .phone-signal { display: inline-flex; align-items: flex-end; gap: 1px; height: 9px; }
+  .phone-signal i { width: 2px; background: #f4f8ff; }
+  .phone-signal i:nth-child(1) { height: 3px; }
+  .phone-signal i:nth-child(2) { height: 5px; }
+  .phone-signal i:nth-child(3) { height: 7px; }
+  .phone-signal i:nth-child(4) { height: 9px; }
+  .phone-battery {
+    position: relative;
+    width: 16px;
+    height: 8px;
+    padding: 1px;
+    border: 1px solid #f4f8ff;
+    border-radius: 2px;
+  }
+  .phone-battery i { display: block; width: 75%; height: 100%; background: #f4f8ff; }
+  .phone-battery::after {
+    content: "";
+    position: absolute;
+    right: -3px;
+    top: 2px;
+    width: 2px;
+    height: 2px;
+    background: #f4f8ff;
+  }
+  .phone-screen-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .phone-screen #hang-difficulty { margin-top: 0; font-size: 0.68rem; padding: 3px 10px; }
+  .phone-screen .hang-tiles { gap: 4px; margin: 4px 0 0; }
+  .phone-screen .hang-tile {
+    width: clamp(24px, 7.4vw, 30px);
+    height: 46px;
+    font-size: 1.3rem;
+    color: #ffffff;
+    border-bottom-color: rgba(255, 255, 255, 0.4);
+  }
+  .phone-screen .hang-tile.blank { border-bottom-color: #9fd0ff; }
+  .phone-screen .hang-tile.active {
+    border-color: #9fd0ff;
+    background: rgba(159, 208, 255, 0.18);
+  }
+  .phone-screen .hang-pressnum { color: #a9c4ea; }
+  .phone-wordmark {
+    margin-top: 8px;
+    font-size: 0.6rem;
+    font-weight: 800;
+    letter-spacing: 0.32em;
+    color: #6b727b;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.85);
+  }
+  .phone-hinge {
+    position: relative;
+    z-index: 1;
+    width: 86%;
+    height: 16px;
+    margin: -2px 0;
+    border-radius: 8px;
+    background: linear-gradient(180deg, #858c94 0%, #f3f5f7 35%, #bcc2c8 58%, #747b83 100%);
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.35);
+  }
+  .phone-base {
+    padding: 18px 16px 14px;
+    border-radius: 16px 16px 48px 48px;
+  }
+  .phone-keypad {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 9px 10px;
+  }
+  .phone-key {
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    padding: 0;
+    border-radius: 14px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: #2a2e34;
+    background: linear-gradient(180deg, #ffffff 0%, #e4e7eb 55%, #c8cdd3 100%);
+    box-shadow: 0 2px 0 #8a9198, 0 3px 4px rgba(0, 0, 0, 0.25), inset 0 1px 0 #ffffff;
+  }
+  #keypad button.phone-key:hover:not(:disabled) {
+    background: linear-gradient(180deg, #ffffff 0%, #eef0f3 55%, #d6dadf 100%);
+  }
+  #keypad button.phone-key:active:not(:disabled) {
+    transform: translateY(2px);
+    box-shadow: 0 0 0 #8a9198, 0 1px 2px rgba(0, 0, 0, 0.25), inset 0 1px 0 #ffffff;
+  }
+  #keypad .send-key {
+    color: #ffffff;
+    font-size: 0.9rem;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.35);
+    background: linear-gradient(180deg, #62d66d 0%, #2f9e3b 60%, #22802d 100%);
+    box-shadow: 0 2px 0 #185c21, 0 3px 4px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  }
+  #keypad button.send-key:hover:not(:disabled) {
+    background: linear-gradient(180deg, #74e07e 0%, #36ad43 60%, #278f33 100%);
+  }
+  #keypad .end-key {
+    color: #ffffff;
+    font-size: 1.2rem;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.35);
+    background: linear-gradient(180deg, #ff7070 0%, #d32f2f 60%, #a61f1f 100%);
+    box-shadow: 0 2px 0 #721414, 0 3px 4px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  }
+  #keypad button.end-key:hover:not(:disabled) {
+    background: linear-gradient(180deg, #ff8484 0%, #e03a3a 60%, #b52626 100%);
+  }
+  /* Keys that are part of the handset but do nothing in the game. */
+  .phone-key-inert { cursor: default; color: #7a8189; font-size: 1.15rem; }
+  .phone-nav {
+    justify-self: center;
+    align-self: center;
+    width: 56px;
+    height: 56px;
+    margin: -8px 0;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 32%, #fdfdfd 0%, #c9ced4 70%, #9aa1a8 100%);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.35), inset 0 1px 0 #ffffff;
+  }
+  .phone-nav i {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 32%, #ffffff 0%, #d7dbe0 70%, #b0b7be 100%);
+    box-shadow: inset 0 -1px 2px rgba(0, 0, 0, 0.25), 0 1px 1px rgba(0, 0, 0, 0.3);
+  }
+  .phone-mic {
+    width: 18px;
+    height: 4px;
+    margin: 12px auto 0;
+    border-radius: 2px;
+    background: #4a4f56;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.6), 0 1px 0 rgba(255, 255, 255, 0.7);
+  }
+</style>
+</head>
+<body>
+  <h1><span class="title-t9">T9</span> <span id="title-tangle">TANGLE</span></h1>
+
+  <div id="examples">
+    <div class="example-row">
+      <div class="key-demo-row">
+        <div class="key"><span class="key-letter highlight"><span>A</span><span class="key-letter-num">1</span></span><span class="key-letter"><span>B</span><span class="key-letter-num">2</span></span><span class="key-letter"><span>C</span><span class="key-letter-num">3</span></span></div>
+        <div class="key"><span class="key-letter"><span>A</span><span class="key-letter-num">1</span></span><span class="key-letter highlight"><span>B</span><span class="key-letter-num">2</span></span><span class="key-letter"><span>C</span><span class="key-letter-num">3</span></span></div>
+        <div class="key"><span class="key-letter"><span>A</span><span class="key-letter-num">1</span></span><span class="key-letter"><span>B</span><span class="key-letter-num">2</span></span><span class="key-letter highlight"><span>C</span><span class="key-letter-num">3</span></span></div>
+      </div>
+      <p class="example-text">Each letter has a value based on the number of presses to type it on the T9 keyboard used on flip phones.</p>
+    </div>
+    <div class="example-row">
+      <div class="example-word" id="ex-this"></div>
+      <p class="example-text">The goal is to find words that make a number sequence like 1 2 3 4</p>
+    </div>
+    <div class="example-row">
+      <div class="example-word" id="ex-spur"></div>
+      <p class="example-text">The sequence can wrap around</p>
+    </div>
+    <div class="example-row">
+      <div class="example-word" id="ex-punts"></div>
+      <p class="example-text">Numbers can add together such as 2+1=3</p>
+    </div>
+    <div class="example-row">
+      <div class="example-word" id="ex-song"></div>
+      <p class="example-text">Backwards sequences are allowed</p>
+    </div>
+    <div class="example-row">
+      <div class="example-word" id="ex-whiskies"></div>
+      <p class="example-text">The sequence length can be 4 or longer (here 2+3=5, 2+4=6). Combine these rules and find all valid words!</p>
+    </div>
+  </div>
+
+  <div id="yesno-mode" hidden>
+    <div id="word"></div>
+
+    <div class="keypad-grid">
+      <div class="key"><span class="key-letter"><span>A</span><span class="key-letter-num">1</span></span><span class="key-letter"><span>B</span><span class="key-letter-num">2</span></span><span class="key-letter"><span>C</span><span class="key-letter-num">3</span></span></div>
+      <div class="key"><span class="key-letter"><span>D</span><span class="key-letter-num">1</span></span><span class="key-letter"><span>E</span><span class="key-letter-num">2</span></span><span class="key-letter"><span>F</span><span class="key-letter-num">3</span></span></div>
+      <div class="key blank"></div>
+      <div class="key"><span class="key-letter"><span>G</span><span class="key-letter-num">1</span></span><span class="key-letter"><span>H</span><span class="key-letter-num">2</span></span><span class="key-letter"><span>I</span><span class="key-letter-num">3</span></span></div>
+      <div class="key"><span class="key-letter"><span>J</span><span class="key-letter-num">1</span></span><span class="key-letter"><span>K</span><span class="key-letter-num">2</span></span><span class="key-letter"><span>L</span><span class="key-letter-num">3</span></span></div>
+      <div class="key"><span class="key-letter"><span>M</span><span class="key-letter-num">1</span></span><span class="key-letter"><span>N</span><span class="key-letter-num">2</span></span><span class="key-letter"><span>O</span><span class="key-letter-num">3</span></span></div>
+      <div class="key"><span class="key-letter"><span>P</span><span class="key-letter-num">1</span></span><span class="key-letter"><span>Q</span><span class="key-letter-num">2</span></span><span class="key-letter"><span>R</span><span class="key-letter-num">3</span></span><span class="key-letter"><span>S</span><span class="key-letter-num">4</span></span></div>
+      <div class="key"><span class="key-letter"><span>T</span><span class="key-letter-num">1</span></span><span class="key-letter"><span>U</span><span class="key-letter-num">2</span></span><span class="key-letter"><span>V</span><span class="key-letter-num">3</span></span></div>
+      <div class="key"><span class="key-letter"><span>W</span><span class="key-letter-num">1</span></span><span class="key-letter"><span>X</span><span class="key-letter-num">2</span></span><span class="key-letter"><span>Y</span><span class="key-letter-num">3</span></span><span class="key-letter"><span>Z</span><span class="key-letter-num">4</span></span></div>
+    </div>
+
+    <div id="guess-row">
+      <button id="guess-good">✅ Good</button>
+      <button id="guess-bad">❌ Not good</button>
+    </div>
+
+    <div id="result" class="result"></div>
+    <div id="explanation"></div>
+    <div id="solution"></div>
+    <button id="next" hidden>Next word →</button>
+
+    <div id="stats">
+      <div>Score<b id="score">0 / 0</b></div>
+      <div>Streak<b id="streak">0</b></div>
+    </div>
+  </div>
+
+  <div id="hangman-mode">
+    <p class="subtitle">Tap keys repeatedly to cycle through letters</p>
+
+    <div class="phone">
+      <div class="phone-lid">
+        <div class="phone-earpiece" aria-hidden="true"></div>
+        <div class="phone-bezel">
+          <div class="phone-screen">
+            <div class="phone-status" aria-hidden="true">
+              <span class="phone-signal"><i></i><i></i><i></i><i></i></span>
+              <span>T9</span>
+              <span class="phone-battery"><i></i></span>
+            </div>
+            <div class="phone-screen-body">
+              <div id="hang-difficulty"></div>
+              <div id="hang-tiles" class="hang-tiles"></div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-wordmark" aria-hidden="true">T9 TANGLE</div>
+      </div>
+      <div class="phone-hinge" aria-hidden="true"></div>
+      <div class="phone-base">
+        <div id="keypad" class="phone-keypad">
+          <button type="button" id="hang-enter" class="phone-key tap-key send-key">Send</button>
+          <div class="phone-nav" aria-hidden="true"><i></i></div>
+          <button type="button" id="tap-backspace" class="phone-key tap-key end-key" aria-label="Backspace">⌫</button>
+          <div class="phone-key phone-key-inert" aria-hidden="true"></div>
+          <button type="button" class="phone-key tap-key" data-letters="abc"><span class="letter-opt">A</span><span class="letter-opt">B</span><span class="letter-opt">C</span></button>
+          <button type="button" class="phone-key tap-key" data-letters="def"><span class="letter-opt">D</span><span class="letter-opt">E</span><span class="letter-opt">F</span></button>
+          <button type="button" class="phone-key tap-key" data-letters="ghi"><span class="letter-opt">G</span><span class="letter-opt">H</span><span class="letter-opt">I</span></button>
+          <button type="button" class="phone-key tap-key" data-letters="jkl"><span class="letter-opt">J</span><span class="letter-opt">K</span><span class="letter-opt">L</span></button>
+          <button type="button" class="phone-key tap-key" data-letters="mno"><span class="letter-opt">M</span><span class="letter-opt">N</span><span class="letter-opt">O</span></button>
+          <button type="button" class="phone-key tap-key" data-letters="pqrs"><span class="letter-opt">P</span><span class="letter-opt">Q</span><span class="letter-opt">R</span><span class="letter-opt">S</span></button>
+          <button type="button" class="phone-key tap-key" data-letters="tuv"><span class="letter-opt">T</span><span class="letter-opt">U</span><span class="letter-opt">V</span></button>
+          <button type="button" class="phone-key tap-key" data-letters="wxyz"><span class="letter-opt">W</span><span class="letter-opt">X</span><span class="letter-opt">Y</span><span class="letter-opt">Z</span></button>
+          <div class="phone-key phone-key-inert" aria-hidden="true">*</div>
+          <div class="phone-key phone-key-inert" aria-hidden="true">0</div>
+          <div class="phone-key phone-key-inert" aria-hidden="true">#</div>
+        </div>
+        <div class="phone-mic" aria-hidden="true"></div>
+      </div>
+    </div>
+
+    <div id="hang-counter">0 / 0 found</div>
+    <div id="hang-found-list"></div>
+
+    <div id="hang-feedback"></div>
+    <div id="hang-solution"></div>
+    <button id="hang-give-up">Give up</button>
+    <button id="hang-next" hidden>New puzzle →</button>
+
+    <div id="stats">
+      <div>Puzzles solved<b id="hang-solved">0</b></div>
+      <div>Attempts<b id="hang-attempts">0</b></div>
+    </div>
+  </div>
+
+  <div id="mode-switch">
+    <button id="mode-toggle"></button>
+  </div>
+
+  <div id="version-label">v0.11 · testing</div>
+
+  <!-- Testing build: rules and word list are shared with the live site one
+       folder up; this page and its app.js are the testing copies. -->
+  <script src="../js/t9-logic.js?v=49"></script>
+  <script src="../js/words.js?v=49"></script>
+  <script src="js/app.js?v=50"></script>
+</body>
+</html>
