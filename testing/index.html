@@ -425,7 +425,12 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    /* Bottom-aligned: the found/message box (sized for the worst case) ends
+       at the bottom of the screen, so its last possible line sits as low as
+       it can, and the spare space goes above the difficulty badge. In the
+       usual case, with only a line or two of words, that leaves the puzzle
+       near the middle of the screen rather than crowded toward the top. */
+    justify-content: flex-end;
     gap: 8px;
   }
   .phone-screen #hang-difficulty { margin-top: 0; font-size: 0.68rem; padding: 3px 10px; }
@@ -455,14 +460,19 @@
      most one of the two, so the box is sized for their worst *combined*
      height, not the sum of each one's worst case -- found by checking
      every answer set the game can produce, every found/missed split and
-     every order the words could be found in, at the narrowest phone width
-     (320px): 5 lines, for 8 eight-letter words found plus "Got 'em all!". */
+     every order the words could be found in: 4 lines for any viewport at
+     least 326px wide, 5 below that (8 eight-letter words found plus "Got
+     'em all!"). The 5-line box kicks in below 340px, a safety margin over
+     the measured 326px threshold. */
   .phone-screen .screen-lists {
     width: 100%;
-    height: calc(5 * 1.35em);
+    height: calc(4 * 1.35em);
     font-size: 0.75rem;
     line-height: 1.35;
     overflow: hidden;
+  }
+  @media (max-width: 339px) {
+    .phone-screen .screen-lists { height: calc(5 * 1.35em); }
   }
   .phone-screen #hang-found-list,
   .phone-screen #hang-missed {
@@ -719,7 +729,7 @@
     <button id="mode-toggle"></button>
   </div>
 
-  <div id="version-label">v0.15 · testing</div>
+  <div id="version-label">v0.16 · testing</div>
 
   <!-- Testing build: rules and word list are shared with the live site one
        folder up; this page and its app.js are the testing copies. -->
