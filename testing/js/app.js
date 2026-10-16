@@ -567,13 +567,16 @@
       missedEl.className = message ? message.kind : "";
     }
 
-    // The three Daily answers, top to bottom, tiled like the puzzles.
+    // The player's score on each Daily puzzle, e.g. "4/4 Easy".
     function renderDailyResults() {
       dailyRowsEl.innerHTML = "";
       daily.puzzles.forEach((p) => {
         const row = document.createElement("div");
-        row.className = "hang-tiles";
-        p.word.split("").forEach((letter, i) => row.appendChild(makeTile(letter, p.blanks.has(i), false)));
+        row.textContent = `${p.found.size}/${p.answers.length} `;
+        const label = document.createElement("span");
+        label.className = "difficulty-" + p.difficulty.toLowerCase();
+        label.textContent = p.difficulty;
+        row.appendChild(label);
         dailyRowsEl.appendChild(row);
       });
     }
@@ -581,8 +584,9 @@
     // Redraws everything about the current puzzle (or the Daily results),
     // e.g. after switching modes or moving on to another puzzle.
     function renderAll() {
-      dailyLabelEl.hidden = mode !== "daily";
-      if (mode === "daily") dailyLabelEl.textContent = `Daily #${daily.number}`;
+      // A non-breaking space keeps the status bar the same height in
+      // Practice, so switching modes never nudges the screen.
+      dailyLabelEl.textContent = mode === "daily" ? `Daily #${daily.number}` : "\u00a0";
 
       const p = currentPuzzle();
       const showResults = !p;
@@ -747,7 +751,8 @@
       activeBlankPositions = p ? [...p.blanks].sort((a, b) => a - b) : [];
       filledMap = new Map();
       fillHistory = [];
-      activeTarget = activeBlankPositions.length > 0 ? activeBlankPositions[0] : null;
+      // No blank is boxed once the puzzle is over.
+      activeTarget = p && !p.complete && activeBlankPositions.length > 0 ? activeBlankPositions[0] : null;
       pendingKey = null;
       pendingCount = 0;
       clearPendingTimer();

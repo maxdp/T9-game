@@ -327,8 +327,8 @@
     background: linear-gradient(125deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.04) 36%, transparent 37%);
     pointer-events: none;
   }
-  /* Three columns so the centered "T9" stays centered whether or not
-     "Daily #X" sits beside the battery on the right. */
+  /* Three columns so "Daily #X" (Daily mode only) sits exactly centered
+     between the signal bars and the battery. */
   .phone-status {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
@@ -338,12 +338,6 @@
     letter-spacing: 0.06em;
     opacity: 0.85;
   }
-  .phone-status-right {
-    justify-self: end;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-  }
   .phone-signal { justify-self: start; display: inline-flex; align-items: flex-end; gap: 1px; height: 9px; }
   .phone-signal i { width: 2px; background: #f4f8ff; }
   .phone-signal i:nth-child(1) { height: 3px; }
@@ -351,6 +345,7 @@
   .phone-signal i:nth-child(3) { height: 7px; }
   .phone-signal i:nth-child(4) { height: 9px; }
   .phone-battery {
+    justify-self: end;
     position: relative;
     width: 16px;
     height: 8px;
@@ -397,9 +392,19 @@
     gap: 10px;
   }
   #daily-results[hidden] { display: none; }
-  #daily-rows { display: flex; flex-direction: column; align-items: center; gap: 6px; }
-  #daily-rows .hang-tile { height: 40px; cursor: default; }
-  .daily-done { font-size: 0.75rem; font-weight: 700; color: #dbe8ff; }
+  #daily-rows {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #ffffff;
+  }
+  #daily-rows .difficulty-easy { color: #6ee0a0; }
+  #daily-rows .difficulty-medium { color: #ffcf6e; }
+  #daily-rows .difficulty-hard { color: #ff8a8a; }
+  .daily-done { margin-top: 8px; font-size: 0.75rem; font-weight: 700; color: #dbe8ff; }
   .phone-screen #hang-difficulty { margin-top: 0; font-size: 0.68rem; padding: 3px 10px; }
   .phone-screen .hang-tiles { gap: 4px; margin: 4px 0 0; flex-wrap: nowrap; }
   .phone-screen .hang-tile {
@@ -636,8 +641,8 @@
           <div class="phone-screen">
             <div class="phone-status" aria-hidden="true">
               <span class="phone-signal"><i></i><i></i><i></i><i></i></span>
-              <span>T9</span>
-              <span class="phone-status-right"><span id="daily-label" hidden></span><span class="phone-battery"><i></i></span></span>
+              <span id="daily-label"></span>
+              <span class="phone-battery"><i></i></span>
             </div>
             <div class="phone-screen-body">
               <div id="hang-difficulty"></div>
@@ -686,14 +691,14 @@
     </div>
   </div>
 
-  <div id="version-label">v0.24 · testing</div>
+  <div id="version-label">v0.25 · testing</div>
 
   <!-- Testing build: rules and word list are shared with the live site one
        folder up; this page and its app.js are the testing copies. -->
   <script src="../js/t9-logic.js?v=49"></script>
   <script src="../js/words.js?v=59"></script>
   <script src="../js/inappropriate-words.js?v=2"></script>
-  <script src="js/celebrate.js?v=5"></script>
-  <script src="js/app.js?v=61"></script>
+  <script src="js/celebrate.js?v=6"></script>
+  <script src="js/app.js?v=62"></script>
 </body>
 </html>
