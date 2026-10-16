@@ -738,6 +738,7 @@
         solvedEl.textContent = String(solvedCount);
         showScreenMessage("Got 'em all!", "success");
         completePuzzle();
+        window.T9Celebrate.celebrate(document.querySelector(".phone"));
       }
     }
 
