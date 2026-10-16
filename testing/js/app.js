@@ -755,16 +755,18 @@
       if (found.size === validAnswers.length) {
         solvedCount++;
         solvedEl.textContent = String(solvedCount);
-        feedbackEl.textContent = `🎉 Found all ${validAnswers.length}!`;
+        missedEl.textContent = "Got 'em all!";
+        missedEl.classList.add("success");
         completePuzzle();
       }
     }
 
     // The screen line under the found words shows "Incorrect" after a bad
-    // guess, or the missed answers after giving up.
+    // guess, the missed answers after giving up, or "Got 'em all!" once
+    // every answer is found.
     function clearScreenMessage() {
       missedEl.textContent = "";
-      missedEl.classList.remove("incorrect");
+      missedEl.classList.remove("incorrect", "success");
     }
 
     // Clears any leftover message from the last guess, and lists on the

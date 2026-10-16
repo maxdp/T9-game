@@ -448,21 +448,35 @@
     font-size: 0.8rem;
     color: #dbe8ff;
   }
-  /* Nothing on the screen may shift as the game goes on, so the found and
-     missed lines get fixed heights sized for the worst real case: every
-     possible answer list (up to 8 words of up to 8 letters) was measured
-     at the narrowest phone width -- 3 lines found, 4 lines "Missed: ...". */
-  .phone-screen #hang-found-list,
-  .phone-screen #hang-missed {
+  /* The found words and the message line under them ("Incorrect",
+     "Missed: ...", "Got 'em all!") share one fixed-height box, so nothing
+     else on the screen ever moves: the found list grows with what's in it
+     and pushes the message down within the box. Each answer appears in at
+     most one of the two, so the box is sized for their worst *combined*
+     height, not the sum of each one's worst case -- found by checking
+     every answer set the game can produce, every found/missed split and
+     every order the words could be found in, at the narrowest phone width
+     (320px): 5 lines, for 8 eight-letter words found plus "Got 'em all!". */
+  .phone-screen .screen-lists {
     width: 100%;
-    margin: 0;
+    height: calc(5 * 1.35em);
     font-size: 0.75rem;
     line-height: 1.35;
     overflow: hidden;
   }
-  .phone-screen #hang-found-list { height: calc(3 * 1.35em); color: #a9c4ea; }
-  .phone-screen #hang-missed { height: calc(4 * 1.35em); color: #ffb8b8; }
+  .phone-screen #hang-found-list,
+  .phone-screen #hang-missed {
+    width: 100%;
+    max-width: none;
+    min-height: 0;
+    margin: 0;
+    font-size: inherit;
+    line-height: inherit;
+  }
+  .phone-screen #hang-found-list { color: #a9c4ea; }
+  .phone-screen #hang-missed { color: #ffb8b8; }
   .phone-screen #hang-missed.incorrect { font-weight: 700; }
+  .phone-screen #hang-missed.success { font-weight: 700; color: #7be59a; }
   #keypad .giveup-key { font-size: 0.8rem; letter-spacing: 0.02em; }
   .phone-keypad .phone-key-inert,
   .phone-keypad .phone-nav { transition: opacity 0.15s ease; }
@@ -660,8 +674,10 @@
               <div id="hang-difficulty"></div>
               <div id="hang-tiles" class="hang-tiles"></div>
               <div id="hang-counter">0 / 0 found</div>
-              <div id="hang-found-list"></div>
-              <div id="hang-missed"></div>
+              <div class="screen-lists">
+                <div id="hang-found-list"></div>
+                <div id="hang-missed"></div>
+              </div>
             </div>
           </div>
         </div>
@@ -703,12 +719,12 @@
     <button id="mode-toggle"></button>
   </div>
 
-  <div id="version-label">v0.14 · testing</div>
+  <div id="version-label">v0.15 · testing</div>
 
   <!-- Testing build: rules and word list are shared with the live site one
        folder up; this page and its app.js are the testing copies. -->
   <script src="../js/t9-logic.js?v=49"></script>
   <script src="../js/words.js?v=49"></script>
-  <script src="js/app.js?v=54"></script>
+  <script src="js/app.js?v=55"></script>
 </body>
 </html>
