@@ -252,7 +252,6 @@
     line-height: 1;
   }
 
-  #hang-next { margin-top: 10px; }
 
   #hang-counter {
     color: #c8c8e0;
@@ -456,7 +455,18 @@
     line-height: 1.35;
     color: #a9c4ea;
   }
+  .phone-screen #hang-missed {
+    max-width: 100%;
+    font-size: 0.75rem;
+    line-height: 1.35;
+    color: #ffb8b8;
+  }
+  .phone-screen #hang-missed:empty { display: none; }
   #keypad .giveup-key { font-size: 0.8rem; letter-spacing: 0.02em; }
+  .phone-keypad .phone-key-inert,
+  .phone-keypad .phone-nav { transition: opacity 0.15s ease; }
+  .phone-keypad.keypad-off .phone-key-inert,
+  .phone-keypad.keypad-off .phone-nav { opacity: 0.35; }
   .phone-wordmark {
     margin-top: 8px;
     font-size: 0.6rem;
@@ -554,6 +564,17 @@
     background: #4a4f56;
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.6), 0 1px 0 rgba(255, 255, 255, 0.7);
   }
+  /* Once a puzzle ends, the Give up key turns into New puzzle -- the only
+     live key left -- so it's colored to stand out from the greyed keypad. */
+  #keypad button.next-key {
+    color: #ffffff;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.35);
+    background: linear-gradient(180deg, #8aa2ff 0%, #4f6df5 60%, #3a54d6 100%);
+    box-shadow: 0 2px 0 #26399a, 0 3px 4px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  }
+  #keypad button.next-key:hover:not(:disabled) {
+    background: linear-gradient(180deg, #9db1ff 0%, #5d79f7 60%, #4460e0 100%);
+  }
 </style>
 </head>
 <body>
@@ -639,6 +660,7 @@
               <div id="hang-tiles" class="hang-tiles"></div>
               <div id="hang-counter">0 / 0 found</div>
               <div id="hang-found-list"></div>
+              <div id="hang-missed"></div>
             </div>
           </div>
         </div>
@@ -669,7 +691,6 @@
 
     <div id="hang-feedback"></div>
     <div id="hang-solution"></div>
-    <button id="hang-next" hidden>New puzzle →</button>
 
     <div id="stats">
       <div>Puzzles solved<b id="hang-solved">0</b></div>
@@ -681,12 +702,12 @@
     <button id="mode-toggle"></button>
   </div>
 
-  <div id="version-label">v0.12 · testing</div>
+  <div id="version-label">v0.13 · testing</div>
 
   <!-- Testing build: rules and word list are shared with the live site one
        folder up; this page and its app.js are the testing copies. -->
   <script src="../js/t9-logic.js?v=49"></script>
   <script src="../js/words.js?v=49"></script>
-  <script src="js/app.js?v=51"></script>
+  <script src="js/app.js?v=52"></script>
 </body>
 </html>
