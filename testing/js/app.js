@@ -350,8 +350,6 @@
     const backspaceBtn = document.getElementById("tap-backspace");
     const enterBtn = document.getElementById("hang-enter");
     const giveUpBtn = document.getElementById("hang-give-up");
-    const feedbackEl = document.getElementById("hang-feedback");
-    const solutionEl = document.getElementById("hang-solution");
     const counterEl = document.getElementById("hang-counter");
     const foundListEl = document.getElementById("hang-found-list");
     const difficultyEl = document.getElementById("hang-difficulty");
@@ -598,8 +596,7 @@
 
       const allFilled = activeBlankPositions.every((pos) => filledMap.has(pos));
       if (!allFilled) {
-        feedbackEl.textContent = `Fill in all ${activeBlankPositions.length} blanks first.`;
-        feedbackEl.className = "wrong";
+        showScreenMessage("Fill in all blanks", "note");
         return;
       }
       submitGuess();
@@ -634,10 +631,6 @@
       complete = false;
       attempts = 0;
       attemptsEl.textContent = "0";
-      feedbackEl.textContent = "";
-      feedbackEl.className = "";
-      solutionEl.textContent = "";
-      solutionEl.classList.remove("reveal-list", "word-row");
       clearScreenMessage();
       giveUpBtn.textContent = "Give up";
       giveUpBtn.classList.remove("next-key");
@@ -717,13 +710,7 @@
       const guess = assembleGuess();
       resetGuessInProgress();
 
-      // Clear the previous guess's response before deciding this one's, so
-      // e.g. an old success's colored word doesn't linger under a new
-      // guess that turns out wrong.
-      feedbackEl.textContent = "";
-      feedbackEl.className = "";
-      solutionEl.textContent = "";
-      solutionEl.classList.remove("reveal-list", "word-row");
+      // Clear the previous guess's response before deciding this one's.
       clearScreenMessage();
 
       attempts++;
@@ -733,50 +720,45 @@
         ? findSequentialGrouping(wordToDigits(guess))
         : null;
       if (!grouping) {
-        missedEl.textContent = "Incorrect";
-        missedEl.classList.add("incorrect");
+        showScreenMessage("Incorrect", "incorrect");
         return;
       }
 
       if (found.has(guess)) {
-        feedbackEl.textContent = `You already found "${guess.toUpperCase()}".`;
-        feedbackEl.className = "";
+        showScreenMessage("Already found", "note");
         return;
       }
 
       found.add(guess);
       updateCounter();
       renderFoundList();
-      feedbackEl.textContent = "Nice!";
-      feedbackEl.className = "right";
-      solutionEl.classList.add("word-row");
-      renderExampleWord(solutionEl, guess, grouping);
 
       if (found.size === validAnswers.length) {
         solvedCount++;
         solvedEl.textContent = String(solvedCount);
-        missedEl.textContent = "Got 'em all!";
-        missedEl.classList.add("success");
+        showScreenMessage("Got 'em all!", "success");
         completePuzzle();
       }
     }
 
-    // The screen line under the found words shows "Incorrect" after a bad
-    // guess, the missed answers after giving up, or "Got 'em all!" once
-    // every answer is found.
+    // The screen line under the found words is the game's only message
+    // area: "Incorrect", "Already found" or "Fill in all blanks" during
+    // play, the missed answers after giving up, or "Got 'em all!".
     function clearScreenMessage() {
       missedEl.textContent = "";
-      missedEl.classList.remove("incorrect", "success");
+      missedEl.classList.remove("incorrect", "success", "note");
+    }
+
+    function showScreenMessage(text, kind) {
+      clearScreenMessage();
+      missedEl.textContent = text;
+      missedEl.classList.add(kind);
     }
 
     // Clears any leftover message from the last guess, and lists on the
     // phone's screen only the answers the player didn't find.
     function giveUp() {
       if (complete) return;
-      feedbackEl.textContent = "";
-      feedbackEl.className = "";
-      solutionEl.textContent = "";
-      solutionEl.classList.remove("word-row");
       const missed = validAnswers.filter((w) => !found.has(w));
       clearScreenMessage();
       missedEl.textContent = "Missed: " + missed.map((w) => w.toUpperCase()).join(", ");

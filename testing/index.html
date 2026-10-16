@@ -269,39 +269,6 @@
     margin: 0 auto 14px;
   }
 
-  #hang-feedback {
-    min-height: 1.6em;
-    font-size: 1.1rem;
-    margin-top: 12px;
-    font-weight: 700;
-  }
-  #hang-feedback.right { color: #6ee0a0; }
-  #hang-feedback.wrong { color: #ff8a8a; }
-
-  #hang-solution {
-    max-width: 480px;
-    min-height: 1.8em;
-    font-size: 1.5rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    margin-top: 8px;
-  }
-  #hang-solution.reveal-list {
-    font-size: 1rem;
-    font-weight: 400;
-    letter-spacing: normal;
-    color: #c8c8e0;
-    line-height: 1.5;
-  }
-  #hang-solution.word-row {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 0.12em;
-  }
-  #hang-solution.word-row .word-letter-text { font-size: 1.8rem; }
-  #hang-solution.word-row .word-letter-num { font-size: 0.7rem; }
-
   #mode-switch { margin-top: 36px; }
 
   /* Visible proof a deploy actually landed — bump this on every change
@@ -487,6 +454,7 @@
   .phone-screen #hang-missed { color: #ffb8b8; }
   .phone-screen #hang-missed.incorrect { font-weight: 700; }
   .phone-screen #hang-missed.success { font-weight: 700; color: #7be59a; }
+  .phone-screen #hang-missed.note { font-weight: 700; color: #dbe8ff; }
   #keypad .giveup-key { font-size: 0.8rem; letter-spacing: 0.02em; }
   .phone-keypad .phone-key-inert,
   .phone-keypad .phone-nav { transition: opacity 0.15s ease; }
@@ -716,9 +684,6 @@
       </div>
     </div>
 
-    <div id="hang-feedback"></div>
-    <div id="hang-solution"></div>
-
     <div id="stats">
       <div>Puzzles solved<b id="hang-solved">0</b></div>
       <div>Attempts<b id="hang-attempts">0</b></div>
@@ -729,12 +694,12 @@
     <button id="mode-toggle"></button>
   </div>
 
-  <div id="version-label">v0.16 · testing</div>
+  <div id="version-label">v0.17 · testing</div>
 
   <!-- Testing build: rules and word list are shared with the live site one
        folder up; this page and its app.js are the testing copies. -->
   <script src="../js/t9-logic.js?v=49"></script>
   <script src="../js/words.js?v=49"></script>
-  <script src="js/app.js?v=55"></script>
+  <script src="js/app.js?v=56"></script>
 </body>
 </html>
