@@ -637,7 +637,6 @@
       solutionEl.textContent = "";
       solutionEl.classList.remove("reveal-list", "word-row");
       nextBtn.hidden = true;
-      giveUpBtn.hidden = false;
       setKeypadDisabled(false);
       found = new Set();
       renderFoundList();
@@ -707,8 +706,9 @@
       clearPendingTimer();
       pendingKey = null;
       pendingCount = 0;
+      // Give up is a key in the phone's keypad, so it's disabled along with
+      // the rest rather than hidden (hiding it would leave a hole in the grid).
       setKeypadDisabled(true);
-      giveUpBtn.hidden = true;
       nextBtn.hidden = false;
       renderKeypadHighlight();
     }

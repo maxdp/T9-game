@@ -252,8 +252,6 @@
     line-height: 1;
   }
 
-  #hang-give-up { background: #3a3a55; margin-top: 10px; }
-  #hang-give-up:hover:not(:disabled) { background: #4a4a6a; }
   #hang-next { margin-top: 10px; }
 
   #hang-counter {
@@ -372,7 +370,7 @@
   .phone-screen {
     position: relative;
     overflow: hidden;
-    min-height: 176px;
+    min-height: 264px;
     display: flex;
     flex-direction: column;
     padding: 5px 8px 10px;
@@ -428,7 +426,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 6px;
+    gap: 8px;
   }
   .phone-screen #hang-difficulty { margin-top: 0; font-size: 0.68rem; padding: 3px 10px; }
   .phone-screen .hang-tiles { gap: 4px; margin: 4px 0 0; }
@@ -445,6 +443,20 @@
     background: rgba(159, 208, 255, 0.18);
   }
   .phone-screen .hang-pressnum { color: #a9c4ea; }
+  .phone-screen #hang-counter {
+    margin: 4px 0 0;
+    font-size: 0.8rem;
+    color: #dbe8ff;
+  }
+  .phone-screen #hang-found-list {
+    max-width: 100%;
+    min-height: 1.3em;
+    margin: 0;
+    font-size: 0.75rem;
+    line-height: 1.35;
+    color: #a9c4ea;
+  }
+  #keypad .giveup-key { font-size: 0.8rem; letter-spacing: 0.02em; }
   .phone-wordmark {
     margin-top: 8px;
     font-size: 0.6rem;
@@ -470,17 +482,17 @@
   .phone-keypad {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 9px 10px;
+    gap: 12px 10px;
   }
   .phone-key {
-    height: 42px;
+    height: 63px;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 3px;
     padding: 0;
-    border-radius: 14px;
-    font-size: 0.95rem;
+    border-radius: 16px;
+    font-size: 1.05rem;
     font-weight: 700;
     letter-spacing: 0.04em;
     color: #2a2e34;
@@ -519,9 +531,8 @@
   .phone-nav {
     justify-self: center;
     align-self: center;
-    width: 56px;
-    height: 56px;
-    margin: -8px 0;
+    width: 64px;
+    height: 64px;
     display: grid;
     place-items: center;
     border-radius: 50%;
@@ -529,8 +540,8 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.35), inset 0 1px 0 #ffffff;
   }
   .phone-nav i {
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
     background: radial-gradient(circle at 50% 32%, #ffffff 0%, #d7dbe0 70%, #b0b7be 100%);
     box-shadow: inset 0 -1px 2px rgba(0, 0, 0, 0.25), 0 1px 1px rgba(0, 0, 0, 0.3);
@@ -626,6 +637,8 @@
             <div class="phone-screen-body">
               <div id="hang-difficulty"></div>
               <div id="hang-tiles" class="hang-tiles"></div>
+              <div id="hang-counter">0 / 0 found</div>
+              <div id="hang-found-list"></div>
             </div>
           </div>
         </div>
@@ -648,18 +661,14 @@
           <button type="button" class="phone-key tap-key" data-letters="wxyz"><span class="letter-opt">W</span><span class="letter-opt">X</span><span class="letter-opt">Y</span><span class="letter-opt">Z</span></button>
           <div class="phone-key phone-key-inert" aria-hidden="true">*</div>
           <div class="phone-key phone-key-inert" aria-hidden="true">0</div>
-          <div class="phone-key phone-key-inert" aria-hidden="true">#</div>
+          <button type="button" id="hang-give-up" class="phone-key tap-key giveup-key">Give up</button>
         </div>
         <div class="phone-mic" aria-hidden="true"></div>
       </div>
     </div>
 
-    <div id="hang-counter">0 / 0 found</div>
-    <div id="hang-found-list"></div>
-
     <div id="hang-feedback"></div>
     <div id="hang-solution"></div>
-    <button id="hang-give-up">Give up</button>
     <button id="hang-next" hidden>New puzzle →</button>
 
     <div id="stats">
@@ -672,12 +681,12 @@
     <button id="mode-toggle"></button>
   </div>
 
-  <div id="version-label">v0.11 · testing</div>
+  <div id="version-label">v0.12 · testing</div>
 
   <!-- Testing build: rules and word list are shared with the live site one
        folder up; this page and its app.js are the testing copies. -->
   <script src="../js/t9-logic.js?v=49"></script>
   <script src="../js/words.js?v=49"></script>
-  <script src="js/app.js?v=50"></script>
+  <script src="js/app.js?v=51"></script>
 </body>
 </html>
