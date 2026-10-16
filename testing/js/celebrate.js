@@ -173,12 +173,6 @@
 
   function celebrate(phone) {
     playSound();
-    // Real vibration where supported (Android), matching the bursts.
-    if (navigator.vibrate) {
-      navigator.vibrate(
-        BURSTS.flatMap((ms, i) => (i === 0 ? [BURST_MS] : [ms - BURSTS[i - 1] - BURST_MS, BURST_MS]))
-      );
-    }
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     buzzPhone(phone);
     launchFlyers();

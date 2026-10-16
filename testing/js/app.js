@@ -733,13 +733,25 @@
       updateCounter();
       renderFoundList();
 
-      if (found.size === validAnswers.length) {
-        solvedCount++;
-        solvedEl.textContent = String(solvedCount);
-        showScreenMessage("Got 'em all!", "success");
-        completePuzzle();
-        window.T9Celebrate.celebrate(document.querySelector(".phone"));
-      }
+      if (found.size === validAnswers.length) winPuzzle();
+    }
+
+    function winPuzzle() {
+      solvedCount++;
+      solvedEl.textContent = String(solvedCount);
+      showScreenMessage("Got 'em all!", "success");
+      completePuzzle();
+      window.T9Celebrate.celebrate(document.querySelector(".phone"));
+    }
+
+    // TESTING ONLY: the 0 key wins the current puzzle on the spot (every
+    // answer counted as found), to try out the win celebration quickly.
+    function debugWin() {
+      if (complete) return;
+      found = new Set(validAnswers);
+      updateCounter();
+      renderFoundList();
+      winPuzzle();
     }
 
     // The screen line under the found words is the game's only message
@@ -772,6 +784,7 @@
     backspaceBtn.addEventListener("click", handleBackspace);
     enterBtn.addEventListener("click", handleEnter);
     giveUpBtn.addEventListener("click", () => (complete ? newPuzzle() : giveUp()));
+    document.getElementById("debug-win").addEventListener("click", debugWin);
 
     return {
       startIfNeeded() {

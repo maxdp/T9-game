@@ -693,7 +693,8 @@
           <button type="button" class="phone-key tap-key" data-letters="tuv"><span class="letter-opt">T</span><span class="letter-opt">U</span><span class="letter-opt">V</span></button>
           <button type="button" class="phone-key tap-key" data-letters="wxyz"><span class="letter-opt">W</span><span class="letter-opt">X</span><span class="letter-opt">Y</span><span class="letter-opt">Z</span></button>
           <div class="phone-key phone-key-inert" aria-hidden="true">*</div>
-          <div class="phone-key phone-key-inert" aria-hidden="true">0</div>
+          <!-- TESTING ONLY: 0 wins the current puzzle (see debugWin in app.js). -->
+          <button type="button" id="debug-win" class="phone-key tap-key">0</button>
           <button type="button" id="hang-give-up" class="phone-key tap-key giveup-key">Give up</button>
         </div>
         <div class="phone-mic" aria-hidden="true"></div>
@@ -710,13 +711,13 @@
     <button id="mode-toggle"></button>
   </div>
 
-  <div id="version-label">v0.20 · testing</div>
+  <div id="version-label">v0.21 · testing</div>
 
   <!-- Testing build: rules and word list are shared with the live site one
        folder up; this page and its app.js are the testing copies. -->
   <script src="../js/t9-logic.js?v=49"></script>
   <script src="../js/words.js?v=57"></script>
-  <script src="js/celebrate.js?v=1"></script>
-  <script src="js/app.js?v=58"></script>
+  <script src="js/celebrate.js?v=2"></script>
+  <script src="js/app.js?v=59"></script>
 </body>
 </html>
