@@ -355,7 +355,7 @@
     const counterEl = document.getElementById("hang-counter");
     const foundListEl = document.getElementById("hang-found-list");
     const difficultyEl = document.getElementById("hang-difficulty");
-    const nextBtn = document.getElementById("hang-next");
+    const missedEl = document.getElementById("hang-missed");
     const solvedEl = document.getElementById("hang-solved");
     const attemptsEl = document.getElementById("hang-attempts");
 
@@ -505,6 +505,8 @@
       tapKeypadEl.querySelectorAll("button").forEach((b) => {
         b.disabled = disabled;
       });
+      // Lets the decorative keys (blank, *, 0, nav pad) grey out too.
+      tapKeypadEl.classList.toggle("keypad-off", disabled);
     }
 
     // The blank to land on after filling `pos`: the next still-empty blank
@@ -636,8 +638,9 @@
       feedbackEl.className = "";
       solutionEl.textContent = "";
       solutionEl.classList.remove("reveal-list", "word-row");
-      nextBtn.hidden = true;
-      giveUpBtn.hidden = false;
+      missedEl.textContent = "";
+      giveUpBtn.textContent = "Give up";
+      giveUpBtn.classList.remove("next-key");
       setKeypadDisabled(false);
       found = new Set();
       renderFoundList();
@@ -692,24 +695,17 @@
       difficultyEl.className = "difficulty-" + difficulty.toLowerCase();
     }
 
-    // Shows every valid answer as plain text (used on give-up and on
-    // finding them all) rather than a per-word colored breakdown, since
-    // there can be many of them.
-    function revealAllAnswers() {
-      solutionEl.classList.remove("word-row");
-      solutionEl.classList.add("reveal-list");
-      solutionEl.textContent =
-        "Valid answers: " + validAnswers.map((w) => w.toUpperCase()).join(", ");
-    }
-
     function completePuzzle() {
       complete = true;
       clearPendingTimer();
       pendingKey = null;
       pendingCount = 0;
+      // The whole keypad switches off except the Give up key, which turns
+      // into the way to start the next puzzle.
       setKeypadDisabled(true);
-      giveUpBtn.hidden = true;
-      nextBtn.hidden = false;
+      giveUpBtn.disabled = false;
+      giveUpBtn.textContent = "New puzzle";
+      giveUpBtn.classList.add("next-key");
       renderKeypadHighlight();
     }
 
@@ -767,14 +763,16 @@
       }
     }
 
+    // Clears any leftover message from the last guess, and lists on the
+    // phone's screen only the answers the player didn't find.
     function giveUp() {
       if (complete) return;
-      feedbackEl.textContent =
-        found.size > 0
-          ? `Found ${found.size} of ${validAnswers.length}.`
-          : "No answers found.";
+      feedbackEl.textContent = "";
       feedbackEl.className = "";
-      revealAllAnswers();
+      solutionEl.textContent = "";
+      solutionEl.classList.remove("word-row");
+      const missed = validAnswers.filter((w) => !found.has(w));
+      missedEl.textContent = "Missed: " + missed.map((w) => w.toUpperCase()).join(", ");
       completePuzzle();
     }
 
@@ -783,8 +781,7 @@
     });
     backspaceBtn.addEventListener("click", handleBackspace);
     enterBtn.addEventListener("click", handleEnter);
-    giveUpBtn.addEventListener("click", giveUp);
-    nextBtn.addEventListener("click", newPuzzle);
+    giveUpBtn.addEventListener("click", () => (complete ? newPuzzle() : giveUp()));
 
     return {
       startIfNeeded() {
