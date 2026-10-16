@@ -421,6 +421,7 @@
   }
   .phone-screen-body {
     flex: 1;
+    margin-top: 8px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -428,7 +429,7 @@
     gap: 8px;
   }
   .phone-screen #hang-difficulty { margin-top: 0; font-size: 0.68rem; padding: 3px 10px; }
-  .phone-screen .hang-tiles { gap: 4px; margin: 4px 0 0; }
+  .phone-screen .hang-tiles { gap: 4px; margin: 4px 0 0; flex-wrap: nowrap; }
   .phone-screen .hang-tile {
     width: clamp(24px, 7.4vw, 30px);
     height: 46px;
@@ -447,21 +448,21 @@
     font-size: 0.8rem;
     color: #dbe8ff;
   }
-  .phone-screen #hang-found-list {
-    max-width: 100%;
-    min-height: 1.3em;
+  /* Nothing on the screen may shift as the game goes on, so the found and
+     missed lines get fixed heights sized for the worst real case: every
+     possible answer list (up to 8 words of up to 8 letters) was measured
+     at the narrowest phone width -- 3 lines found, 4 lines "Missed: ...". */
+  .phone-screen #hang-found-list,
+  .phone-screen #hang-missed {
+    width: 100%;
     margin: 0;
     font-size: 0.75rem;
     line-height: 1.35;
-    color: #a9c4ea;
+    overflow: hidden;
   }
-  .phone-screen #hang-missed {
-    max-width: 100%;
-    font-size: 0.75rem;
-    line-height: 1.35;
-    color: #ffb8b8;
-  }
-  .phone-screen #hang-missed:empty { display: none; }
+  .phone-screen #hang-found-list { height: calc(3 * 1.35em); color: #a9c4ea; }
+  .phone-screen #hang-missed { height: calc(4 * 1.35em); color: #ffb8b8; }
+  .phone-screen #hang-missed.incorrect { font-weight: 700; }
   #keypad .giveup-key { font-size: 0.8rem; letter-spacing: 0.02em; }
   .phone-keypad .phone-key-inert,
   .phone-keypad .phone-nav { transition: opacity 0.15s ease; }
@@ -702,12 +703,12 @@
     <button id="mode-toggle"></button>
   </div>
 
-  <div id="version-label">v0.13 · testing</div>
+  <div id="version-label">v0.14 · testing</div>
 
   <!-- Testing build: rules and word list are shared with the live site one
        folder up; this page and its app.js are the testing copies. -->
   <script src="../js/t9-logic.js?v=49"></script>
   <script src="../js/words.js?v=49"></script>
-  <script src="js/app.js?v=52"></script>
+  <script src="js/app.js?v=54"></script>
 </body>
 </html>

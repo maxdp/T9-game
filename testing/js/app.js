@@ -638,7 +638,7 @@
       feedbackEl.className = "";
       solutionEl.textContent = "";
       solutionEl.classList.remove("reveal-list", "word-row");
-      missedEl.textContent = "";
+      clearScreenMessage();
       giveUpBtn.textContent = "Give up";
       giveUpBtn.classList.remove("next-key");
       setKeypadDisabled(false);
@@ -724,20 +724,17 @@
       feedbackEl.className = "";
       solutionEl.textContent = "";
       solutionEl.classList.remove("reveal-list", "word-row");
+      clearScreenMessage();
 
       attempts++;
       attemptsEl.textContent = String(attempts);
 
-      if (!DICTIONARY_SET.has(guess)) {
-        feedbackEl.textContent = `"${guess.toUpperCase()}" is not a real word.`;
-        feedbackEl.className = "wrong";
-        return;
-      }
-
-      const grouping = findSequentialGrouping(wordToDigits(guess));
+      const grouping = DICTIONARY_SET.has(guess)
+        ? findSequentialGrouping(wordToDigits(guess))
+        : null;
       if (!grouping) {
-        feedbackEl.textContent = `"${guess.toUpperCase()}" is a real word, but not good.`;
-        feedbackEl.className = "wrong";
+        missedEl.textContent = "Incorrect";
+        missedEl.classList.add("incorrect");
         return;
       }
 
@@ -763,6 +760,13 @@
       }
     }
 
+    // The screen line under the found words shows "Incorrect" after a bad
+    // guess, or the missed answers after giving up.
+    function clearScreenMessage() {
+      missedEl.textContent = "";
+      missedEl.classList.remove("incorrect");
+    }
+
     // Clears any leftover message from the last guess, and lists on the
     // phone's screen only the answers the player didn't find.
     function giveUp() {
@@ -772,6 +776,7 @@
       solutionEl.textContent = "";
       solutionEl.classList.remove("word-row");
       const missed = validAnswers.filter((w) => !found.has(w));
+      clearScreenMessage();
       missedEl.textContent = "Missed: " + missed.map((w) => w.toUpperCase()).join(", ");
       completePuzzle();
     }
