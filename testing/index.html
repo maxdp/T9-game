@@ -56,14 +56,6 @@
     line-height: 1.4;
   }
 
-  .keypad-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 64px);
-    grid-auto-rows: 64px;
-    gap: 10px;
-    justify-content: center;
-    margin: 0 0 8px;
-  }
   .key {
     display: flex;
     align-items: center;
@@ -89,10 +81,6 @@
     color: #8a8aa8;
     margin-top: 2px;
   }
-  .key.blank {
-    background: #1f1f33;
-    box-shadow: none;
-  }
   .tap-key {
     border: none;
     padding: 0;
@@ -114,22 +102,7 @@
     opacity: 1;
     color: #8c5ce6;
   }
-  .backspace-key { font-size: 1.3rem; }
-  .enter-key {
-    grid-column: 1 / -1;
-    background: #4f6df5;
-    color: white;
-    font-size: 1.05rem;
-    letter-spacing: 0.02em;
-  }
-  .enter-key:hover:not(:disabled) { background: #3a54d6; }
 
-  #word {
-    display: flex;
-    justify-content: center;
-    gap: 0.15em;
-    margin: 8px 0 20px;
-  }
   .word-letter {
     display: flex;
     flex-direction: column;
@@ -147,7 +120,6 @@
     margin-top: 4px;
   }
 
-  #guess-row { display: flex; justify-content: center; gap: 12px; margin-bottom: 8px; }
   button {
     font-size: 1rem;
     padding: 12px 22px;
@@ -163,35 +135,6 @@
   }
   button:hover:not(:disabled) { background: #3a54d6; }
   button:disabled { opacity: 0.5; cursor: default; }
-  #guess-bad { background: #d1495b; }
-  #guess-bad:hover:not(:disabled) { background: #b13448; }
-  #next { background: #3a3a55; }
-  #next:hover { background: #4a4a6a; }
-
-  .result {
-    min-height: 1.6em;
-    font-size: 1.3rem;
-    margin-top: 16px;
-    font-weight: 700;
-  }
-  .result.right { color: #6ee0a0; }
-  .result.wrong { color: #ff8a8a; }
-
-  #explanation {
-    max-width: 480px;
-    min-height: 1.3em;
-    color: #c8c8e0;
-    margin-top: 6px;
-    font-size: 0.95rem;
-  }
-
-  #solution {
-    min-height: 1.8em;
-    font-size: 1.5rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    margin-top: 8px;
-  }
 
   #stats {
     margin-top: 28px;
@@ -269,7 +212,6 @@
     margin: 0 auto 14px;
   }
 
-  #mode-switch { margin-top: 36px; }
 
   /* Visible proof a deploy actually landed — bump this on every change
      (see the versioning note in the git commit convention). */
@@ -282,14 +224,46 @@
     pointer-events: none;
     user-select: none;
   }
-  #mode-toggle {
-    background: #262640;
-    color: #c8c8e0;
-    font-size: 0.85rem;
-    padding: 10px 18px;
-    border: 1px solid #3a3a55;
+
+  /* Practice / Daily switch above the phone. */
+  .mode-switch {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 0 0 10px;
   }
-  #mode-toggle:hover { background: #2f2f4d; }
+  .mode-label {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #7c7c9c;
+    cursor: pointer;
+    user-select: none;
+    transition: color 0.2s ease;
+  }
+  .mode-label.active { color: #ffffff; font-weight: 700; }
+  #mode-toggle {
+    position: relative;
+    width: 52px;
+    height: 30px;
+    padding: 0;
+    border-radius: 999px;
+    background: #6c45c9;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.45);
+  }
+  #mode-toggle:hover { background: #7b54d8; }
+  .mode-knob {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #ffffff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
+    transition: transform 0.2s ease;
+  }
+  #mode-toggle[aria-checked="true"] .mode-knob { transform: translateX(22px); }
 
   /* ---- Silver flip phone (open, facing the player) ---------------------
      Built in CSS rather than from a photo; the keypad sits in the real
@@ -353,16 +327,24 @@
     background: linear-gradient(125deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.04) 36%, transparent 37%);
     pointer-events: none;
   }
+  /* Three columns so the centered "T9" stays centered whether or not
+     "Daily #X" sits beside the battery on the right. */
   .phone-status {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    justify-content: space-between;
     font-size: 0.62rem;
     font-weight: 700;
     letter-spacing: 0.06em;
     opacity: 0.85;
   }
-  .phone-signal { display: inline-flex; align-items: flex-end; gap: 1px; height: 9px; }
+  .phone-status-right {
+    justify-self: end;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .phone-signal { justify-self: start; display: inline-flex; align-items: flex-end; gap: 1px; height: 9px; }
   .phone-signal i { width: 2px; background: #f4f8ff; }
   .phone-signal i:nth-child(1) { height: 3px; }
   .phone-signal i:nth-child(2) { height: 5px; }
@@ -400,6 +382,24 @@
     justify-content: flex-end;
     gap: 8px;
   }
+  /* Daily results replace the puzzle on the screen once all three Daily
+     puzzles are done. The puzzle's own elements stay in the layout (just
+     invisible) underneath, so the screen keeps exactly the same size. */
+  .phone-screen-body { position: relative; }
+  .phone-screen-body.show-results > :not(#daily-results) { visibility: hidden; }
+  #daily-results {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+  #daily-results[hidden] { display: none; }
+  #daily-rows { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  #daily-rows .hang-tile { height: 40px; cursor: default; }
+  .daily-done { font-size: 0.75rem; font-weight: 700; color: #dbe8ff; }
   .phone-screen #hang-difficulty { margin-top: 0; font-size: 0.68rem; padding: 3px 10px; }
   .phone-screen .hang-tiles { gap: 4px; margin: 4px 0 0; flex-wrap: nowrap; }
   .phone-screen .hang-tile {
@@ -455,7 +455,7 @@
   .phone-screen #hang-missed.incorrect { font-weight: 700; }
   .phone-screen #hang-missed.success { font-weight: 700; color: #7be59a; }
   .phone-screen #hang-missed.note { font-weight: 700; color: #dbe8ff; }
-  .phone-screen #hang-missed.scold { font-weight: 700; color: #ff4d4d; }
+  .phone-screen #hang-missed.scold { font-weight: 700; color: #dbe8ff; }
   #keypad .giveup-key { font-size: 0.8rem; letter-spacing: 0.02em; }
   .phone-keypad .phone-key-inert,
   .phone-keypad .phone-nav { transition: opacity 0.15s ease; }
@@ -621,38 +621,12 @@
     </div>
   </div>
 
-  <div id="yesno-mode" hidden>
-    <div id="word"></div>
-
-    <div class="keypad-grid">
-      <div class="key"><span class="key-letter"><span>A</span><span class="key-letter-num">1</span></span><span class="key-letter"><span>B</span><span class="key-letter-num">2</span></span><span class="key-letter"><span>C</span><span class="key-letter-num">3</span></span></div>
-      <div class="key"><span class="key-letter"><span>D</span><span class="key-letter-num">1</span></span><span class="key-letter"><span>E</span><span class="key-letter-num">2</span></span><span class="key-letter"><span>F</span><span class="key-letter-num">3</span></span></div>
-      <div class="key blank"></div>
-      <div class="key"><span class="key-letter"><span>G</span><span class="key-letter-num">1</span></span><span class="key-letter"><span>H</span><span class="key-letter-num">2</span></span><span class="key-letter"><span>I</span><span class="key-letter-num">3</span></span></div>
-      <div class="key"><span class="key-letter"><span>J</span><span class="key-letter-num">1</span></span><span class="key-letter"><span>K</span><span class="key-letter-num">2</span></span><span class="key-letter"><span>L</span><span class="key-letter-num">3</span></span></div>
-      <div class="key"><span class="key-letter"><span>M</span><span class="key-letter-num">1</span></span><span class="key-letter"><span>N</span><span class="key-letter-num">2</span></span><span class="key-letter"><span>O</span><span class="key-letter-num">3</span></span></div>
-      <div class="key"><span class="key-letter"><span>P</span><span class="key-letter-num">1</span></span><span class="key-letter"><span>Q</span><span class="key-letter-num">2</span></span><span class="key-letter"><span>R</span><span class="key-letter-num">3</span></span><span class="key-letter"><span>S</span><span class="key-letter-num">4</span></span></div>
-      <div class="key"><span class="key-letter"><span>T</span><span class="key-letter-num">1</span></span><span class="key-letter"><span>U</span><span class="key-letter-num">2</span></span><span class="key-letter"><span>V</span><span class="key-letter-num">3</span></span></div>
-      <div class="key"><span class="key-letter"><span>W</span><span class="key-letter-num">1</span></span><span class="key-letter"><span>X</span><span class="key-letter-num">2</span></span><span class="key-letter"><span>Y</span><span class="key-letter-num">3</span></span><span class="key-letter"><span>Z</span><span class="key-letter-num">4</span></span></div>
-    </div>
-
-    <div id="guess-row">
-      <button id="guess-good">✅ Good</button>
-      <button id="guess-bad">❌ Not good</button>
-    </div>
-
-    <div id="result" class="result"></div>
-    <div id="explanation"></div>
-    <div id="solution"></div>
-    <button id="next" hidden>Next word →</button>
-
-    <div id="stats">
-      <div>Score<b id="score">0 / 0</b></div>
-      <div>Streak<b id="streak">0</b></div>
-    </div>
-  </div>
-
   <div id="hangman-mode">
+    <div class="mode-switch">
+      <span class="mode-label active" data-mode="practice">Practice</span>
+      <button type="button" id="mode-toggle" role="switch" aria-checked="false" aria-label="Daily mode"><span class="mode-knob"></span></button>
+      <span class="mode-label" data-mode="daily">Daily</span>
+    </div>
     <p class="subtitle">Tap keys repeatedly to cycle through letters</p>
 
     <div class="phone">
@@ -663,7 +637,7 @@
             <div class="phone-status" aria-hidden="true">
               <span class="phone-signal"><i></i><i></i><i></i><i></i></span>
               <span>T9</span>
-              <span class="phone-battery"><i></i></span>
+              <span class="phone-status-right"><span id="daily-label" hidden></span><span class="phone-battery"><i></i></span></span>
             </div>
             <div class="phone-screen-body">
               <div id="hang-difficulty"></div>
@@ -672,6 +646,10 @@
               <div class="screen-lists">
                 <div id="hang-found-list"></div>
                 <div id="hang-missed"></div>
+              </div>
+              <div id="daily-results" hidden>
+                <div id="daily-rows"></div>
+                <div class="daily-done">Come back tomorrow for a new Daily</div>
               </div>
             </div>
           </div>
@@ -708,18 +686,14 @@
     </div>
   </div>
 
-  <div id="mode-switch">
-    <button id="mode-toggle"></button>
-  </div>
-
-  <div id="version-label">v0.23 · testing</div>
+  <div id="version-label">v0.24 · testing</div>
 
   <!-- Testing build: rules and word list are shared with the live site one
        folder up; this page and its app.js are the testing copies. -->
   <script src="../js/t9-logic.js?v=49"></script>
   <script src="../js/words.js?v=59"></script>
-  <script src="../js/inappropriate-words.js?v=1"></script>
+  <script src="../js/inappropriate-words.js?v=2"></script>
   <script src="js/celebrate.js?v=5"></script>
-  <script src="js/app.js?v=60"></script>
+  <script src="js/app.js?v=61"></script>
 </body>
 </html>

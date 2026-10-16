@@ -2,14 +2,11 @@
   const { wordToDigits, findSequentialGrouping, PRESS_COUNTS } = window.T9;
   const { DICTIONARY, WORDS_GOOD, WORDS_GOOD_RANK } = window.T9_WORDS;
 
-  // DICTIONARY lets hangman mode check whether a typed guess is a real word
-  // at all. WORDS_GOOD is precomputed (see words.js) rather than classified
-  // here at startup — deriving WORDS_BAD from it is just a set difference,
-  // no rule-checking needed, so it stays cheap.
+  // DICTIONARY lets the game check whether a typed guess is a real word at
+  // all. WORDS_GOOD is precomputed (see words.js) rather than classified
+  // here at startup.
   const DICTIONARY_SET = new Set(DICTIONARY);
   const INAPPROPRIATE_SET = new Set(window.T9_INAPPROPRIATE);
-  const WORDS_GOOD_SET = new Set(WORDS_GOOD);
-  const WORDS_BAD = DICTIONARY.filter((w) => !WORDS_GOOD_SET.has(w));
 
   // Word -> frequency rank (1 = most common, higher = rarer), for gauging
   // hangman puzzle difficulty from its rarest valid answer.
@@ -28,20 +25,13 @@
   //    below): 3-4 is worth 1 point, 5-6 worth 2, 7-8 worth 3.
   //
   // Summing gives 3-9 points, classified 3-4 Easy / 5-6 Medium / 7-9 Hard.
-  // Left on its own this skews heavily towards Medium (random word+blank
-  // draws land there about half the time, Hard well under a fifth —
-  // confirmed by simulating 50,000 draws), so newPuzzle() doesn't just
-  // draw randomly: it picks a target label first and retries until a
-  // drawn puzzle actually lands on it, which a second simulation (of that
-  // exact retry loop, 20,000 runs) confirmed yields Easy/Medium/Hard in
-  // close to equal thirds. Re-verified against the current (1,908-word)
-  // WORDS_GOOD pool with the Easy/Medium/Hard cutoffs as they stand now
-  // (3-4/5-6/7-9): raw draws skew much harder towards Hard this time
-  // (4.1/36.5/59.4% Easy/Medium/Hard, since 7+ points is a wide top band),
-  // but the target-and-retry loop still lands on 33.7/32.9/33.3% -- at a
-  // steeper but still safe retry cost (worst case seen: 812 tries, under
-  // half the cap below) since genuine Easy draws are now rarer to land on
-  // by chance.
+  // Random word+blank draws skew heavily away from Easy (about 4/37/59%
+  // Easy/Medium/Hard against the current 1,773-word pool), so
+  // generatePuzzle() doesn't just accept a random draw: it is given a
+  // target label (Easy or Medium at even odds in Practice; Easy, Medium,
+  // then Hard in Daily) and retries until a draw actually lands on it.
+  // Simulating that retry loop found a worst case of 812 tries, under half
+  // its 2000-try cap.
   const RARITY_QUARTILES = (() => {
     const sortedRanks = [...WORDS_GOOD_RANK].sort((a, b) => a - b);
     const n = sortedRanks.length;
@@ -90,82 +80,16 @@
     return grouping.groups.findIndex((g) => g.indices.includes(letterIndex));
   }
 
-  function groupingNotes(grouping) {
-    const notes = [];
-    if (grouping.direction === "decreasing") notes.push("counting down");
-    if (grouping.wrapped) notes.push("wraps around");
-    return notes.join(", ");
-  }
-
-  // Renders a word as one column per letter (its letter, with its
-  // press-count digit small and gray underneath), for the practice-mode
-  // word display. With a grouping, each letter is colored by merged group
-  // (matching the colored digit-line breakdown); without one (the
-  // not-yet-answered or "not good" case), letters show in the default
-  // color and only the digits are didactic.
-  function renderWordDigits(container, word, grouping) {
-    container.innerHTML = "";
-    word.split("").forEach((letter, i) => {
-      const wrap = document.createElement("span");
-      wrap.className = "word-letter";
-
-      const letterSpan = document.createElement("span");
-      letterSpan.className = "word-letter-text";
-      letterSpan.textContent = letter.toUpperCase();
-      if (grouping) {
-        letterSpan.style.color =
-          GROUP_COLORS[groupIndexForLetter(grouping, i) % GROUP_COLORS.length];
-      }
-      wrap.appendChild(letterSpan);
-
-      const numSpan = document.createElement("span");
-      numSpan.className = "word-letter-num";
-      numSpan.textContent = String(PRESS_COUNTS[letter]);
-      wrap.appendChild(numSpan);
-
-      container.appendChild(wrap);
-    });
-  }
-
-  // Lays out a word's digits by merged group, e.g. SPENT -> 4 1 2 (2 1),
-  // colored to match renderWordDigits's letter colors.
-  // Walks the digits left to right (not grouping.groups in whatever order
-  // they were built) so a group that wraps around the ends of the word —
-  // e.g. hindu's first and last digits merging into one group — renders as
-  // two separate parenthesized pieces in their actual positions, sharing
-  // one color, rather than one piece jumping out of position.
-  function renderDigitLine(container, digits, grouping) {
-    container.innerHTML = "";
-    const n = digits.length;
-    let i = 0;
-    while (i < n) {
-      const gi = groupIndexForLetter(grouping, i);
-      const groupSize = grouping.groups[gi].indices.length;
-      let j = i;
-      while (j < n && groupIndexForLetter(grouping, j) === gi) j++;
-
-      const runDigits = digits.slice(i, j);
-      const span = document.createElement("span");
-      span.style.color = GROUP_COLORS[gi % GROUP_COLORS.length];
-      span.textContent =
-        groupSize > 1 ? `(${runDigits.join(" ")})` : `${runDigits[0]}`;
-      container.appendChild(span);
-      container.appendChild(document.createTextNode(" "));
-      i = j;
-    }
-  }
-
   // ---------------------------------------------------------------------
   // Top-of-page rule examples
   // ---------------------------------------------------------------------
 
-  // Like renderWordDigits, but a multi-letter group's digits get split
-  // parentheses around the first/last letter of each contiguous run it
-  // occupies — e.g. PUNTS's merged N+T shows "(2" / "1)" — the same
-  // convention a wraparound merge needs (two separate "(x)" pieces in
-  // their actual positions, per renderDigitLine) generalized to any
-  // group. Scoped to the examples so it doesn't change how Practice/
-  // Hangman already render their own (unparenthesized) per-letter digits.
+  // Renders a word as one column per letter (its letter colored by merged
+  // group, with its press-count digit small and gray underneath). A
+  // multi-letter group's digits get split parentheses around the first/last
+  // letter of each contiguous run it occupies — e.g. PUNTS's merged N+T
+  // shows "(2" / "1)" — so a wraparound merge shows as two separate "(x)"
+  // pieces in their actual positions.
   function renderExampleWord(container, word, grouping) {
     container.innerHTML = "";
     const n = word.length;
@@ -248,104 +172,57 @@
     });
   })();
 
+
   // ---------------------------------------------------------------------
-  // Practice mode (yes/no quiz)
+  // Seeded randomness for the Daily puzzles
+  // ---------------------------------------------------------------------
+
+  // FNV-1a string hash -> 32-bit seed.
+  function hashString(str) {
+    let h = 2166136261;
+    for (let i = 0; i < str.length; i++) {
+      h ^= str.charCodeAt(i);
+      h = Math.imul(h, 16777619);
+    }
+    return h >>> 0;
+  }
+
+  // mulberry32: a small, fast PRNG that gives every player the same
+  // sequence for the same seed (Math.random can't be seeded).
+  function seededRandom(seed) {
+    let a = seed >>> 0;
+    return () => {
+      a = (a + 0x6d2b79f5) | 0;
+      let t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  // Today's date in US Central time (CST or CDT, whichever is in effect),
+  // as "YYYY-MM-DD", so the Daily changes at Central midnight for everyone.
+  const CENTRAL_DATE = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Chicago",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
+  function centralDateKey() {
+    return CENTRAL_DATE.format(new Date());
+  }
+
+  // Daily #1 is 2026-10-16; each Central-time day after that is one more.
+  const DAILY_EPOCH = Date.UTC(2026, 9, 16);
+  function dailyNumber(dateKey) {
+    const [y, m, d] = dateKey.split("-").map(Number);
+    return Math.round((Date.UTC(y, m - 1, d) - DAILY_EPOCH) / 86400000) + 1;
+  }
+
+  // ---------------------------------------------------------------------
+  // The game (Practice and Daily modes share the phone)
   // ---------------------------------------------------------------------
   (() => {
-    const wordEl = document.getElementById("word");
-    const goodBtn = document.getElementById("guess-good");
-    const badBtn = document.getElementById("guess-bad");
-    const resultEl = document.getElementById("result");
-    const explanationEl = document.getElementById("explanation");
-    const solutionEl = document.getElementById("solution");
-    const nextBtn = document.getElementById("next");
-    const scoreEl = document.getElementById("score");
-    const streakEl = document.getElementById("streak");
-
-    let currentWord = "";
-    let currentDigits = [];
-    let answered = false;
-    let correct = 0;
-    let total = 0;
-    let streak = 0;
-    const seen = new Set();
-
-    function pickWord() {
-      const pool = Math.random() < 0.5 ? WORDS_GOOD : WORDS_BAD;
-      let word;
-      let attempts = 0;
-      do {
-        word = pool[Math.floor(Math.random() * pool.length)];
-        attempts++;
-      } while (seen.has(word) && attempts < 20);
-      seen.add(word);
-      if (seen.size > (WORDS_GOOD.length + WORDS_BAD.length) * 0.9) {
-        seen.clear();
-      }
-      return word;
-    }
-
-    function newRound() {
-      answered = false;
-      resultEl.textContent = "";
-      resultEl.className = "result";
-      explanationEl.textContent = "";
-      solutionEl.textContent = "";
-      nextBtn.hidden = true;
-      goodBtn.disabled = false;
-      badBtn.disabled = false;
-
-      currentWord = pickWord();
-      currentDigits = wordToDigits(currentWord);
-      renderWordDigits(wordEl, currentWord, null);
-    }
-
-    function submitGuess(guessGood) {
-      if (answered) return;
-      answered = true;
-      goodBtn.disabled = true;
-      badBtn.disabled = true;
-      nextBtn.hidden = false;
-
-      const grouping = findSequentialGrouping(currentDigits);
-      const actuallyGood = grouping !== null;
-      const wasRight = guessGood === actuallyGood;
-
-      total++;
-      if (wasRight) {
-        correct++;
-        streak++;
-      } else {
-        streak = 0;
-      }
-      scoreEl.textContent = `${correct} / ${total}`;
-      streakEl.textContent = streak;
-
-      resultEl.textContent = wasRight ? "✅ Correct!" : "❌ Not quite";
-      resultEl.className = "result " + (wasRight ? "right" : "wrong");
-
-      if (actuallyGood) {
-        const notes = groupingNotes(grouping);
-        explanationEl.textContent = "GOOD" + (notes ? " — " + notes : "");
-        renderWordDigits(wordEl, currentWord, grouping);
-        renderDigitLine(solutionEl, currentDigits, grouping);
-      } else {
-        explanationEl.textContent =
-          "NOT GOOD — no way to merge neighboring digits into a sequential run.";
-      }
-    }
-
-    goodBtn.addEventListener("click", () => submitGuess(true));
-    badBtn.addEventListener("click", () => submitGuess(false));
-    nextBtn.addEventListener("click", newRound);
-
-    newRound();
-  })();
-
-  // ---------------------------------------------------------------------
-  // Hangman mode
-  // ---------------------------------------------------------------------
-  const hangman = (() => {
+    const screenBodyEl = document.querySelector(".phone-screen-body");
     const tilesEl = document.getElementById("hang-tiles");
     const tapKeypadEl = document.getElementById("keypad");
     const backspaceBtn = document.getElementById("tap-backspace");
@@ -357,20 +234,26 @@
     const missedEl = document.getElementById("hang-missed");
     const solvedEl = document.getElementById("hang-solved");
     const attemptsEl = document.getElementById("hang-attempts");
+    const dailyLabelEl = document.getElementById("daily-label");
+    const dailyResultsEl = document.getElementById("daily-results");
+    const dailyRowsEl = document.getElementById("daily-rows");
+    const modeToggleBtn = document.getElementById("mode-toggle");
 
     const MIN_VALID_ANSWERS = 3;
     const MAX_VALID_ANSWERS = 8;
+    const DAILY_STORAGE_KEY = "t9tangle-daily";
 
-    let hiddenWord = "";
-    let blanks = new Set();
-    let validAnswers = [];
-    let found = new Set();
-    let complete = false;
-    let attempts = 0;
+    let mode = "practice";
     let solvedCount = 0;
-    const seen = new Set();
-    let started = false;
-    let isFirstPuzzle = true;
+
+    // A puzzle: the hidden word, which positions are blank, every valid
+    // answer, plus the player's progress on it. Practice keeps one current
+    // puzzle and Daily keeps its three, so switching modes never loses
+    // either one's progress.
+    //   { word, blanks: Set, answers: [], difficulty, found: Set,
+    //     complete, attempts, message: { text, kind } | null }
+    const practice = { puzzle: null, seen: new Set(), isFirst: true };
+    let daily = null; // { dateKey, number, puzzles: [3], index } (index 3 = all done)
 
     // Tap-input state: every blank position in the puzzle, which one (if
     // any) is active, what's been filled so far, and the in-progress
@@ -390,7 +273,15 @@
     let pendingCount = 0;
     let pendingTimer = null;
 
+    function currentPuzzle() {
+      if (mode === "practice") return practice.puzzle;
+      return daily.index < daily.puzzles.length ? daily.puzzles[daily.index] : null;
+    }
+
+    // ---- Puzzle generation ----------------------------------------------
+
     function pickGoodWord() {
+      const seen = practice.seen;
       let word;
       let tries = 0;
       do {
@@ -426,21 +317,188 @@
       );
     }
 
+    function rarestRankOf(answers) {
+      return Math.max(...answers.map((w) => WORD_RANK.get(w)));
+    }
+
+    // Only offers puzzles with MIN_VALID_ANSWERS..MAX_VALID_ANSWERS valid
+    // answers AND the requested difficulty, retrying draws until one lands
+    // on it (see the difficulty notes at the top).
+    function generatePuzzle(targetDifficulty) {
+      let word;
+      let blanks;
+      let answers;
+      let difficulty;
+      let tries = 0;
+      do {
+        word = pickGoodWord();
+        blanks = pickBlanks(word);
+        answers = computeValidAnswers(word, blanks);
+        difficulty =
+          answers.length >= MIN_VALID_ANSWERS && answers.length <= MAX_VALID_ANSWERS
+            ? difficultyForPuzzle(rarestRankOf(answers), blanks.size, answers.length)
+            : null;
+        tries++;
+      } while (difficulty !== targetDifficulty && tries < 2000);
+      return {
+        word,
+        blanks,
+        answers,
+        difficulty: difficultyForPuzzle(rarestRankOf(answers), blanks.size, answers.length),
+        found: new Set(),
+        complete: false,
+        attempts: 0,
+        message: null,
+      };
+    }
+
+    // Every distinct puzzle the rules allow, grouped by difficulty, for the
+    // Daily. A puzzle is identified by its pattern (revealed letters plus
+    // blanks, e.g. "l__s"), since two hidden words with the same pattern
+    // make the very same puzzle. Built once, on first opening Daily (about
+    // 130k patterns, roughly a tenth of a second).
+    let dailyPools = null;
+    function buildDailyPools() {
+      const byPattern = new Map();
+      WORDS_GOOD.forEach((w) => {
+        const n = w.length;
+        for (let mask = 0; mask < 1 << n; mask++) {
+          let blankCount = 0;
+          for (let m = mask; m; m &= m - 1) blankCount++;
+          if (blankCount < 2 || blankCount > n - 2) continue;
+          let pattern = "";
+          for (let i = 0; i < n; i++) pattern += (mask >> i) & 1 ? "_" : w[i];
+          let entry = byPattern.get(pattern);
+          if (!entry) byPattern.set(pattern, (entry = { blankCount, answers: [] }));
+          entry.answers.push(w);
+        }
+      });
+      const pools = { Easy: [], Medium: [], Hard: [] };
+      byPattern.forEach((entry, pattern) => {
+        const count = entry.answers.length;
+        if (count < MIN_VALID_ANSWERS || count > MAX_VALID_ANSWERS) return;
+        const label = difficultyForPuzzle(rarestRankOf(entry.answers), entry.blankCount, count);
+        pools[label].push({ pattern, answers: entry.answers, difficulty: label });
+      });
+      return pools;
+    }
+
+    // Day n's puzzle of a difficulty is entry n of a fixed shuffled order
+    // of that difficulty's pool, so no Daily puzzle repeats until the whole
+    // pool has been used (only ~130 Easy puzzles exist, which random draws
+    // were repeating within days); after that a fresh shuffle starts. The
+    // date alone decides everything, so every player gets the same three.
+    function dailyPuzzle(label, number) {
+      const pool = dailyPools[label];
+      const day = number - 1;
+      const cycle = Math.floor(day / pool.length);
+      const pos = day - cycle * pool.length;
+      const random = seededRandom(hashString(`t9-tangle-daily:${label}:${cycle}`));
+      const order = [...pool.keys()];
+      for (let i = order.length - 1; i > 0; i--) {
+        const j = Math.floor(random() * (i + 1));
+        [order[i], order[j]] = [order[j], order[i]];
+      }
+      const { pattern, answers, difficulty } = pool[order[pos]];
+      // The answer shown as "the" word (in the Daily results) is the most
+      // common one.
+      const word = answers.reduce((a, b) => (WORD_RANK.get(b) < WORD_RANK.get(a) ? b : a));
+      return {
+        word,
+        blanks: new Set([...pattern].flatMap((ch, i) => (ch === "_" ? [i] : []))),
+        answers,
+        difficulty,
+        found: new Set(),
+        complete: false,
+        attempts: 0,
+        message: null,
+      };
+    }
+
+    // Practice: Easy or Medium at even odds, except that the very first
+    // puzzle a page load shows is always Easy.
+    function newPracticePuzzle() {
+      const target = practice.isFirst ? "Easy" : Math.random() < 0.5 ? "Easy" : "Medium";
+      practice.isFirst = false;
+      practice.puzzle = generatePuzzle(target);
+    }
+
+    // Daily: one Easy, one Medium and one Hard, in that order, set by
+    // today's Central-time date.
+    function loadDaily() {
+      const dateKey = centralDateKey();
+      if (daily && daily.dateKey === dateKey) return;
+      if (!dailyPools) dailyPools = buildDailyPools();
+      const number = dailyNumber(dateKey);
+      daily = {
+        dateKey,
+        number,
+        puzzles: DIFFICULTY_LABELS.map((label) => dailyPuzzle(label, number)),
+        index: 0,
+      };
+      restoreDaily();
+    }
+
+    // Daily progress is kept in this browser so a reload doesn't reset it
+    // (or let today's puzzles be replayed); it's ignored once the date
+    // moves on. Storage can be unavailable (private windows, blocked site
+    // data), in which case Daily still works, just without remembering.
+    function saveDaily() {
+      try {
+        localStorage.setItem(
+          DAILY_STORAGE_KEY,
+          JSON.stringify({
+            dateKey: daily.dateKey,
+            index: daily.index,
+            puzzles: daily.puzzles.map((p) => ({
+              found: [...p.found],
+              complete: p.complete,
+              attempts: p.attempts,
+            })),
+          })
+        );
+      } catch (e) {
+        // Not remembered; nothing else to do.
+      }
+    }
+
+    function restoreDaily() {
+      let saved = null;
+      try {
+        saved = JSON.parse(localStorage.getItem(DAILY_STORAGE_KEY));
+      } catch (e) {
+        saved = null;
+      }
+      if (!saved || saved.dateKey !== daily.dateKey || !Array.isArray(saved.puzzles)) return;
+      daily.index = Math.min(Math.max(0, saved.index | 0), daily.puzzles.length);
+      daily.puzzles.forEach((p, i) => {
+        const s = saved.puzzles[i];
+        if (!s) return;
+        p.found = new Set((s.found || []).filter((w) => p.answers.includes(w)));
+        p.complete = !!s.complete;
+        p.attempts = s.attempts | 0;
+        if (p.complete) p.message = endMessage(p);
+      });
+    }
+
+    // The screen message a finished puzzle shows.
+    function endMessage(p) {
+      const missed = p.answers.filter((w) => !p.found.has(w));
+      if (missed.length === 0) return { text: "Got 'em all!", kind: "success" };
+      return { text: "Missed: " + missed.map((w) => w.toUpperCase()).join(", "), kind: "missed" };
+    }
+
+    // ---- Rendering ------------------------------------------------------
+
     // Renders each tile's letter (revealed, already tap-filled, or a dimmed
     // preview of the in-progress multi-tap cycle) plus the small press-count
     // digit underneath it, and boxes whichever blank is next to fill.
     function renderTiles() {
+      const p = currentPuzzle();
       tilesEl.innerHTML = "";
-      hiddenWord.split("").forEach((letter, i) => {
-        const tile = document.createElement("div");
-        tile.className = "hang-tile";
-        const isBlank = blanks.has(i);
-        if (isBlank) {
-          tile.classList.add("blank");
-          tile.addEventListener("click", () => handleTileClick(i));
-        }
-        if (i === activeTarget) tile.classList.add("active");
-
+      if (!p) return;
+      p.word.split("").forEach((letter, i) => {
+        const isBlank = p.blanks.has(i);
         let shown = null;
         let isPreview = false;
         if (!isBlank) {
@@ -451,21 +509,28 @@
           shown = groupLetterAt(pendingKey, pendingCount);
           isPreview = true;
         }
-
-        if (shown) {
-          const letterSpan = document.createElement("span");
-          letterSpan.className = "hang-letter" + (isPreview ? " pending-letter" : "");
-          letterSpan.textContent = shown.toUpperCase();
-          tile.appendChild(letterSpan);
-
-          const numSpan = document.createElement("span");
-          numSpan.className = "hang-pressnum";
-          numSpan.textContent = String(PRESS_COUNTS[shown]);
-          tile.appendChild(numSpan);
-        }
-
+        const tile = makeTile(shown, isBlank, isPreview);
+        if (isBlank) tile.addEventListener("click", () => handleTileClick(i));
+        if (i === activeTarget) tile.classList.add("active");
         tilesEl.appendChild(tile);
       });
+    }
+
+    function makeTile(letter, isBlank, isPreview) {
+      const tile = document.createElement("div");
+      tile.className = "hang-tile" + (isBlank ? " blank" : "");
+      if (letter) {
+        const letterSpan = document.createElement("span");
+        letterSpan.className = "hang-letter" + (isPreview ? " pending-letter" : "");
+        letterSpan.textContent = letter.toUpperCase();
+        tile.appendChild(letterSpan);
+
+        const numSpan = document.createElement("span");
+        numSpan.className = "hang-pressnum";
+        numSpan.textContent = String(PRESS_COUNTS[letter]);
+        tile.appendChild(numSpan);
+      }
+      return tile;
     }
 
     // Highlights which letter a mid-cycle key is currently on, dimming the
@@ -489,6 +554,73 @@
       renderKeypadHighlight();
     }
 
+    function setKeypadDisabled(disabled) {
+      tapKeypadEl.querySelectorAll("button").forEach((b) => {
+        b.disabled = disabled;
+      });
+      // Lets the decorative keys (blank, *, nav pad) grey out too.
+      tapKeypadEl.classList.toggle("keypad-off", disabled);
+    }
+
+    function renderScreenMessage(message) {
+      missedEl.textContent = message ? message.text : "";
+      missedEl.className = message ? message.kind : "";
+    }
+
+    // The three Daily answers, top to bottom, tiled like the puzzles.
+    function renderDailyResults() {
+      dailyRowsEl.innerHTML = "";
+      daily.puzzles.forEach((p) => {
+        const row = document.createElement("div");
+        row.className = "hang-tiles";
+        p.word.split("").forEach((letter, i) => row.appendChild(makeTile(letter, p.blanks.has(i), false)));
+        dailyRowsEl.appendChild(row);
+      });
+    }
+
+    // Redraws everything about the current puzzle (or the Daily results),
+    // e.g. after switching modes or moving on to another puzzle.
+    function renderAll() {
+      dailyLabelEl.hidden = mode !== "daily";
+      if (mode === "daily") dailyLabelEl.textContent = `Daily #${daily.number}`;
+
+      const p = currentPuzzle();
+      const showResults = !p;
+      screenBodyEl.classList.toggle("show-results", showResults);
+      dailyResultsEl.hidden = !showResults;
+
+      giveUpBtn.textContent = "Give up";
+      giveUpBtn.classList.remove("next-key");
+
+      if (showResults) {
+        renderDailyResults();
+        renderTiles();
+        setKeypadDisabled(true);
+        renderKeypadHighlight();
+        return;
+      }
+
+      difficultyEl.textContent = p.difficulty;
+      difficultyEl.className = "difficulty-" + p.difficulty.toLowerCase();
+      updateCounter();
+      renderFoundList();
+      renderScreenMessage(p.message);
+      attemptsEl.textContent = String(p.attempts);
+
+      setKeypadDisabled(p.complete);
+      if (p.complete) {
+        // The whole keypad switches off except the Give up key, which turns
+        // into the way on to the next puzzle.
+        giveUpBtn.disabled = false;
+        giveUpBtn.textContent =
+          mode === "practice" ? "New puzzle" : daily.index < daily.puzzles.length - 1 ? "Next puzzle" : "See results";
+        giveUpBtn.classList.add("next-key");
+      }
+      render();
+    }
+
+    // ---- Tap input ------------------------------------------------------
+
     function groupLetterAt(group, count) {
       return group[(count - 1) % group.length];
     }
@@ -500,12 +632,9 @@
       }
     }
 
-    function setKeypadDisabled(disabled) {
-      tapKeypadEl.querySelectorAll("button").forEach((b) => {
-        b.disabled = disabled;
-      });
-      // Lets the decorative keys (blank, *, 0, nav pad) grey out too.
-      tapKeypadEl.classList.toggle("keypad-off", disabled);
+    function isPlayable() {
+      const p = currentPuzzle();
+      return p && !p.complete;
     }
 
     // The blank to land on after filling `pos`: the next still-empty blank
@@ -526,10 +655,10 @@
     // into the active blank (called after a 1s pause, when a different
     // key is tapped, or when the player taps a different blank or Enter),
     // then advances to the next blank per nextTargetAfter. Submission is
-    // no longer automatic — the player taps Enter when ready.
+    // never automatic — the player taps Send when ready.
     function commitPending() {
       clearPendingTimer();
-      if (!pendingKey || complete || activeTarget === null) {
+      if (!pendingKey || !isPlayable() || activeTarget === null) {
         pendingKey = null;
         pendingCount = 0;
         return;
@@ -545,12 +674,12 @@
     }
 
     function handleKeyClick(group) {
-      if (complete || activeTarget === null) return;
+      if (!isPlayable() || activeTarget === null) return;
 
       if (pendingKey && pendingKey !== group) {
         commitPending();
       }
-      if (complete || activeTarget === null) return;
+      if (!isPlayable() || activeTarget === null) return;
 
       pendingCount = pendingKey === group ? pendingCount + 1 : 1;
       pendingKey = group;
@@ -563,7 +692,8 @@
     // switching to a different letter key), so a tap elsewhere never
     // silently drops an in-progress letter.
     function handleTileClick(pos) {
-      if (complete || !blanks.has(pos)) return;
+      const p = currentPuzzle();
+      if (!isPlayable() || !p.blanks.has(pos)) return;
       if (pendingKey) commitPending();
       activeTarget = pos;
       render();
@@ -573,7 +703,7 @@
     // not position), so it stays correct even after jumping around with
     // tile clicks.
     function handleBackspace() {
-      if (complete) return;
+      if (!isPlayable()) return;
       if (pendingKey) {
         // Cancel the in-progress cycle rather than committing then
         // immediately deleting it.
@@ -591,9 +721,8 @@
     }
 
     function handleEnter() {
-      if (complete) return;
+      if (!isPlayable()) return;
       if (pendingKey) commitPending();
-      if (complete) return;
 
       const allFilled = activeBlankPositions.every((pos) => filledMap.has(pos));
       if (!allFilled) {
@@ -604,118 +733,59 @@
     }
 
     function assembleGuess() {
-      return hiddenWord
+      const p = currentPuzzle();
+      return p.word
         .split("")
-        .map((ch, i) => (blanks.has(i) ? filledMap.get(i) : ch))
+        .map((ch, i) => (p.blanks.has(i) ? filledMap.get(i) : ch))
         .join("");
     }
 
+    // Clears any half-typed guess and points input at the first blank of
+    // whatever puzzle is current.
     function resetGuessInProgress() {
+      const p = currentPuzzle();
+      activeBlankPositions = p ? [...p.blanks].sort((a, b) => a - b) : [];
       filledMap = new Map();
       fillHistory = [];
       activeTarget = activeBlankPositions.length > 0 ? activeBlankPositions[0] : null;
       pendingKey = null;
       pendingCount = 0;
       clearPendingTimer();
-      render();
     }
 
+    // ---- Guessing and finishing puzzles -------------------------------
+
     function updateCounter() {
-      counterEl.textContent = `${found.size} / ${validAnswers.length} found`;
+      const p = currentPuzzle();
+      counterEl.textContent = `${p.found.size} / ${p.answers.length} found`;
     }
 
     function renderFoundList() {
-      foundListEl.textContent = [...found].map((w) => w.toUpperCase()).join(", ");
+      const p = currentPuzzle();
+      foundListEl.textContent = [...p.found].map((w) => w.toUpperCase()).join(", ");
     }
 
-    function newPuzzle() {
-      complete = false;
-      attempts = 0;
-      attemptsEl.textContent = "0";
-      clearScreenMessage();
-      giveUpBtn.textContent = "Give up";
-      giveUpBtn.classList.remove("next-key");
-      setKeypadDisabled(false);
-      found = new Set();
-      renderFoundList();
-
-      // Only offer puzzles with MIN_VALID_ANSWERS..MAX_VALID_ANSWERS valid
-      // answers AND a difficulty matching a randomly-chosen target label —
-      // picking the target first and retrying until a draw actually lands
-      // on it (rather than just accepting whatever a random draw gives)
-      // is what keeps Easy/Medium/Hard roughly equally likely despite the
-      // natural skew toward Hard under the current point thresholds.
-      // Simulating this exact loop 20,000 times found a worst case of 812
-      // tries, comfortably under the cap below, with no danger of looping
-      // for long even if it's ever hit.
-      // The very first puzzle a page load ever shows is always Easy
-      // (a gentler landing than a random label that could come up Hard),
-      // regardless of mode-switching — every puzzle after that goes back
-      // to picking a random target as usual.
-      const targetDifficulty = isFirstPuzzle
-        ? "Easy"
-        : DIFFICULTY_LABELS[Math.floor(Math.random() * DIFFICULTY_LABELS.length)];
-      isFirstPuzzle = false;
-      let tries = 0;
-      let difficulty;
-      do {
-        hiddenWord = pickGoodWord();
-        blanks = pickBlanks(hiddenWord);
-        validAnswers = computeValidAnswers(hiddenWord, blanks);
-        difficulty =
-          validAnswers.length >= MIN_VALID_ANSWERS && validAnswers.length <= MAX_VALID_ANSWERS
-            ? difficultyForPuzzle(rarestRankOf(validAnswers), blanks.size, validAnswers.length)
-            : null;
-        tries++;
-      } while (difficulty !== targetDifficulty && tries < 2000);
-
-      activeBlankPositions = [...blanks].sort((a, b) => a - b);
-      resetGuessInProgress();
-      updateCounter();
-      renderDifficulty();
-    }
-
-    function rarestRankOf(answers) {
-      return Math.max(...answers.map((w) => WORD_RANK.get(w)));
-    }
-
-    function renderDifficulty() {
-      const difficulty = difficultyForPuzzle(
-        rarestRankOf(validAnswers),
-        blanks.size,
-        validAnswers.length
-      );
-      difficultyEl.textContent = difficulty;
-      difficultyEl.className = "difficulty-" + difficulty.toLowerCase();
-    }
-
-    function completePuzzle() {
-      complete = true;
-      clearPendingTimer();
-      pendingKey = null;
-      pendingCount = 0;
-      // The whole keypad switches off except the Give up key, which turns
-      // into the way to start the next puzzle.
-      setKeypadDisabled(true);
-      giveUpBtn.disabled = false;
-      giveUpBtn.textContent = "New puzzle";
-      giveUpBtn.classList.add("next-key");
-      renderKeypadHighlight();
+    // The screen line under the found words is the game's only message
+    // area: "Incorrect", "Already found" or "Fill in all blanks" during
+    // play, the missed answers after giving up, or "Got 'em all!".
+    function showScreenMessage(text, kind) {
+      const p = currentPuzzle();
+      p.message = { text, kind };
+      renderScreenMessage(p.message);
     }
 
     // Every blank is filled by construction (tap input can't produce a
     // wrong-length guess or one that disagrees with a revealed letter), so
     // there's nothing to validate before checking realness/goodness below.
     function submitGuess() {
-      if (complete) return;
+      const p = currentPuzzle();
       const guess = assembleGuess();
       resetGuessInProgress();
+      render();
 
-      // Clear the previous guess's response before deciding this one's.
-      clearScreenMessage();
-
-      attempts++;
-      attemptsEl.textContent = String(attempts);
+      p.attempts++;
+      attemptsEl.textContent = String(p.attempts);
+      if (mode === "daily") saveDaily();
 
       if (INAPPROPRIATE_SET.has(guess)) {
         showScreenMessage("See me after class", "scold");
@@ -730,58 +800,80 @@
         return;
       }
 
-      if (found.has(guess)) {
+      if (p.found.has(guess)) {
         showScreenMessage("Already found", "note");
         return;
       }
 
-      found.add(guess);
+      p.found.add(guess);
+      p.message = null;
+      renderScreenMessage(null);
       updateCounter();
       renderFoundList();
 
-      if (found.size === validAnswers.length) winPuzzle();
+      if (p.found.size === p.answers.length) {
+        winPuzzle();
+      } else if (mode === "daily") {
+        saveDaily();
+      }
+    }
+
+    function finishPuzzle() {
+      const p = currentPuzzle();
+      p.complete = true;
+      p.message = endMessage(p);
+      if (mode === "daily") saveDaily();
+      resetGuessInProgress();
+      renderAll();
     }
 
     function winPuzzle() {
       solvedCount++;
       solvedEl.textContent = String(solvedCount);
-      showScreenMessage("Got 'em all!", "success");
-      completePuzzle();
+      finishPuzzle();
       window.T9Celebrate.celebrate(document.querySelector(".phone"));
+    }
+
+    // Lists on the phone's screen only the answers the player didn't find.
+    function giveUp() {
+      if (!isPlayable()) return;
+      finishPuzzle();
     }
 
     // TESTING ONLY: the 0 key wins the current puzzle on the spot (every
     // answer counted as found), to try out the win celebration quickly.
     function debugWin() {
-      if (complete) return;
-      found = new Set(validAnswers);
-      updateCounter();
-      renderFoundList();
+      if (!isPlayable()) return;
+      const p = currentPuzzle();
+      p.found = new Set(p.answers);
       winPuzzle();
     }
 
-    // The screen line under the found words is the game's only message
-    // area: "Incorrect", "Already found" or "Fill in all blanks" during
-    // play, the missed answers after giving up, or "Got 'em all!".
-    function clearScreenMessage() {
-      missedEl.textContent = "";
-      missedEl.classList.remove("incorrect", "success", "note", "scold");
+    // Once a puzzle is over, the Give up key moves on: a fresh puzzle in
+    // Practice, the next of the three in Daily, then the Daily results.
+    function nextPuzzle() {
+      if (mode === "practice") {
+        newPracticePuzzle();
+      } else {
+        daily.index++;
+        saveDaily();
+      }
+      resetGuessInProgress();
+      renderAll();
     }
 
-    function showScreenMessage(text, kind) {
-      clearScreenMessage();
-      missedEl.textContent = text;
-      missedEl.classList.add(kind);
-    }
+    // ---- Mode toggle ----------------------------------------------------
 
-    // Clears any leftover message from the last guess, and lists on the
-    // phone's screen only the answers the player didn't find.
-    function giveUp() {
-      if (complete) return;
-      const missed = validAnswers.filter((w) => !found.has(w));
-      clearScreenMessage();
-      missedEl.textContent = "Missed: " + missed.map((w) => w.toUpperCase()).join(", ");
-      completePuzzle();
+    function setMode(newMode) {
+      if (newMode === mode) return;
+      mode = newMode;
+      if (mode === "daily") loadDaily();
+      modeToggleBtn.setAttribute("aria-checked", String(mode === "daily"));
+      document.querySelectorAll(".mode-label").forEach((el) => {
+        el.classList.toggle("active", el.dataset.mode === mode);
+      });
+      resetGuessInProgress();
+      renderAll();
     }
 
     tapKeypadEl.querySelectorAll(".tap-key[data-letters]").forEach((btn) => {
@@ -789,46 +881,20 @@
     });
     backspaceBtn.addEventListener("click", handleBackspace);
     enterBtn.addEventListener("click", handleEnter);
-    giveUpBtn.addEventListener("click", () => (complete ? newPuzzle() : giveUp()));
+    giveUpBtn.addEventListener("click", () => {
+      const p = currentPuzzle();
+      if (!p) return;
+      if (p.complete) nextPuzzle();
+      else giveUp();
+    });
     document.getElementById("debug-win").addEventListener("click", debugWin);
+    modeToggleBtn.addEventListener("click", () => setMode(mode === "practice" ? "daily" : "practice"));
+    document.querySelectorAll(".mode-label").forEach((el) => {
+      el.addEventListener("click", () => setMode(el.dataset.mode));
+    });
 
-    return {
-      startIfNeeded() {
-        if (!started) {
-          started = true;
-          newPuzzle();
-        }
-      },
-    };
+    newPracticePuzzle();
+    resetGuessInProgress();
+    renderAll();
   })();
-
-  // ---------------------------------------------------------------------
-  // Mode toggle
-  // ---------------------------------------------------------------------
-  const yesnoSection = document.getElementById("yesno-mode");
-  const hangmanSection = document.getElementById("hangman-mode");
-  const modeToggleBtn = document.getElementById("mode-toggle");
-
-  let mode = "hangman";
-
-  function renderModeToggle() {
-    modeToggleBtn.textContent =
-      mode === "yesno"
-        ? "Mode: Practice  (switch to Hangman)"
-        : "Mode: Hangman  (switch to Practice)";
-  }
-
-  function setMode(newMode) {
-    mode = newMode;
-    yesnoSection.hidden = mode !== "yesno";
-    hangmanSection.hidden = mode !== "hangman";
-    renderModeToggle();
-    if (mode === "hangman") hangman.startIfNeeded();
-  }
-
-  modeToggleBtn.addEventListener("click", () => {
-    setMode(mode === "yesno" ? "hangman" : "yesno");
-  });
-
-  setMode(mode);
 })();
