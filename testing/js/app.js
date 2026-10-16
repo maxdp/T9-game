@@ -892,7 +892,9 @@
       if (p.complete) nextPuzzle();
       else giveUp();
     });
-    document.getElementById("debug-win").addEventListener("click", debugWin);
+    // Only the testing page has the debug 0 key; on live 0 is inert.
+    const debugWinBtn = document.getElementById("debug-win");
+    if (debugWinBtn) debugWinBtn.addEventListener("click", debugWin);
     modeToggleBtn.addEventListener("click", () => setMode(mode === "practice" ? "daily" : "practice"));
     document.querySelectorAll(".mode-label").forEach((el) => {
       el.addEventListener("click", () => setMode(el.dataset.mode));
