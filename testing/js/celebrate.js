@@ -143,25 +143,15 @@
       <path d="M19.5 27.8 Q25 31.3 30.5 27.8" fill="none" stroke="#2a2f36" stroke-width="1.1" stroke-linecap="round"/><path d="M33.5 27.8 Q39 31.3 44.5 27.8" fill="none" stroke="#2a2f36" stroke-width="1.1" stroke-linecap="round"/>
       <path d="M18.5 12.5 Q24 9.5 30 11.5" fill="none" stroke="#2a2f36" stroke-width="2.4" stroke-linecap="round"/><path d="M34 10.5 Q40 7.5 45.5 10" fill="none" stroke="#2a2f36" stroke-width="2.4" stroke-linecap="round"/></svg>`,
 
-    // Running buddy figure: a chunky yellow, thick-black-outlined figure
-    // leaning into a full stride, with both arms swinging.
     (u) => {
-      // Thick rounded limbs, each a tapered bean shape, black outline then
-      // yellow fill; leaning hard into the run, facing right.
-      const shapes = [
-        // back arm (the added second arm), swung behind
-        'M31.5 19.5 C27 20.5 22.5 22.5 19.5 25.5 C17 28 16 31.5 16.5 34 C17 36.5 20.5 36.5 21 33.5 C21.5 31 23 29 25.5 27.5 C28 26 30.5 25.5 33 25 Z',
-        // back leg, kicked out behind
-        'M27 34 C24 39 20 42 14 43 C10.5 43.5 9.5 47 13 47.5 C19.5 48.5 25 45 30 39 Z',
-        // torso
-        'M33.5 16.5 C37.5 15.5 40 18 39 21.5 L33.5 36.5 C32 40 25.5 39 26.5 34.5 Z',
-        // front leg: knee driven forward, shin back down to the foot
-        'M30 34.5 C34 37 38.5 39 41 41.5 C43 43.5 42 46 40.5 48.5 L38 54 C40 54.5 42.5 55.5 42.5 57.5 C42.5 59.5 39 59.5 36.5 59 C33.5 58.5 32 57 33 54.5 L35.5 46.5 C33 44.5 29.5 42.5 27.5 40.5 Z',
-        // front arm, bent and pumping forward
-        'M35 19 C39 21 43 23.5 45.5 24.5 C47 21.5 49 18.5 51 16.5 C53 14.5 56 16.5 54.5 18.5 C52 22 50 26 48 29 C46.5 31 44 30.5 42 29.5 C38.5 27.5 35 26 32.5 24.5 Z',
-      ];
-      const paths = (fill, stroke, w) => shapes.map((d) => `<path d="${d}" fill="${fill}" stroke="${stroke}" stroke-width="${w}" stroke-linejoin="round"/>`).join('');
-      return `<svg viewBox="0 0 64 64">${paths('#151515', '#151515', 6.4)}<circle cx="42" cy="8.5" r="8.2" fill="#151515"/>${paths('#ffd21f', '#ffd21f', 0)}<circle cx="42" cy="8.5" r="5.6" fill="#ffd21f"/></svg>`;
+      // Traced from the classic running-man silhouette (on an 800x600
+      // canvas, scaled down below): one solid figure, black outline merging
+      // between head and body, square-cut hand and feet -- plus a second,
+      // back arm of our own.
+      const body = 'M362 216 L403 224 C410 245 420 257 437 259 C455 264 490 262 519 253 L542 286 C525 300 480 322 450 319 C430 318 415 315 405 312 L394 342 C430 365 480 390 500 405 C520 425 540 455 553 484 L509 516 C490 490 465 465 450 450 C430 432 410 420 395 418 C380 416 368 415 362 416 C350 435 335 452 325 462 C300 485 270 500 262 506 C240 520 215 530 203 536 L181 481 C205 476 230 470 250 462 C275 450 290 425 294 400 C300 385 303 380 306 375 C310 340 312 315 312 300 C318 280 325 262 337 250 C345 235 352 224 362 216 Z';
+      const arm = 'M332 242 L240 294 L222 348 L276 366 L288 334 L360 290 Z';
+      const ink = (d) => `<path d="${d}" fill="#141414" stroke="#141414" stroke-width="66" stroke-linejoin="miter" stroke-miterlimit="3"/>`;
+      return `<svg viewBox="0 0 64 64"><g transform="translate(-7.6 -0.2) scale(0.106)">${ink(arm)}${ink(body)}<circle cx="420" cy="116" r="104" fill="#141414"/><path d="${arm}" fill="#fcc80d"/><path d="${body}" fill="#fcc80d"/><circle cx="420" cy="116" r="73" fill="#fcc80d"/></g></svg>`;
     },
 
     // Wheeled sneaker: a high-top with a wheel set up inside the heel, only
