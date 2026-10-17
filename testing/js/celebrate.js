@@ -122,9 +122,9 @@
   let flyerCount = 0;
   let layer = null;
 
-  // How many icons one celebration throws: each of the nine once, plus a
-  // few repeats.
-  const FLYER_COUNT = 12;
+  // How many icons one celebration throws: each of the nine once, plus
+  // repeats.
+  const FLYER_COUNT = 15;
 
   // Icons spread evenly over the landing zone (best-of-several random
   // candidates, keeping whichever is farthest from those already placed)
@@ -350,6 +350,31 @@
     }
   }
 
+  // A short low "duhn" for an incorrect guess: one square-wave note,
+  // softened by a low-pass filter, sagging slightly in pitch.
+  function scheduleBuzzer(ctx, t0) {
+    const master = ctx.createGain();
+    master.gain.value = 0.2;
+    master.connect(ctx.destination);
+    const osc = ctx.createOscillator();
+    osc.type = "square";
+    osc.frequency.setValueAtTime(130, t0);
+    osc.frequency.exponentialRampToValueAtTime(98, t0 + 0.22);
+    const lowpass = ctx.createBiquadFilter();
+    lowpass.type = "lowpass";
+    lowpass.frequency.value = 600;
+    const env = ctx.createGain();
+    env.gain.setValueAtTime(0, t0);
+    env.gain.linearRampToValueAtTime(0.7, t0 + 0.012);
+    env.gain.setValueAtTime(0.7, t0 + 0.13);
+    env.gain.linearRampToValueAtTime(0, t0 + 0.22);
+    osc.connect(lowpass);
+    lowpass.connect(env);
+    env.connect(master);
+    osc.start(t0);
+    osc.stop(t0 + 0.25);
+  }
+
   // A quick "dee-dl-ee" for each correct answer: three short square-wave
   // notes, up a step, down, then up to the top.
   function scheduleChime(ctx, t0) {
@@ -380,14 +405,39 @@
   }
 
   let audioCtx = null;
-  // Called from the Send key's click, so creating/resuming the audio
-  // context here satisfies browsers' "needs a user gesture" rule.
-  function play(schedule) {
+
+  function getAudio() {
     const AC = window.AudioContext || window.webkitAudioContext;
-    if (!AC) return;
+    if (!AC) return null;
     if (!audioCtx) audioCtx = new AC();
-    if (audioCtx.state === "suspended") audioCtx.resume();
-    schedule(audioCtx, audioCtx.currentTime + 0.02);
+    return audioCtx;
+  }
+
+  // Browsers only let audio start from a user gesture, and phones pause the
+  // audio context whenever the page is backgrounded or interrupted (iOS
+  // marks it "interrupted", not "suspended"), after which it stays silent
+  // until resumed from another gesture. So every tap/keypress on the page
+  // wakes it up ahead of time, and a sound requested while it isn't running
+  // waits for the resume instead of being scheduled on a stopped clock.
+  function wakeAudio() {
+    const ctx = getAudio();
+    if (ctx && ctx.state !== "running") ctx.resume().catch(() => {});
+  }
+  ["pointerdown", "touchend", "keydown"].forEach((type) =>
+    window.addEventListener(type, wakeAudio, { capture: true, passive: true })
+  );
+
+  function play(schedule) {
+    const ctx = getAudio();
+    if (!ctx) return;
+    if (ctx.state === "running") {
+      schedule(ctx, ctx.currentTime + 0.02);
+      return;
+    }
+    ctx
+      .resume()
+      .then(() => schedule(ctx, ctx.currentTime + 0.02))
+      .catch(() => {});
   }
 
   function celebrate(phone) {
@@ -401,5 +451,9 @@
     play(scheduleChime);
   }
 
-  window.T9Celebrate = { celebrate, chime, clear, scheduleSound, scheduleChime };
+  function buzzer() {
+    play(scheduleBuzzer);
+  }
+
+  window.T9Celebrate = { celebrate, chime, buzzer, clear, scheduleSound, scheduleChime, scheduleBuzzer };
 })();

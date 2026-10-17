@@ -234,7 +234,7 @@
     const missedEl = document.getElementById("hang-missed");
     const solvedEl = document.getElementById("hang-solved");
     const attemptsEl = document.getElementById("hang-attempts");
-    const dailyLabelEl = document.getElementById("daily-label");
+    const modeLabelEl = document.getElementById("screen-mode-label");
     const dailyResultsEl = document.getElementById("daily-results");
     const dailyRowsEl = document.getElementById("daily-rows");
     const modeToggleBtn = document.getElementById("mode-toggle");
@@ -261,13 +261,9 @@
     // tapped) on the key that hasn't committed a letter yet. activeTarget
     // is a word-position index (not an index into activeBlankPositions),
     // since tapping a blank directly can jump it anywhere; it's null once
-    // every blank is filled and nothing new has been tapped. fillHistory
-    // is a stack of filled positions in commit order, so backspace always
-    // undoes whatever was typed most recently, even if blanks were filled
-    // out of left-to-right order.
+    // every blank is filled and nothing new has been tapped.
     let activeBlankPositions = [];
     let filledMap = new Map();
-    let fillHistory = [];
     let activeTarget = null;
     let pendingKey = null;
     let pendingCount = 0;
@@ -428,6 +424,8 @@
     function loadDaily() {
       const dateKey = centralDateKey();
       if (daily && daily.dateKey === dateKey) return;
+      daily = restoreDaily(dateKey);
+      if (daily) return;
       if (!dailyPools) dailyPools = buildDailyPools();
       const number = dailyNumber(dateKey);
       daily = {
@@ -436,21 +434,30 @@
         puzzles: DIFFICULTY_LABELS.map((label) => dailyPuzzle(label, number)),
         index: 0,
       };
-      restoreDaily();
+      saveDaily();
     }
 
-    // Daily progress is kept in this browser so a reload doesn't reset it
-    // (or let today's puzzles be replayed); it's ignored once the date
-    // moves on. Storage can be unavailable (private windows, blocked site
-    // data), in which case Daily still works, just without remembering.
+    // Today's Daily is kept in this browser: the three puzzles themselves
+    // (so an update to the word list mid-day can't swap them out from under
+    // a player) and how each went, so after a reload Daily comes back to
+    // the scores once all three are done, or to the puzzle the player was
+    // on. It's ignored once the date moves on. Storage can be unavailable
+    // (private windows, blocked site data), in which case Daily still
+    // works, just without remembering.
     function saveDaily() {
       try {
         localStorage.setItem(
           DAILY_STORAGE_KEY,
           JSON.stringify({
+            version: 2,
             dateKey: daily.dateKey,
+            number: daily.number,
             index: daily.index,
             puzzles: daily.puzzles.map((p) => ({
+              word: p.word,
+              blanks: [...p.blanks],
+              answers: p.answers,
+              difficulty: p.difficulty,
               found: [...p.found],
               complete: p.complete,
               attempts: p.attempts,
@@ -462,23 +469,52 @@
       }
     }
 
-    function restoreDaily() {
+    // Finished puzzles come back exactly as they ended; the one that was
+    // still in progress comes back fresh (no answers found yet).
+    function restoreDaily(dateKey) {
       let saved = null;
       try {
         saved = JSON.parse(localStorage.getItem(DAILY_STORAGE_KEY));
       } catch (e) {
         saved = null;
       }
-      if (!saved || saved.dateKey !== daily.dateKey || !Array.isArray(saved.puzzles)) return;
-      daily.index = Math.min(Math.max(0, saved.index | 0), daily.puzzles.length);
-      daily.puzzles.forEach((p, i) => {
-        const s = saved.puzzles[i];
-        if (!s) return;
-        p.found = new Set((s.found || []).filter((w) => p.answers.includes(w)));
-        p.complete = !!s.complete;
-        p.attempts = s.attempts | 0;
-        if (p.complete) p.message = endMessage(p);
-      });
+      if (
+        !saved ||
+        saved.version !== 2 ||
+        saved.dateKey !== dateKey ||
+        !Array.isArray(saved.puzzles) ||
+        saved.puzzles.length !== DIFFICULTY_LABELS.length
+      ) {
+        return null;
+      }
+      try {
+        const puzzles = saved.puzzles.map((s) => {
+          const p = {
+            word: s.word,
+            blanks: new Set(s.blanks),
+            answers: s.answers,
+            difficulty: s.difficulty,
+            found: new Set(),
+            complete: !!s.complete,
+            attempts: 0,
+            message: null,
+          };
+          if (p.complete) {
+            p.found = new Set(s.found.filter((w) => p.answers.includes(w)));
+            p.attempts = s.attempts | 0;
+            p.message = endMessage(p);
+          }
+          return p;
+        });
+        return {
+          dateKey,
+          number: dailyNumber(dateKey),
+          puzzles,
+          index: Math.min(Math.max(0, saved.index | 0), puzzles.length),
+        };
+      } catch (e) {
+        return null;
+      }
     }
 
     // The screen message a finished puzzle shows.
@@ -584,9 +620,7 @@
     // Redraws everything about the current puzzle (or the Daily results),
     // e.g. after switching modes or moving on to another puzzle.
     function renderAll() {
-      // A non-breaking space keeps the status bar the same height in
-      // Practice, so switching modes never nudges the screen.
-      dailyLabelEl.textContent = mode === "daily" ? `Daily #${daily.number}` : "\u00a0";
+      modeLabelEl.textContent = mode === "daily" ? `Daily #${daily.number}` : "Practice";
 
       const p = currentPuzzle();
       const showResults = !p;
@@ -670,7 +704,6 @@
       const letter = groupLetterAt(pendingKey, pendingCount);
       const pos = activeTarget;
       filledMap.set(pos, letter);
-      fillHistory.push(pos);
       pendingKey = null;
       pendingCount = 0;
       activeTarget = nextTargetAfter(pos);
@@ -703,9 +736,10 @@
       render();
     }
 
-    // Always undoes whatever was filled most recently (by commit order,
-    // not position), so it stays correct even after jumping around with
-    // tile clicks.
+    // Deletes the letter in the active blank if it has one; otherwise the
+    // nearest filled blank to its left (or the last filled blank, when
+    // every blank is filled and none is active), which then becomes the
+    // active blank -- like backspacing in a text field.
     function handleBackspace() {
       if (!isPlayable()) return;
       if (pendingKey) {
@@ -717,8 +751,16 @@
         render();
         return;
       }
-      if (fillHistory.length === 0) return;
-      const pos = fillHistory.pop();
+      let pos = null;
+      if (activeTarget !== null && filledMap.has(activeTarget)) {
+        pos = activeTarget;
+      } else {
+        const limit = activeTarget === null ? Infinity : activeTarget;
+        for (const p of activeBlankPositions) {
+          if (p < limit && filledMap.has(p)) pos = p;
+        }
+      }
+      if (pos === null) return;
       filledMap.delete(pos);
       activeTarget = pos;
       render();
@@ -750,7 +792,6 @@
       const p = currentPuzzle();
       activeBlankPositions = p ? [...p.blanks].sort((a, b) => a - b) : [];
       filledMap = new Map();
-      fillHistory = [];
       // No blank is boxed once the puzzle is over.
       activeTarget = p && !p.complete && activeBlankPositions.length > 0 ? activeBlankPositions[0] : null;
       pendingKey = null;
@@ -802,6 +843,7 @@
         : null;
       if (!grouping) {
         showScreenMessage("Incorrect", "incorrect");
+        window.T9Celebrate.buzzer();
         return;
       }
 
@@ -818,8 +860,10 @@
 
       if (p.found.size === p.answers.length) {
         winPuzzle();
-      } else if (mode === "daily") {
-        saveDaily();
+      } else {
+        // The last answer gets the full celebration instead.
+        window.T9Celebrate.chime();
+        if (mode === "daily") saveDaily();
       }
     }
 
@@ -857,6 +901,7 @@
     // Once a puzzle is over, the Give up key moves on: a fresh puzzle in
     // Practice, the next of the three in Daily, then the Daily results.
     function nextPuzzle() {
+      window.T9Celebrate.clear();
       if (mode === "practice") {
         newPracticePuzzle();
       } else {
@@ -872,6 +917,7 @@
     function setMode(newMode) {
       if (newMode === mode) return;
       mode = newMode;
+      window.T9Celebrate.clear();
       if (mode === "daily") loadDaily();
       modeToggleBtn.setAttribute("aria-checked", String(mode === "daily"));
       document.querySelectorAll(".mode-label").forEach((el) => {

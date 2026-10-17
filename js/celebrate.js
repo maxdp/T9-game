@@ -1,7 +1,10 @@
 // Puzzle-solved celebration: the phone buzzes in three bursts (a quick
 // back-and-forth rotation, like a phone vibrating on a table) to a
 // synthesized buzz + chiptune fanfare, while little 2000s-nostalgia icons
-// fly across the window. No image or audio files: the icons are inline
+// burst in from both sides like confetti from party poppers, slow sharply
+// and come to rest on and around the phone. They stay (draggable, in case
+// one covers something) until the game clears them. Also the short chime
+// for each correct answer. No image or audio files: the icons are inline
 // SVG and the sound is generated with the Web Audio API.
 (() => {
   // Start time (ms) of each buzz burst, and how long each lasts.
@@ -117,49 +120,164 @@
   }
 
   let flyerCount = 0;
+  let layer = null;
 
-  function launchFlyers() {
-    const layer = document.createElement("div");
+  // How many icons one celebration throws: each of the nine once, plus
+  // repeats.
+  const FLYER_COUNT = 15;
+
+  // Icons spread evenly over the landing zone (best-of-several random
+  // candidates, keeping whichever is farthest from those already placed)
+  // rather than purely at random, so they don't pile up on one another.
+  // No icon lands on `avoid` (the New puzzle key, the next thing to tap).
+  function landingSpots(zone, count, avoid, size) {
+    const spots = [];
+    for (let i = 0; i < count; i++) {
+      let best = null;
+      let bestDist = -1;
+      for (let c = 0; c < 12; c++) {
+        const p = {
+          x: zone.left + Math.random() * (zone.right - zone.left),
+          y: zone.top + Math.random() * (zone.bottom - zone.top),
+        };
+        const hitsAvoid =
+          avoid &&
+          p.x < avoid.right && p.x + size > avoid.left && p.y < avoid.bottom && p.y + size > avoid.top;
+        // (Only if every candidate so far hit it is one allowed through.)
+        if (hitsAvoid && (best || c < 11)) continue;
+        const d = spots.reduce((m, q) => Math.min(m, Math.hypot(p.x - q.x, p.y - q.y)), Infinity);
+        if (d > bestDist) {
+          best = p;
+          bestDist = d;
+        }
+      }
+      spots.push(best);
+    }
+    return spots;
+  }
+
+  // Lets a resting icon be dragged out of the way (mouse or touch).
+  function makeDraggable(el, anim) {
+    el.addEventListener("pointerdown", (e) => {
+      if (anim.playState !== "finished") anim.finish();
+      e.preventDefault();
+      el.setPointerCapture(e.pointerId);
+      const startX = e.clientX - el.offsetLeft;
+      const startY = e.clientY - el.offsetTop;
+      el.classList.add("dragging");
+      const move = (ev) => {
+        el.style.left = ev.clientX - startX + "px";
+        el.style.top = ev.clientY - startY + "px";
+      };
+      const up = () => {
+        el.classList.remove("dragging");
+        el.removeEventListener("pointermove", move);
+        el.removeEventListener("pointerup", up);
+        el.removeEventListener("pointercancel", up);
+      };
+      el.addEventListener("pointermove", move);
+      el.addEventListener("pointerup", up);
+      el.addEventListener("pointercancel", up);
+    });
+  }
+
+  function launchFlyers(phone) {
+    clear();
+    // The layer covers the whole page (body is position: relative), so
+    // resting icons scroll along with the phone; it clips anything outside
+    // the page, so off-screen launch points never add scrollbars.
+    layer = document.createElement("div");
     layer.className = "celebrate-layer";
     document.body.appendChild(layer);
-    const count = 18;
-    // Deal icons like a shuffled deck (each one twice) rather than picking
-    // at random, so a single celebration always shows the full variety.
-    const deck = [];
-    while (deck.length < count) deck.push(...ICONS);
+
+    const size = ICON_SIZE;
+    const body = document.body.getBoundingClientRect();
+    const ph = phone.getBoundingClientRect();
+    const pageW = document.body.clientWidth;
+    // Landing zone: the phone plus a margin around it, kept on the page.
+    const zone = {
+      left: Math.max(4, ph.left - body.left - 50),
+      right: Math.min(pageW - size - 4, ph.right - body.left + 50 - size),
+      top: ph.top - body.top - 20,
+      bottom: ph.bottom - body.top + 10 - size,
+    };
+    const key = document.getElementById("hang-give-up");
+    let avoid = null;
+    if (key) {
+      const k = key.getBoundingClientRect();
+      // Padded, since a tilted icon reaches past its own square.
+      const pad = 14;
+      avoid = {
+        left: k.left - body.left - pad,
+        right: k.right - body.left + pad,
+        top: k.top - body.top - pad,
+        bottom: k.bottom - body.top + pad,
+      };
+    }
+    const spots = landingSpots(zone, FLYER_COUNT, avoid, size);
+    // The poppers fire from just off each side of the window, level with
+    // the visible part of the phone.
+    const visTop = Math.max(ph.top, 0);
+    const visBottom = Math.min(ph.bottom, window.innerHeight);
+    const launchY = (visTop + visBottom) / 2 - body.top - size / 2;
+
+    const deck = [...ICONS];
     for (let i = deck.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [deck[i], deck[j]] = [deck[j], deck[i]];
     }
-    let finished = 0;
-    const vw = window.innerWidth;
-    for (let i = 0; i < count; i++) {
+    while (deck.length < FLYER_COUNT) deck.push(ICONS[Math.floor(Math.random() * ICONS.length)]);
+
+    for (let i = 0; i < FLYER_COUNT; i++) {
       const el = document.createElement("div");
       el.className = "celebrate-flyer";
       el.innerHTML = deck[i]("c" + ++flyerCount);
-      const size = ICON_SIZE;
       el.style.width = el.style.height = size + "px";
-      el.style.top = 4 + Math.random() * 84 + "vh";
-      const leftToRight = i % 2 === 0;
-      const from = leftToRight ? -size - 20 : vw + 20;
-      const to = leftToRight ? vw + 20 : -size - 20;
-      const spin = (Math.random() < 0.5 ? -1 : 1) * (180 + Math.random() * 360);
-      const bob = 15 + Math.random() * 30;
-      const frames = [0, 0.25, 0.5, 0.75, 1].map((p) => ({
-        transform: `translate(${from + (to - from) * p}px, ${Math.sin(p * Math.PI * 2) * bob}px) rotate(${spin * p}deg)`,
-      }));
+      const spot = spots[i];
+      el.style.left = spot.x + "px";
+      el.style.top = spot.y + "px";
+
+      const fromLeft = i % 2 === 0;
+      const startX = fromLeft ? -body.left - size - 10 : window.innerWidth - body.left + 10;
+      const startY = launchY + (Math.random() - 0.5) * 120;
+      const dx = startX - spot.x;
+      const dy = startY - spot.y;
+      // Popper burst: a fast start that decays exponentially, with a
+      // slight upward arc and a spin that winds down into a resting tilt.
+      const lift = 40 + Math.random() * 70;
+      const restTilt = (Math.random() - 0.5) * 50;
+      const spin = (fromLeft ? 1 : -1) * (360 + Math.random() * 360);
+      const frames = [];
+      const steps = 24;
+      for (let k = 0; k <= steps; k++) {
+        const p = k / steps;
+        const ease = 1 - Math.exp(-6 * p);
+        const remain = k === steps ? 0 : 1 - ease / (1 - Math.exp(-6));
+        const arc = Math.sin(Math.min(1, ease * 1.15) * Math.PI) * lift;
+        frames.push({
+          transform: `translate(${dx * remain}px, ${dy * remain - arc * remain}px) rotate(${restTilt + spin * remain}deg)`,
+        });
+      }
       layer.appendChild(el);
       const anim = el.animate(frames, {
-        duration: 1800 + Math.random() * 1200,
-        delay: i * 110 + Math.random() * 120,
+        duration: 1100 + Math.random() * 300,
+        delay: (fromLeft ? 0 : 60) + Math.random() * 140,
         easing: "linear",
-        fill: "both", // sit off-screen during the delay instead of at left:0
+        fill: "both",
       });
-      anim.onfinish = () => {
-        el.remove();
-        if (++finished === count) layer.remove();
-      };
+      makeDraggable(el, anim);
     }
+  }
+
+  // Removes any icons left from the last celebration (New puzzle, or a
+  // switch between modes), with a quick fade.
+  function clear() {
+    if (!layer) return;
+    const old = layer;
+    layer = null;
+    old.style.transition = "opacity 0.2s ease";
+    old.style.opacity = "0";
+    setTimeout(() => old.remove(), 220);
   }
 
   // Schedules the whole sound on `ctx` starting at time `t0` (seconds), so
@@ -232,23 +350,110 @@
     }
   }
 
+  // A short low "duhn" for an incorrect guess: one square-wave note,
+  // softened by a low-pass filter, sagging slightly in pitch.
+  function scheduleBuzzer(ctx, t0) {
+    const master = ctx.createGain();
+    master.gain.value = 0.2;
+    master.connect(ctx.destination);
+    const osc = ctx.createOscillator();
+    osc.type = "square";
+    osc.frequency.setValueAtTime(130, t0);
+    osc.frequency.exponentialRampToValueAtTime(98, t0 + 0.22);
+    const lowpass = ctx.createBiquadFilter();
+    lowpass.type = "lowpass";
+    lowpass.frequency.value = 600;
+    const env = ctx.createGain();
+    env.gain.setValueAtTime(0, t0);
+    env.gain.linearRampToValueAtTime(0.7, t0 + 0.012);
+    env.gain.setValueAtTime(0.7, t0 + 0.13);
+    env.gain.linearRampToValueAtTime(0, t0 + 0.22);
+    osc.connect(lowpass);
+    lowpass.connect(env);
+    env.connect(master);
+    osc.start(t0);
+    osc.stop(t0 + 0.25);
+  }
+
+  // A quick "dee-dl-ee" for each correct answer: three short square-wave
+  // notes, up a step, down, then up to the top.
+  function scheduleChime(ctx, t0) {
+    const master = ctx.createGain();
+    master.gain.value = 0.14;
+    master.connect(ctx.destination);
+    const notes = [
+      [1318.5, 0.07],
+      [1174.66, 0.05],
+      [1567.98, 0.16],
+    ];
+    let t = t0;
+    for (const [freq, dur] of notes) {
+      const osc = ctx.createOscillator();
+      osc.type = "square";
+      osc.frequency.value = freq;
+      const env = ctx.createGain();
+      env.gain.setValueAtTime(0, t);
+      env.gain.linearRampToValueAtTime(0.45, t + 0.008);
+      env.gain.setValueAtTime(0.45, t + dur * 0.6);
+      env.gain.linearRampToValueAtTime(0, t + dur);
+      osc.connect(env);
+      env.connect(master);
+      osc.start(t);
+      osc.stop(t + dur + 0.02);
+      t += dur;
+    }
+  }
+
   let audioCtx = null;
-  // Called from the Send key's click, so creating/resuming the audio
-  // context here satisfies browsers' "needs a user gesture" rule.
-  function playSound() {
+
+  function getAudio() {
     const AC = window.AudioContext || window.webkitAudioContext;
-    if (!AC) return;
+    if (!AC) return null;
     if (!audioCtx) audioCtx = new AC();
-    if (audioCtx.state === "suspended") audioCtx.resume();
-    scheduleSound(audioCtx, audioCtx.currentTime + 0.02);
+    return audioCtx;
+  }
+
+  // Browsers only let audio start from a user gesture, and phones pause the
+  // audio context whenever the page is backgrounded or interrupted (iOS
+  // marks it "interrupted", not "suspended"), after which it stays silent
+  // until resumed from another gesture. So every tap/keypress on the page
+  // wakes it up ahead of time, and a sound requested while it isn't running
+  // waits for the resume instead of being scheduled on a stopped clock.
+  function wakeAudio() {
+    const ctx = getAudio();
+    if (ctx && ctx.state !== "running") ctx.resume().catch(() => {});
+  }
+  ["pointerdown", "touchend", "keydown"].forEach((type) =>
+    window.addEventListener(type, wakeAudio, { capture: true, passive: true })
+  );
+
+  function play(schedule) {
+    const ctx = getAudio();
+    if (!ctx) return;
+    if (ctx.state === "running") {
+      schedule(ctx, ctx.currentTime + 0.02);
+      return;
+    }
+    ctx
+      .resume()
+      .then(() => schedule(ctx, ctx.currentTime + 0.02))
+      .catch(() => {});
   }
 
   function celebrate(phone) {
-    playSound();
+    play(scheduleSound);
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     buzzPhone(phone);
-    launchFlyers();
+    launchFlyers(phone);
   }
 
-  window.T9Celebrate = { celebrate, scheduleSound };
+  function chime() {
+    play(scheduleChime);
+  }
+
+  function buzzer() {
+    play(scheduleBuzzer);
+  }
+
+  window.T9Celebrate = { celebrate, chime, buzzer, clear, scheduleSound, scheduleChime, scheduleBuzzer };
 })();
