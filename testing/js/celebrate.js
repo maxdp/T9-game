@@ -113,11 +113,13 @@
       <circle cx="32" cy="32" r="9" fill="#1d1d1f"/><circle cx="32" cy="32" r="6.3" fill="url(#bw${u})"/><circle cx="32" cy="32" r="3.6" fill="none" stroke="#c4c8ce" stroke-width="1"/>
       <ellipse cx="21" cy="15" rx="7" ry="3.6" fill="#fff" opacity=".55" transform="rotate(-30 21 15)"/></svg>`,
 
-    // Troll doll: a huge, tall shock of pink hair over a small body with
-    // feet; big nose, wide grin.
+    // Troll doll: a huge, frizzy, wild shock of pink hair (with stray
+    // fly-aways) over a small body with feet; big nose, wide grin.
     (u) => `<svg viewBox="0 0 64 64"><defs><linearGradient id="th${u}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffb3e0"/><stop offset=".5" stop-color="#ff5cb8"/><stop offset="1" stop-color="#e8329a"/></linearGradient><radialGradient id="ts${u}" cx=".4" cy=".35" r=".75"><stop offset="0" stop-color="#ffd9b8"/><stop offset="1" stop-color="#d9935f"/></radialGradient></defs>
-      <path d="M21 38 C12 30 7 18 10 3 C13 13 17 18 20 20 C17 10 19 3 26 -1 C24 9 27 15 30 18 C30 8 34 1 41 -1 C37 8 37 14 38 19 C41 11 47 6 55 4 C49 12 48 21 47 27 C50 24 54 23 58 24 C52 28 48 33 43 38 Z" fill="url(#th${u})" stroke="#c2187a" stroke-width="1"/>
-      <g fill="none" stroke="#c2187a" stroke-width=".8" opacity=".65"><path d="M20 34 C14 26 12 16 13 8"/><path d="M25 32 C21 22 21 12 24 4"/><path d="M31 31 C30 21 31 11 35 4"/><path d="M37 31 C38 22 41 14 46 8"/><path d="M42 33 C45 28 49 26 53 25"/></g>
+      <path d="M14.8 31.2 Q11.2 31.7 10.7 27.5 M15.6 22.7 Q16.3 17.1 11 17.5 M19 15.8 Q14.8 13.1 16.4 8.6 M24.8 11 Q23.8 6.3 23.2 4.6 M32.3 9.3 Q28.5 4.5 31.8 2.3 M40.7 11.9 Q47.8 9.8 41.2 3.5 M46.6 18.2 Q51.1 16.3 49 11 M48.5 23.1 Q54 23.8 51.7 18.3 M49.1 32.1 Q52.7 33 52.3 27.1" fill="none" stroke="#ff5cb8" stroke-width=".9" stroke-linecap="round"/>
+      <path d="M18.5 36.1 Q14.9 35.8 13.1 34.5 L16.3 34.9 Q15.4 32.7 11.9 32.8 L17.1 33.6 Q15.5 30.5 10.7 30.3 L17.4 32.2 Q15.1 29.7 11.3 28.5 L17.4 30.5 Q13.6 29.8 11.3 25.3 L17.3 28.6 Q16.3 23.9 10.5 21.7 L17.8 26.8 Q14.5 24.1 12.8 20.3 L17.6 24.2 Q15.8 21 12 15.5 L18.4 22.2 Q15 20.7 12.7 13.4 L19.3 20 Q18.9 16.5 16.5 14.4 L21.2 19.3 Q18.5 15.3 18.8 11.7 L22.9 17.9 Q19.3 13.9 20.4 7.7 L24.2 15.4 Q25 11.2 22.1 5 L26.4 14.7 Q28.5 9.8 26.6 6.1 L28.3 12 Q33.2 9.4 29.3 2.9 L30.8 13.5 Q29.3 9.4 31.6 1.1 L33.2 12.8 Q34.2 9.5 35.1 1.4 L35.3 14.6 Q34.6 9.8 38.4 2.4 L38.1 12.7 Q39.3 11.1 41.8 3.4 L40.3 13.9 Q42.7 12.9 42.6 9.5 L41.7 16.7 Q40.7 13.1 46.1 9.2 L43.6 17.8 Q44.7 16.1 49 10.7 L44.4 20.4 Q48.1 19.5 49.8 14.2 L45.2 22.7 Q46.6 20.5 50 19.8 L47.1 23.5 Q48.2 22.9 50.4 21.5 L47 26.1 Q47.2 23.5 53.9 21.5 L46.6 28.6 Q48.2 26.3 53.6 24.9 L47.4 30.1 Q49.1 30.1 54.2 27.9 L47.1 32 Q48.5 31 52.2 31.1 L46.4 33.8 Q48.2 31.3 53.1 32 L47.1 35.1 Q48.9 35.4 52.9 34.4 L45.5 36.1 L43 41 L21 41 Z" fill="url(#th${u})" stroke="#c2187a" stroke-width=".8" stroke-linejoin="round"/>
+      <path d="M33 36 Q26.6 25.9 16 18.4 M31.7 36 Q31.9 22.2 35.9 10.4 M31.7 36 Q27 23.4 28.2 13.4 M27.3 36 Q23.3 31.7 13.5 31 M30.9 36 Q24.8 29.1 16 23.3 M35.5 36 Q30.7 23.9 22.2 11.6 M30.9 36 Q38.1 28.8 47.8 21.4 M27 36 Q38.4 30.1 45.9 21.7 M31.2 36 Q41.2 27.5 46.3 21 M31.7 36 Q26.3 25.2 22 10.6 M31.2 36 Q33.5 23.1 35.4 11.9 M32.9 36 Q44 30.5 50.9 25.1 M34.4 36 Q31 22.3 27.1 7.3 M34.3 36 Q26 31.7 16.3 24.5 M29.5 36 Q28.4 26.6 25.1 15.4 M29.8 36 Q36.1 34.8 47.6 31.8 M35.4 36 Q45.7 31 50.3 28.3 M29.4 36 Q38.5 34.8 48.9 31.8 M33.5 36 Q41.2 27.4 47.4 18.1 M36 36 Q25.2 27.7 18.7 17.6 M32.7 36 Q33.4 24.8 29.4 9.9 M27.2 36 Q22.1 30.3 16.7 25.5 M36.3 36 Q45 31.2 48.9 28.2 M37.1 36 Q36.1 21.7 31.5 8.7 M37.6 36 Q41 30.3 50.4 27.2 M27.3 36 Q38.4 27.7 44.6 21.3" fill="none" stroke="#c2187a" stroke-width=".7" opacity=".6"/>
+      <path d="M33 36 Q26.6 25.9 16 18.4 M31.7 36 Q31.9 22.2 35.9 10.4 M31.7 36 Q27 23.4 28.2 13.4 M27.3 36 Q23.3 31.7 13.5 31 M30.9 36 Q24.8 29.1 16 23.3 M35.5 36 Q30.7 23.9 22.2 11.6 M30.9 36 Q38.1 28.8 47.8 21.4 M27 36 Q38.4 30.1 45.9 21.7 M31.2 36 Q41.2 27.5 46.3 21 M31.7 36 Q26.3 25.2 22 10.6 M31.2 36 Q33.5 23.1 35.4 11.9 M32.9 36 Q44 30.5 50.9 25.1 M34.4 36 Q31 22.3 27.1 7.3 M34.3 36 Q26 31.7 16.3 24.5 M29.5 36 Q28.4 26.6 25.1 15.4 M29.8 36 Q36.1 34.8 47.6 31.8 M35.4 36 Q45.7 31 50.3 28.3 M29.4 36 Q38.5 34.8 48.9 31.8 M33.5 36 Q41.2 27.4 47.4 18.1 M36 36 Q25.2 27.7 18.7 17.6 M32.7 36 Q33.4 24.8 29.4 9.9 M27.2 36 Q22.1 30.3 16.7 25.5 M36.3 36 Q45 31.2 48.9 28.2 M37.1 36 Q36.1 21.7 31.5 8.7 M37.6 36 Q41 30.3 50.4 27.2 M27.3 36 Q38.4 27.7 44.6 21.3" fill="none" stroke="#ffd0ec" stroke-width=".4" opacity=".7" transform="translate(.8 -.4)"/>
       <ellipse cx="20" cy="42" rx="2.6" ry="3.8" fill="url(#ts${u})"/><ellipse cx="44" cy="42" rx="2.6" ry="3.8" fill="url(#ts${u})"/>
       <ellipse cx="32" cy="42.5" rx="11" ry="9.5" fill="url(#ts${u})"/>
       <circle cx="27.5" cy="39.5" r="2.4" fill="#fff"/><circle cx="36.5" cy="39.5" r="2.4" fill="#fff"/><circle cx="27.9" cy="39.9" r="1.5" fill="#3b2a1a"/><circle cx="36.1" cy="39.9" r="1.5" fill="#3b2a1a"/>
@@ -128,16 +130,16 @@
       <ellipse cx="27.8" cy="61" rx="3.6" ry="2" fill="url(#ts${u})"/><ellipse cx="36.2" cy="61" rx="3.6" ry="2" fill="url(#ts${u})"/>
       <g fill="none" stroke="#b97a4c" stroke-width=".6"><path d="M26 61.5 v1.2 M27.6 61.8 v1.1 M34.4 61.8 v1.1 M36 61.5 v1.2"/></g></svg>`,
 
-    // Paperclip assistant: a bent-wire clip with eyebrows and big,
-    // half-lidded (slightly condescending) eyes with lower lids.
+    // Paperclip assistant: a bent-wire clip with eyebrows and big eyes,
+    // lids lowered just a little, with lower lids.
     (u) => `<svg viewBox="0 0 64 64"><defs><linearGradient id="cl${u}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7c8591"/><stop offset=".5" stop-color="#eef1f4"/><stop offset="1" stop-color="#8a939e"/></linearGradient><clipPath id="ce${u}"><ellipse cx="25" cy="23" rx="6" ry="7"/><ellipse cx="39" cy="23" rx="6" ry="7"/></clipPath></defs>
       <path d="M27 50 V25 a5.5 5.5 0 0 1 11 0 V53 a8.5 8.5 0 0 1 -17 0 V17 a11.5 11.5 0 0 1 23 0 V46" fill="none" stroke="#4f5660" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
       <path d="M27 50 V25 a5.5 5.5 0 0 1 11 0 V53 a8.5 8.5 0 0 1 -17 0 V17 a11.5 11.5 0 0 1 23 0 V46" fill="none" stroke="url(#cl${u})" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
       <ellipse cx="25" cy="23" rx="6" ry="7" fill="#fff"/><ellipse cx="39" cy="23" rx="6" ry="7" fill="#fff"/>
       <g clip-path="url(#ce${u})">
-        <circle cx="26.8" cy="25.5" r="3" fill="#111"/><circle cx="40.8" cy="25.5" r="3" fill="#111"/><circle cx="27.8" cy="24.6" r=".9" fill="#fff"/><circle cx="41.8" cy="24.6" r=".9" fill="#fff"/>
-        <rect x="17" y="14" width="30" height="9.6" fill="#d9dde2"/>
-        <path d="M17 23.6 H33" stroke="#2a2f36" stroke-width="1.6"/><path d="M31 23.6 H47" stroke="#2a2f36" stroke-width="1.6"/>
+        <circle cx="26.6" cy="24.6" r="3" fill="#111"/><circle cx="40.6" cy="24.6" r="3" fill="#111"/><circle cx="27.6" cy="23.6" r=".9" fill="#fff"/><circle cx="41.6" cy="23.6" r=".9" fill="#fff"/>
+        <rect x="17" y="14" width="30" height="6.8" fill="#d9dde2"/>
+        <path d="M17 20.8 H33" stroke="#2a2f36" stroke-width="1.6"/><path d="M31 20.8 H47" stroke="#2a2f36" stroke-width="1.6"/>
       </g>
       <g fill="none" stroke="#2a2f36" stroke-width="1.2"><ellipse cx="25" cy="23" rx="6" ry="7"/><ellipse cx="39" cy="23" rx="6" ry="7"/></g>
       <path d="M19.5 27.8 Q25 31.3 30.5 27.8" fill="none" stroke="#2a2f36" stroke-width="1.1" stroke-linecap="round"/><path d="M33.5 27.8 Q39 31.3 44.5 27.8" fill="none" stroke="#2a2f36" stroke-width="1.1" stroke-linecap="round"/>
@@ -145,25 +147,37 @@
 
     (u) => {
       // Traced from the classic running-man silhouette (on an 800x600
-      // canvas, scaled down below): one solid figure, black outline merging
-      // between head and body, square-cut hand and feet -- plus a second,
-      // back arm of our own.
-      const body = 'M362 216 L403 224 C410 245 420 257 437 259 C455 264 490 262 519 253 L542 286 C525 300 480 322 450 319 C430 318 415 315 405 312 L394 342 C430 365 480 390 500 405 C520 425 540 455 553 484 L509 516 C490 490 465 465 450 450 C430 432 410 420 395 418 C380 416 368 415 362 416 C350 435 335 452 325 462 C300 485 270 500 262 506 C240 520 215 530 203 536 L181 481 C205 476 230 470 250 462 C275 450 290 425 294 400 C300 385 303 380 306 375 C310 340 312 315 312 300 C318 280 325 262 337 250 C345 235 352 224 362 216 Z';
-      const arm = 'M332 242 L240 294 L222 348 L276 366 L288 334 L360 290 Z';
-      const ink = (d) => `<path d="${d}" fill="#141414" stroke="#141414" stroke-width="66" stroke-linejoin="miter" stroke-miterlimit="3"/>`;
-      return `<svg viewBox="0 0 64 64"><g transform="translate(-7.6 -0.2) scale(0.106)">${ink(arm)}${ink(body)}<circle cx="420" cy="116" r="104" fill="#141414"/><path d="${arm}" fill="#fcc80d"/><path d="${body}" fill="#fcc80d"/><circle cx="420" cy="116" r="73" fill="#fcc80d"/></g></svg>`;
+      // canvas, scaled down below): head, torso and bent front arm as one
+      // solid shape, legs as even-width strokes with square-cut feet, and a
+      // thick black outline that merges between head and body.
+      const torso = 'M362 216 L403 224 C410 245 420 257 437 259 C455 264 490 262 519 253 L542 286 C525 300 480 322 450 319 C430 318 415 315 405 312 L394 342 L405 395 L335 420 L306 375 C310 340 312 315 312 300 C318 280 325 262 337 250 C345 235 352 224 362 216 Z';
+      const back = 'M345 380 C330 450 265 490 192 508';
+      const front = 'M372 368 C440 395 495 430 531 500';
+      const W = 58;
+      const O = 66;
+      return `<svg viewBox="0 0 64 64"><g transform="translate(-7.6 -0.2) scale(0.106)">
+        <path d="${torso}" fill="#141414" stroke="#141414" stroke-width="${O}" stroke-linejoin="miter" stroke-miterlimit="3"/>
+        <path d="${back} L160 517" fill="none" stroke="#141414" stroke-width="${W + O}"/>
+        <path d="${front} L548 528" fill="none" stroke="#141414" stroke-width="${W + O}"/>
+        <circle cx="420" cy="116" r="104" fill="#141414"/>
+        <path d="${torso}" fill="#fcc80d"/>
+        <path d="${back}" fill="none" stroke="#fcc80d" stroke-width="${W}"/>
+        <path d="${front}" fill="none" stroke="#fcc80d" stroke-width="${W}"/>
+        <circle cx="420" cy="116" r="73" fill="#fcc80d"/></g></svg>`;
     },
 
-    // Wheeled sneaker: a high-top with a wheel set up inside the heel, only
-    // its lower half showing below the sole.
-    (u) => `<svg viewBox="0 0 64 64"><defs><linearGradient id="sk${u}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#cfd5dc"/></linearGradient><radialGradient id="sw${u}" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#9fe1ff"/><stop offset="1" stop-color="#1d79c4"/></radialGradient><clipPath id="sv${u}"><path d="M0 48 H64 V64 H0 Z"/></clipPath></defs>
-      <path d="M6 42 C6 34 8 26 12 21 C16 18 21 19 23 22 C27 27 33 30 41 32 C50 34 57 36 58 41 L58 46 L6 46 Z" fill="url(#sk${u})" stroke="#5b6470" stroke-width="1.5" stroke-linejoin="round"/>
-      <path d="M12 21 C15 18 21 18 23 22 L22 28 C18 27 14 26 11 26 Z" fill="#2f4f8a"/>
-      <path d="M14 33 C24 34 34 37 44 37" fill="none" stroke="#2c86d9" stroke-width="3" stroke-linecap="round"/>
-      <g stroke="#5b6470" stroke-width="1.6" stroke-linecap="round"><line x1="27" y1="27" x2="30" y2="31"/><line x1="31" y1="29" x2="34" y2="32.5"/><line x1="35" y1="30.5" x2="38" y2="33.5"/></g>
-      <rect x="5" y="44" width="54" height="7" rx="3" fill="#3a3f47"/>
-      <rect x="8" y="47" width="14" height="5" rx="2" fill="#0d0f12"/>
-      <g clip-path="url(#sv${u})"><circle cx="15" cy="51.5" r="6" fill="#22262c"/><circle cx="15" cy="51.5" r="4.4" fill="url(#sw${u})"/><circle cx="15" cy="51.5" r="1.6" fill="#e8eef4"/></g>
+    // Wheeled sneaker: a bright, kid-colored high-top with a wheel set up
+    // inside the heel, only its lower half showing below the sole.
+    (u) => `<svg viewBox="0 0 64 64"><defs><linearGradient id="sk${u}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5ec8ff"/><stop offset="1" stop-color="#1f7fe0"/></linearGradient><radialGradient id="sw${u}" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#ffe066"/><stop offset="1" stop-color="#ff8a00"/></radialGradient><clipPath id="sv${u}"><path d="M0 48 H64 V64 H0 Z"/></clipPath></defs>
+      <path d="M6 42 C6 34 8 26 12 21 C16 18 21 19 23 22 C27 27 33 30 41 32 C50 34 57 36 58 41 L58 46 L6 46 Z" fill="url(#sk${u})" stroke="#174f9c" stroke-width="1.5" stroke-linejoin="round"/>
+      <path d="M12 21 C15 18 21 18 23 22 L22 28 C18 27 14 26 11 26 Z" fill="#ff3fa4"/>
+      <path d="M44 33 C50 34.5 56 36.5 57.5 41 L57.5 44 L45 44 C44 40 43.5 36 44 33 Z" fill="#ffffff" opacity=".9"/>
+      <path d="M13 34 C23 35 33 38 43 38.5" fill="none" stroke="#8ef02b" stroke-width="3.4" stroke-linecap="round"/>
+      <g stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"><line x1="27" y1="27" x2="30" y2="31"/><line x1="31" y1="29" x2="34" y2="32.5"/><line x1="35" y1="30.5" x2="38" y2="33.5"/></g>
+      <circle cx="9" cy="35" r="1.4" fill="#ffe14d"/><circle cx="18" cy="41" r="1.1" fill="#ffe14d"/><circle cx="30" cy="42.5" r="1.2" fill="#ff3fa4"/><circle cx="51" cy="40.5" r="1" fill="#8ef02b"/>
+      <rect x="5" y="44" width="54" height="7" rx="3" fill="#ffd21f" stroke="#e0a800" stroke-width="1"/>
+      <rect x="8" y="47" width="14" height="5" rx="2" fill="#5a3b00"/>
+      <g clip-path="url(#sv${u})"><circle cx="15" cy="51.5" r="6" fill="#7a3d00"/><circle cx="15" cy="51.5" r="4.4" fill="url(#sw${u})"/><circle cx="15" cy="51.5" r="1.6" fill="#fff6d6"/></g>
       <ellipse cx="22" cy="24" rx="5" ry="1.6" fill="#fff" opacity=".6" transform="rotate(30 22 24)"/></svg>`,
   ];
 
