@@ -113,48 +113,67 @@
       <circle cx="32" cy="32" r="9" fill="#1d1d1f"/><circle cx="32" cy="32" r="6.3" fill="url(#bw${u})"/><circle cx="32" cy="32" r="3.6" fill="none" stroke="#c4c8ce" stroke-width="1"/>
       <ellipse cx="21" cy="15" rx="7" ry="3.6" fill="#fff" opacity=".55" transform="rotate(-30 21 15)"/></svg>`,
 
-    // Troll doll: wild upswept pink hair, big nose, wide grin, pot belly.
-    (u) => `<svg viewBox="0 0 64 64"><defs><linearGradient id="th${u}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff9fd8"/><stop offset="1" stop-color="#ff3fa8"/></linearGradient><radialGradient id="ts${u}" cx=".4" cy=".35" r=".75"><stop offset="0" stop-color="#ffd9b8"/><stop offset="1" stop-color="#d9935f"/></radialGradient></defs>
-      <path d="M20 30 C14 22 12 12 17 4 C18 12 21 15 23 17 C22 9 24 3 30 0 C28 8 30 13 32 16 C33 8 37 3 43 1 C39 8 39 13 40 17 C43 12 47 9 52 8 C47 14 46 20 45 30 Z" fill="url(#th${u})" stroke="#d61f86" stroke-width="1"/>
-      <g fill="none" stroke="#d61f86" stroke-width=".8" opacity=".7"><path d="M24 28 C21 20 20 12 22 6"/><path d="M30 27 C29 19 29 11 31 5"/><path d="M36 27 C36 19 37 12 40 6"/><path d="M41 28 C42 21 44 15 48 11"/></g>
-      <ellipse cx="32" cy="54" rx="11" ry="9" fill="url(#ts${u})"/>
-      <ellipse cx="21" cy="52" rx="3.2" ry="5" fill="url(#ts${u})" transform="rotate(25 21 52)"/><ellipse cx="43" cy="52" rx="3.2" ry="5" fill="url(#ts${u})" transform="rotate(-25 43 52)"/>
-      <circle cx="32" cy="55" r="1.2" fill="#a8693f"/>
-      <ellipse cx="17.5" cy="37" rx="3.5" ry="5" fill="url(#ts${u})"/><ellipse cx="46.5" cy="37" rx="3.5" ry="5" fill="url(#ts${u})"/>
-      <ellipse cx="32" cy="37" rx="14" ry="12" fill="url(#ts${u})"/>
-      <circle cx="26.5" cy="33" r="3" fill="#fff"/><circle cx="37.5" cy="33" r="3" fill="#fff"/><circle cx="27" cy="33.5" r="1.9" fill="#3b2a1a"/><circle cx="37" cy="33.5" r="1.9" fill="#3b2a1a"/>
-      <ellipse cx="32" cy="38.5" rx="4.6" ry="3.8" fill="#e9a978"/><ellipse cx="30.8" cy="37.3" rx="1.5" ry="1" fill="#ffe2c8" opacity=".8"/>
-      <path d="M24 42.5 Q32 48.5 40 42.5" fill="none" stroke="#8a4a2a" stroke-width="1.5" stroke-linecap="round"/></svg>`,
+    // Troll doll: a huge, tall shock of pink hair over a small body with
+    // feet; big nose, wide grin.
+    (u) => `<svg viewBox="0 0 64 64"><defs><linearGradient id="th${u}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffb3e0"/><stop offset=".5" stop-color="#ff5cb8"/><stop offset="1" stop-color="#e8329a"/></linearGradient><radialGradient id="ts${u}" cx=".4" cy=".35" r=".75"><stop offset="0" stop-color="#ffd9b8"/><stop offset="1" stop-color="#d9935f"/></radialGradient></defs>
+      <path d="M21 38 C12 30 7 18 10 3 C13 13 17 18 20 20 C17 10 19 3 26 -1 C24 9 27 15 30 18 C30 8 34 1 41 -1 C37 8 37 14 38 19 C41 11 47 6 55 4 C49 12 48 21 47 27 C50 24 54 23 58 24 C52 28 48 33 43 38 Z" fill="url(#th${u})" stroke="#c2187a" stroke-width="1"/>
+      <g fill="none" stroke="#c2187a" stroke-width=".8" opacity=".65"><path d="M20 34 C14 26 12 16 13 8"/><path d="M25 32 C21 22 21 12 24 4"/><path d="M31 31 C30 21 31 11 35 4"/><path d="M37 31 C38 22 41 14 46 8"/><path d="M42 33 C45 28 49 26 53 25"/></g>
+      <ellipse cx="20" cy="42" rx="2.6" ry="3.8" fill="url(#ts${u})"/><ellipse cx="44" cy="42" rx="2.6" ry="3.8" fill="url(#ts${u})"/>
+      <ellipse cx="32" cy="42.5" rx="11" ry="9.5" fill="url(#ts${u})"/>
+      <circle cx="27.5" cy="39.5" r="2.4" fill="#fff"/><circle cx="36.5" cy="39.5" r="2.4" fill="#fff"/><circle cx="27.9" cy="39.9" r="1.5" fill="#3b2a1a"/><circle cx="36.1" cy="39.9" r="1.5" fill="#3b2a1a"/>
+      <ellipse cx="32" cy="44" rx="3.6" ry="3" fill="#e9a978"/><ellipse cx="31" cy="43.1" rx="1.2" ry=".8" fill="#ffe2c8" opacity=".8"/>
+      <path d="M26 47.3 Q32 51.5 38 47.3" fill="none" stroke="#8a4a2a" stroke-width="1.3" stroke-linecap="round"/>
+      <ellipse cx="32" cy="55.5" rx="5.6" ry="5" fill="url(#ts${u})"/>
+      <ellipse cx="25.5" cy="54" rx="1.8" ry="3.2" fill="url(#ts${u})" transform="rotate(30 25.5 54)"/><ellipse cx="38.5" cy="54" rx="1.8" ry="3.2" fill="url(#ts${u})" transform="rotate(-30 38.5 54)"/>
+      <ellipse cx="27.8" cy="61" rx="3.6" ry="2" fill="url(#ts${u})"/><ellipse cx="36.2" cy="61" rx="3.6" ry="2" fill="url(#ts${u})"/>
+      <g fill="none" stroke="#b97a4c" stroke-width=".6"><path d="M26 61.5 v1.2 M27.6 61.8 v1.1 M34.4 61.8 v1.1 M36 61.5 v1.2"/></g></svg>`,
 
-    // Paperclip assistant: a bent-wire clip with big eyes, eyebrows and
-    // lower lids.
-    (u) => `<svg viewBox="0 0 64 64"><defs><linearGradient id="cl${u}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7c8591"/><stop offset=".5" stop-color="#eef1f4"/><stop offset="1" stop-color="#8a939e"/></linearGradient></defs>
-      <path d="M27 50 V24 a5.5 5.5 0 0 1 11 0 V53 a8.5 8.5 0 0 1 -17 0 V16 a11.5 11.5 0 0 1 23 0 V46" fill="none" stroke="#4f5660" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="M27 50 V24 a5.5 5.5 0 0 1 11 0 V53 a8.5 8.5 0 0 1 -17 0 V16 a11.5 11.5 0 0 1 23 0 V46" fill="none" stroke="url(#cl${u})" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-      <g stroke="#2a2f36" stroke-width="1.2"><ellipse cx="25" cy="22" rx="6" ry="7" fill="#fff"/><ellipse cx="39" cy="22" rx="6" ry="7" fill="#fff"/></g>
-      <circle cx="26.5" cy="23" r="3" fill="#111"/><circle cx="40.5" cy="23" r="3" fill="#111"/><circle cx="27.5" cy="22" r="1" fill="#fff"/><circle cx="41.5" cy="22" r="1" fill="#fff"/>
-      <path d="M19.5 26.5 Q25 30.5 30.5 26.5" fill="none" stroke="#2a2f36" stroke-width="1.2" stroke-linecap="round"/><path d="M33.5 26.5 Q39 30.5 44.5 26.5" fill="none" stroke="#2a2f36" stroke-width="1.2" stroke-linecap="round"/>
-      <path d="M18 11.5 Q24 7 30 11" fill="none" stroke="#2a2f36" stroke-width="2.4" stroke-linecap="round"/><path d="M34 11 Q40 7 46 11.5" fill="none" stroke="#2a2f36" stroke-width="2.4" stroke-linecap="round"/></svg>`,
+    // Paperclip assistant: a bent-wire clip with eyebrows and big,
+    // half-lidded (slightly condescending) eyes with lower lids.
+    (u) => `<svg viewBox="0 0 64 64"><defs><linearGradient id="cl${u}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7c8591"/><stop offset=".5" stop-color="#eef1f4"/><stop offset="1" stop-color="#8a939e"/></linearGradient><clipPath id="ce${u}"><ellipse cx="25" cy="23" rx="6" ry="7"/><ellipse cx="39" cy="23" rx="6" ry="7"/></clipPath></defs>
+      <path d="M27 50 V25 a5.5 5.5 0 0 1 11 0 V53 a8.5 8.5 0 0 1 -17 0 V17 a11.5 11.5 0 0 1 23 0 V46" fill="none" stroke="#4f5660" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M27 50 V25 a5.5 5.5 0 0 1 11 0 V53 a8.5 8.5 0 0 1 -17 0 V17 a11.5 11.5 0 0 1 23 0 V46" fill="none" stroke="url(#cl${u})" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <ellipse cx="25" cy="23" rx="6" ry="7" fill="#fff"/><ellipse cx="39" cy="23" rx="6" ry="7" fill="#fff"/>
+      <g clip-path="url(#ce${u})">
+        <circle cx="26.8" cy="25.5" r="3" fill="#111"/><circle cx="40.8" cy="25.5" r="3" fill="#111"/><circle cx="27.8" cy="24.6" r=".9" fill="#fff"/><circle cx="41.8" cy="24.6" r=".9" fill="#fff"/>
+        <rect x="17" y="14" width="30" height="9.6" fill="#d9dde2"/>
+        <path d="M17 23.6 H33" stroke="#2a2f36" stroke-width="1.6"/><path d="M31 23.6 H47" stroke="#2a2f36" stroke-width="1.6"/>
+      </g>
+      <g fill="none" stroke="#2a2f36" stroke-width="1.2"><ellipse cx="25" cy="23" rx="6" ry="7"/><ellipse cx="39" cy="23" rx="6" ry="7"/></g>
+      <path d="M19.5 27.8 Q25 31.3 30.5 27.8" fill="none" stroke="#2a2f36" stroke-width="1.1" stroke-linecap="round"/><path d="M33.5 27.8 Q39 31.3 44.5 27.8" fill="none" stroke="#2a2f36" stroke-width="1.1" stroke-linecap="round"/>
+      <path d="M18.5 12.5 Q24 9.5 30 11.5" fill="none" stroke="#2a2f36" stroke-width="2.4" stroke-linecap="round"/><path d="M34 10.5 Q40 7.5 45.5 10" fill="none" stroke="#2a2f36" stroke-width="2.4" stroke-linecap="round"/></svg>`,
 
-    // Running buddy figure: a yellow, black-outlined figure mid-stride.
+    // Running buddy figure: a chunky yellow, thick-black-outlined figure
+    // leaning into a full stride, with both arms swinging.
     (u) => {
-      const limbs = 'M33 12 L29 30 M31 18 L22 24 L16 22 M31 18 L40 22 L46 17 M29 30 L37 39 L35 52 M29 30 L21 40 L12 42';
-      return `<svg viewBox="0 0 64 64">
-      <path d="${limbs}" fill="none" stroke="#1a1a1a" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
-      <circle cx="37" cy="7.5" r="7" fill="#1a1a1a"/>
-      <path d="${limbs}" fill="none" stroke="#ffd21f" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-      <circle cx="37" cy="7.5" r="5" fill="#ffd21f"/>
-      <path d="M30 26 L33 13" stroke="#fff3a6" stroke-width="1.6" stroke-linecap="round" opacity=".8"/></svg>`;
+      // Thick rounded limbs, each a tapered bean shape, black outline then
+      // yellow fill; leaning hard into the run, facing right.
+      const shapes = [
+        // back arm (the added second arm), swung behind
+        'M31.5 19.5 C27 20.5 22.5 22.5 19.5 25.5 C17 28 16 31.5 16.5 34 C17 36.5 20.5 36.5 21 33.5 C21.5 31 23 29 25.5 27.5 C28 26 30.5 25.5 33 25 Z',
+        // back leg, kicked out behind
+        'M27 34 C24 39 20 42 14 43 C10.5 43.5 9.5 47 13 47.5 C19.5 48.5 25 45 30 39 Z',
+        // torso
+        'M33.5 16.5 C37.5 15.5 40 18 39 21.5 L33.5 36.5 C32 40 25.5 39 26.5 34.5 Z',
+        // front leg: knee driven forward, shin back down to the foot
+        'M30 34.5 C34 37 38.5 39 41 41.5 C43 43.5 42 46 40.5 48.5 L38 54 C40 54.5 42.5 55.5 42.5 57.5 C42.5 59.5 39 59.5 36.5 59 C33.5 58.5 32 57 33 54.5 L35.5 46.5 C33 44.5 29.5 42.5 27.5 40.5 Z',
+        // front arm, bent and pumping forward
+        'M35 19 C39 21 43 23.5 45.5 24.5 C47 21.5 49 18.5 51 16.5 C53 14.5 56 16.5 54.5 18.5 C52 22 50 26 48 29 C46.5 31 44 30.5 42 29.5 C38.5 27.5 35 26 32.5 24.5 Z',
+      ];
+      const paths = (fill, stroke, w) => shapes.map((d) => `<path d="${d}" fill="${fill}" stroke="${stroke}" stroke-width="${w}" stroke-linejoin="round"/>`).join('');
+      return `<svg viewBox="0 0 64 64">${paths('#151515', '#151515', 6.4)}<circle cx="42" cy="8.5" r="8.2" fill="#151515"/>${paths('#ffd21f', '#ffd21f', 0)}<circle cx="42" cy="8.5" r="5.6" fill="#ffd21f"/></svg>`;
     },
 
-    // Wheeled sneaker: a chunky skate-shoe with a wheel in the heel.
-    (u) => `<svg viewBox="0 0 64 64"><defs><linearGradient id="sk${u}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#cfd5dc"/></linearGradient><radialGradient id="sw${u}" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#9fe1ff"/><stop offset="1" stop-color="#1d79c4"/></radialGradient></defs>
+    // Wheeled sneaker: a high-top with a wheel set up inside the heel, only
+    // its lower half showing below the sole.
+    (u) => `<svg viewBox="0 0 64 64"><defs><linearGradient id="sk${u}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#cfd5dc"/></linearGradient><radialGradient id="sw${u}" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#9fe1ff"/><stop offset="1" stop-color="#1d79c4"/></radialGradient><clipPath id="sv${u}"><path d="M0 48 H64 V64 H0 Z"/></clipPath></defs>
       <path d="M6 42 C6 34 8 26 12 21 C16 18 21 19 23 22 C27 27 33 30 41 32 C50 34 57 36 58 41 L58 46 L6 46 Z" fill="url(#sk${u})" stroke="#5b6470" stroke-width="1.5" stroke-linejoin="round"/>
       <path d="M12 21 C15 18 21 18 23 22 L22 28 C18 27 14 26 11 26 Z" fill="#2f4f8a"/>
       <path d="M14 33 C24 34 34 37 44 37" fill="none" stroke="#2c86d9" stroke-width="3" stroke-linecap="round"/>
       <g stroke="#5b6470" stroke-width="1.6" stroke-linecap="round"><line x1="27" y1="27" x2="30" y2="31"/><line x1="31" y1="29" x2="34" y2="32.5"/><line x1="35" y1="30.5" x2="38" y2="33.5"/></g>
-      <rect x="5" y="44" width="54" height="6" rx="3" fill="#3a3f47"/>
-      <circle cx="13" cy="51" r="7" fill="#22262c"/><circle cx="13" cy="51" r="5.2" fill="url(#sw${u})"/><circle cx="13" cy="51" r="1.8" fill="#e8eef4"/>
+      <rect x="5" y="44" width="54" height="7" rx="3" fill="#3a3f47"/>
+      <rect x="8" y="47" width="14" height="5" rx="2" fill="#0d0f12"/>
+      <g clip-path="url(#sv${u})"><circle cx="15" cy="51.5" r="6" fill="#22262c"/><circle cx="15" cy="51.5" r="4.4" fill="url(#sw${u})"/><circle cx="15" cy="51.5" r="1.6" fill="#e8eef4"/></g>
       <ellipse cx="22" cy="24" rx="5" ry="1.6" fill="#fff" opacity=".6" transform="rotate(30 22 24)"/></svg>`,
   ];
 
@@ -282,13 +301,14 @@
       [deck[i], deck[j]] = [deck[j], deck[i]];
     }
     while (deck.length < FLYER_COUNT - 1) deck.push(ICONS[Math.floor(Math.random() * ICONS.length)]);
-    // One rare icon per celebration, dealt into a random spot.
+    // One rare icon per celebration, dealt into a random spot. It looks
+    // and flies like the rest -- spotting the rare ones is up to the player.
     const rareSpot = Math.floor(Math.random() * FLYER_COUNT);
     deck.splice(rareSpot, 0, RARE_ICONS[Math.floor(Math.random() * RARE_ICONS.length)]);
 
     for (let i = 0; i < FLYER_COUNT; i++) {
       const el = document.createElement("div");
-      el.className = "celebrate-flyer" + (i === rareSpot ? " rare" : "");
+      el.className = "celebrate-flyer";
       el.innerHTML = deck[i]("c" + ++flyerCount);
       el.style.width = el.style.height = size + "px";
       const spot = spots[i];
@@ -417,7 +437,7 @@
     master.connect(ctx.destination);
     const osc = ctx.createOscillator();
     osc.type = "triangle";
-    osc.frequency.value = 165;
+    osc.frequency.value = 110;
     const env = ctx.createGain();
     const end = t0 + 0.32;
     env.gain.setValueAtTime(0, t0);
