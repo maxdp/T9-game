@@ -350,29 +350,32 @@
     }
   }
 
-  // A short low "duhn" for an incorrect guess: one square-wave note,
-  // softened by a low-pass filter, sagging slightly in pitch.
+  // Game-show "wrong answer" buzzer for an incorrect guess: a flat, low,
+  // steady tone (two slightly detuned sawtooth waves, so it has that harsh
+  // buzzy beat), held for under half a second with no change in pitch.
   function scheduleBuzzer(ctx, t0) {
     const master = ctx.createGain();
-    master.gain.value = 0.2;
+    master.gain.value = 0.16;
     master.connect(ctx.destination);
-    const osc = ctx.createOscillator();
-    osc.type = "square";
-    osc.frequency.setValueAtTime(130, t0);
-    osc.frequency.exponentialRampToValueAtTime(98, t0 + 0.22);
     const lowpass = ctx.createBiquadFilter();
     lowpass.type = "lowpass";
-    lowpass.frequency.value = 600;
+    lowpass.frequency.value = 1400;
     const env = ctx.createGain();
+    const end = t0 + 0.42;
     env.gain.setValueAtTime(0, t0);
-    env.gain.linearRampToValueAtTime(0.7, t0 + 0.012);
-    env.gain.setValueAtTime(0.7, t0 + 0.13);
-    env.gain.linearRampToValueAtTime(0, t0 + 0.22);
-    osc.connect(lowpass);
+    env.gain.linearRampToValueAtTime(0.8, t0 + 0.01);
+    env.gain.setValueAtTime(0.8, end - 0.04);
+    env.gain.linearRampToValueAtTime(0, end);
     lowpass.connect(env);
     env.connect(master);
-    osc.start(t0);
-    osc.stop(t0 + 0.25);
+    for (const freq of [98, 103.5]) {
+      const osc = ctx.createOscillator();
+      osc.type = "sawtooth";
+      osc.frequency.value = freq;
+      osc.connect(lowpass);
+      osc.start(t0);
+      osc.stop(end + 0.02);
+    }
   }
 
   // A quick "dee-dl-ee" for each correct answer: three short square-wave

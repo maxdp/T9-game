@@ -1,67 +1,24 @@
 (() => {
   const { wordToDigits, findSequentialGrouping, PRESS_COUNTS } = window.T9;
-  const { DICTIONARY, WORDS_GOOD, WORDS_GOOD_RANK } = window.T9_WORDS;
+  const { DICTIONARY, WORDS_GOOD } = window.T9_WORDS;
+  const {
+    MIN_VALID_ANSWERS,
+    MAX_VALID_ANSWERS,
+    DIFFICULTY_LABELS,
+    difficultyForPuzzle,
+    rarestRankOf,
+    isBlocked,
+    buildPools,
+    seededShuffle,
+    centralDateKey,
+    dailyNumber,
+  } = window.T9_PUZZLES;
 
   // DICTIONARY lets the game check whether a typed guess is a real word at
   // all. WORDS_GOOD is precomputed (see words.js) rather than classified
   // here at startup.
   const DICTIONARY_SET = new Set(DICTIONARY);
   const INAPPROPRIATE_SET = new Set(window.T9_INAPPROPRIATE);
-
-  // Word -> frequency rank (1 = most common, higher = rarer), for gauging
-  // hangman puzzle difficulty from its rarest valid answer.
-  const WORD_RANK = new Map(WORDS_GOOD.map((w, i) => [w, WORDS_GOOD_RANK[i]]));
-
-  // Difficulty combines three metrics into a 3-9 point score:
-  //
-  // 1. Rarity of the rarest valid answer — WORDS_GOOD split into rarity
-  //    quartiles by rank (cutoffs are the actual 25th/50th/75th percentile
-  //    rank values of the current WORDS_GOOD pool, recomputed here rather
-  //    than hardcoded so they stay correct whenever the word list
-  //    changes); the bottom (most-common) quartile is worth 1 point, the
-  //    2nd 2, the 3rd and 4th (rarest half) 3.
-  // 2. Number of blanks (2-6): 2 is worth 1 point, 3 worth 2, 4-6 worth 3.
-  // 3. Number of valid answers (3-8, the MIN/MAX_VALID_ANSWERS range
-  //    below): 3-4 is worth 1 point, 5-6 worth 2, 7-8 worth 3.
-  //
-  // Summing gives 3-9 points, classified 3-4 Easy / 5-6 Medium / 7-9 Hard.
-  // Random word+blank draws skew heavily away from Easy (about 4/37/59%
-  // Easy/Medium/Hard against the current 1,773-word pool), so
-  // generatePuzzle() doesn't just accept a random draw: it is given a
-  // target label (Easy or Medium at even odds in Practice; Easy, Medium,
-  // then Hard in Daily) and retries until a draw actually lands on it.
-  // Simulating that retry loop found a worst case of 812 tries, under half
-  // its 2000-try cap.
-  const RARITY_QUARTILES = (() => {
-    const sortedRanks = [...WORDS_GOOD_RANK].sort((a, b) => a - b);
-    const n = sortedRanks.length;
-    const pct = (p) => sortedRanks[Math.min(n - 1, Math.floor(p * n))];
-    return { q1: pct(0.25), q2: pct(0.5), q3: pct(0.75) };
-  })();
-
-  function rarityPoints(rarestRank) {
-    if (rarestRank <= RARITY_QUARTILES.q1) return 1;
-    if (rarestRank <= RARITY_QUARTILES.q2) return 2;
-    return 3;
-  }
-  function blankPoints(blankCount) {
-    if (blankCount <= 2) return 1;
-    if (blankCount <= 3) return 2;
-    return 3;
-  }
-  function answerPoints(answerCount) {
-    if (answerCount <= 4) return 1;
-    if (answerCount <= 6) return 2;
-    return 3;
-  }
-  function difficultyForPuzzle(rarestRank, blankCount, answerCount) {
-    const points =
-      rarityPoints(rarestRank) + blankPoints(blankCount) + answerPoints(answerCount);
-    if (points <= 4) return "Easy";
-    if (points <= 6) return "Medium";
-    return "Hard";
-  }
-  const DIFFICULTY_LABELS = ["Easy", "Medium", "Hard"];
 
   // One color per merged group in a solution, so a letter/digit's color
   // shows at a glance which final counting number it contributes to.
@@ -174,51 +131,6 @@
 
 
   // ---------------------------------------------------------------------
-  // Seeded randomness for the Daily puzzles
-  // ---------------------------------------------------------------------
-
-  // FNV-1a string hash -> 32-bit seed.
-  function hashString(str) {
-    let h = 2166136261;
-    for (let i = 0; i < str.length; i++) {
-      h ^= str.charCodeAt(i);
-      h = Math.imul(h, 16777619);
-    }
-    return h >>> 0;
-  }
-
-  // mulberry32: a small, fast PRNG that gives every player the same
-  // sequence for the same seed (Math.random can't be seeded).
-  function seededRandom(seed) {
-    let a = seed >>> 0;
-    return () => {
-      a = (a + 0x6d2b79f5) | 0;
-      let t = Math.imul(a ^ (a >>> 15), 1 | a);
-      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-    };
-  }
-
-  // Today's date in US Central time (CST or CDT, whichever is in effect),
-  // as "YYYY-MM-DD", so the Daily changes at Central midnight for everyone.
-  const CENTRAL_DATE = new Intl.DateTimeFormat("en-CA", {
-    timeZone: "America/Chicago",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  });
-  function centralDateKey() {
-    return CENTRAL_DATE.format(new Date());
-  }
-
-  // Daily #1 is 2026-10-16; each Central-time day after that is one more.
-  const DAILY_EPOCH = Date.UTC(2026, 9, 16);
-  function dailyNumber(dateKey) {
-    const [y, m, d] = dateKey.split("-").map(Number);
-    return Math.round((Date.UTC(y, m - 1, d) - DAILY_EPOCH) / 86400000) + 1;
-  }
-
-  // ---------------------------------------------------------------------
   // The game (Practice and Daily modes share the phone)
   // ---------------------------------------------------------------------
   (() => {
@@ -239,8 +151,6 @@
     const dailyRowsEl = document.getElementById("daily-rows");
     const modeToggleBtn = document.getElementById("mode-toggle");
 
-    const MIN_VALID_ANSWERS = 3;
-    const MAX_VALID_ANSWERS = 8;
     const DAILY_STORAGE_KEY = "t9tangle-daily";
 
     let mode = "practice";
@@ -313,13 +223,12 @@
       );
     }
 
-    function rarestRankOf(answers) {
-      return Math.max(...answers.map((w) => WORD_RANK.get(w)));
-    }
-
     // Only offers puzzles with MIN_VALID_ANSWERS..MAX_VALID_ANSWERS valid
-    // answers AND the requested difficulty, retrying draws until one lands
-    // on it (see the difficulty notes at the top).
+    // answers AND the requested difficulty (see js/puzzles.js), and never a
+    // blocked one, retrying draws until one lands. Random word+blank draws
+    // rarely come out Easy (about 4% of the time), so a target is needed;
+    // simulating this loop found a worst case of 812 tries, under half the
+    // 2000-try cap.
     function generatePuzzle(targetDifficulty) {
       let word;
       let blanks;
@@ -331,7 +240,9 @@
         blanks = pickBlanks(word);
         answers = computeValidAnswers(word, blanks);
         difficulty =
-          answers.length >= MIN_VALID_ANSWERS && answers.length <= MAX_VALID_ANSWERS
+          answers.length >= MIN_VALID_ANSWERS &&
+          answers.length <= MAX_VALID_ANSWERS &&
+          !isBlocked(patternOf(word, blanks))
             ? difficultyForPuzzle(rarestRankOf(answers), blanks.size, answers.length)
             : null;
         tries++;
@@ -348,59 +259,13 @@
       };
     }
 
-    // Every distinct puzzle the rules allow, grouped by difficulty, for the
-    // Daily. A puzzle is identified by its pattern (revealed letters plus
-    // blanks, e.g. "l__s"), since two hidden words with the same pattern
-    // make the very same puzzle. Built once, on first opening Daily (about
-    // 130k patterns, roughly a tenth of a second).
-    let dailyPools = null;
-    function buildDailyPools() {
-      const byPattern = new Map();
-      WORDS_GOOD.forEach((w) => {
-        const n = w.length;
-        for (let mask = 0; mask < 1 << n; mask++) {
-          let blankCount = 0;
-          for (let m = mask; m; m &= m - 1) blankCount++;
-          if (blankCount < 2 || blankCount > n - 2) continue;
-          let pattern = "";
-          for (let i = 0; i < n; i++) pattern += (mask >> i) & 1 ? "_" : w[i];
-          let entry = byPattern.get(pattern);
-          if (!entry) byPattern.set(pattern, (entry = { blankCount, answers: [] }));
-          entry.answers.push(w);
-        }
-      });
-      const pools = { Easy: [], Medium: [], Hard: [] };
-      byPattern.forEach((entry, pattern) => {
-        const count = entry.answers.length;
-        if (count < MIN_VALID_ANSWERS || count > MAX_VALID_ANSWERS) return;
-        const label = difficultyForPuzzle(rarestRankOf(entry.answers), entry.blankCount, count);
-        pools[label].push({ pattern, answers: entry.answers, difficulty: label });
-      });
-      return pools;
+    function patternOf(word, blanks) {
+      return [...word].map((ch, i) => (blanks.has(i) ? "_" : ch)).join("");
     }
 
-    // Day n's puzzle of a difficulty is entry n of a fixed shuffled order
-    // of that difficulty's pool, so no Daily puzzle repeats until the whole
-    // pool has been used (only ~130 Easy puzzles exist, which random draws
-    // were repeating within days); after that a fresh shuffle starts. The
-    // date alone decides everything, so every player gets the same three.
-    function dailyPuzzle(label, number) {
-      const pool = dailyPools[label];
-      const day = number - 1;
-      const cycle = Math.floor(day / pool.length);
-      const pos = day - cycle * pool.length;
-      const random = seededRandom(hashString(`t9-tangle-daily:${label}:${cycle}`));
-      const order = [...pool.keys()];
-      for (let i = order.length - 1; i > 0; i--) {
-        const j = Math.floor(random() * (i + 1));
-        [order[i], order[j]] = [order[j], order[i]];
-      }
-      const { pattern, answers, difficulty } = pool[order[pos]];
-      // The answer shown as "the" word (in the Daily results) is the most
-      // common one.
-      const word = answers.reduce((a, b) => (WORD_RANK.get(b) < WORD_RANK.get(a) ? b : a));
+    function puzzleFromPattern(pattern, answers, difficulty) {
       return {
-        word,
+        word: answers[0],
         blanks: new Set([...pattern].flatMap((ch, i) => (ch === "_" ? [i] : []))),
         answers,
         difficulty,
@@ -419,45 +284,65 @@
       practice.puzzle = generatePuzzle(target);
     }
 
-    // Daily: one Easy, one Medium and one Hard, in that order, set by
-    // today's Central-time date.
+    // Daily: one Easy, one Medium and one Hard, in that order, read from
+    // the fixed schedule in js/daily.js (built by tools/build-daily.js), so
+    // every player everywhere gets the same three puzzles each Central-time
+    // day -- each scheduled puzzle carries its own answer list, so not even
+    // a word-list update can change it.
+    function scheduledDay(number) {
+      const days = (window.T9_DAILY && window.T9_DAILY.days) || [];
+      const day = days[number - 1];
+      if (!day) return null;
+      return day.map((entry, i) => {
+        const [pattern, ...answers] = entry.split(" ");
+        return puzzleFromPattern(pattern, answers, DIFFICULTY_LABELS[i]);
+      });
+    }
+
+    // Only if a date ever runs past the end of the schedule: day n takes
+    // entry n of a seeded shuffle of each difficulty's pool (the same for
+    // everyone on the same word list).
+    let fallbackPools = null;
+    function fallbackDay(number) {
+      if (!fallbackPools) fallbackPools = buildPools();
+      return DIFFICULTY_LABELS.map((label) => {
+        const pool = fallbackPools[label];
+        const day = number - 1;
+        const cycle = Math.floor(day / pool.length);
+        const p = seededShuffle(pool, `t9-tangle-daily:${label}:${cycle}`)[day - cycle * pool.length];
+        return puzzleFromPattern(p.pattern, p.answers, label);
+      });
+    }
+
     function loadDaily() {
       const dateKey = centralDateKey();
       if (daily && daily.dateKey === dateKey) return;
-      daily = restoreDaily(dateKey);
-      if (daily) return;
-      if (!dailyPools) dailyPools = buildDailyPools();
       const number = dailyNumber(dateKey);
       daily = {
         dateKey,
         number,
-        puzzles: DIFFICULTY_LABELS.map((label) => dailyPuzzle(label, number)),
+        puzzles: scheduledDay(number) || fallbackDay(number),
         index: 0,
       };
-      saveDaily();
+      restoreDaily();
     }
 
-    // Today's Daily is kept in this browser: the three puzzles themselves
-    // (so an update to the word list mid-day can't swap them out from under
-    // a player) and how each went, so after a reload Daily comes back to
-    // the scores once all three are done, or to the puzzle the player was
-    // on. It's ignored once the date moves on. Storage can be unavailable
-    // (private windows, blocked site data), in which case Daily still
-    // works, just without remembering.
+    // Progress on today's Daily is kept in this browser, so after a reload
+    // Daily comes back to the scores once all three are done, or to the
+    // puzzle the player was on. It's ignored once the date moves on (or if
+    // it doesn't match today's puzzles). Storage can be unavailable (private
+    // windows, blocked site data), in which case Daily still works, just
+    // without remembering.
     function saveDaily() {
       try {
         localStorage.setItem(
           DAILY_STORAGE_KEY,
           JSON.stringify({
-            version: 2,
+            version: 3,
             dateKey: daily.dateKey,
-            number: daily.number,
             index: daily.index,
             puzzles: daily.puzzles.map((p) => ({
-              word: p.word,
-              blanks: [...p.blanks],
-              answers: p.answers,
-              difficulty: p.difficulty,
+              pattern: patternOf(p.word, p.blanks),
               found: [...p.found],
               complete: p.complete,
               attempts: p.attempts,
@@ -471,50 +356,30 @@
 
     // Finished puzzles come back exactly as they ended; the one that was
     // still in progress comes back fresh (no answers found yet).
-    function restoreDaily(dateKey) {
+    function restoreDaily() {
       let saved = null;
       try {
         saved = JSON.parse(localStorage.getItem(DAILY_STORAGE_KEY));
       } catch (e) {
         saved = null;
       }
-      if (
-        !saved ||
-        saved.version !== 2 ||
-        saved.dateKey !== dateKey ||
-        !Array.isArray(saved.puzzles) ||
-        saved.puzzles.length !== DIFFICULTY_LABELS.length
-      ) {
-        return null;
-      }
-      try {
-        const puzzles = saved.puzzles.map((s) => {
-          const p = {
-            word: s.word,
-            blanks: new Set(s.blanks),
-            answers: s.answers,
-            difficulty: s.difficulty,
-            found: new Set(),
-            complete: !!s.complete,
-            attempts: 0,
-            message: null,
-          };
-          if (p.complete) {
-            p.found = new Set(s.found.filter((w) => p.answers.includes(w)));
-            p.attempts = s.attempts | 0;
-            p.message = endMessage(p);
-          }
-          return p;
-        });
-        return {
-          dateKey,
-          number: dailyNumber(dateKey),
-          puzzles,
-          index: Math.min(Math.max(0, saved.index | 0), puzzles.length),
-        };
-      } catch (e) {
-        return null;
-      }
+      const matches =
+        saved &&
+        saved.version === 3 &&
+        saved.dateKey === daily.dateKey &&
+        Array.isArray(saved.puzzles) &&
+        saved.puzzles.length === daily.puzzles.length &&
+        saved.puzzles.every((s, i) => s && s.pattern === patternOf(daily.puzzles[i].word, daily.puzzles[i].blanks));
+      if (!matches) return;
+      daily.index = Math.min(Math.max(0, saved.index | 0), daily.puzzles.length);
+      daily.puzzles.forEach((p, i) => {
+        const s = saved.puzzles[i];
+        if (!s.complete) return;
+        p.complete = true;
+        p.found = new Set((s.found || []).filter((w) => p.answers.includes(w)));
+        p.attempts = s.attempts | 0;
+        p.message = endMessage(p);
+      });
     }
 
     // The screen message a finished puzzle shows.

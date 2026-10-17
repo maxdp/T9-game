@@ -16,13 +16,13 @@ window.T9_INAPPROPRIATE = [
   "cooch", "coochie", "coon", "coons", "crap", "crapped", "crapper", "crapping", "crappy", "cumming",
   "cunt", "cunts", "dammit", "damn", "damned", "damnit", "dick", "dickface", "dickhead", "dicks",
   "dickwad", "dildo", "dildoes", "dildos", "dipshit", "douche", "douches", "douchey", "dumbass", "fagged",
-  "fagger", "fagging", "faggot", "faggoted", "faggots", "faggy", "fagot", "fagots", "fags", "fatass",
-  "fatso", "fatsoes", "fatsos", "fuck", "fucked", "fucker", "fuckers", "fuckface", "fuckin", "fucking",
-  "fuckoff", "fucks", "fuckup", "fuckups", "fuckwit", "goddam", "goddamn", "gook", "gooks", "gypped",
-  "gypping", "gypsies", "gypsy", "handjob", "hell", "hooker", "hookers", "horny", "incest", "jackass",
-  "jackoff", "jailbait", "japs", "jerkoff", "jewboy", "jewed", "jewing", "jizz", "jizzed", "kickass",
-  "kike", "kikes", "lardass", "mick", "micks", "midget", "midgets", "molest", "molested", "molester",
-  "molests", "mulatto", "mulattos", "nazi", "nazis", "negro", "negroes", "nigga", "niggas", "niggaz",
+  "fagger", "fagging", "faggot", "faggoted", "faggots", "faggy", "fags", "fatass", "fatso", "fatsoes",
+  "fatsos", "fuck", "fucked", "fucker", "fuckers", "fuckface", "fuckin", "fucking", "fuckoff", "fucks",
+  "fuckup", "fuckups", "fuckwit", "goddam", "goddamn", "gook", "gooks", "gypped", "gypping", "gypsies",
+  "gypsy", "handjob", "hell", "hooker", "hookers", "horny", "incest", "jackass", "jackoff", "jailbait",
+  "japs", "jerkoff", "jewboy", "jewed", "jewing", "jizz", "jizzed", "kickass", "kike", "kikes",
+  "lardass", "mick", "micks", "midget", "midgets", "molest", "molested", "molester", "molests", "mulatto",
+  "mulattos", "nazi", "nazis", "negress", "negro", "negroes", "negroid", "nigga", "niggas", "niggaz",
   "nigger", "niggered", "niggers", "nutsack", "paki", "pakis", "paleface", "papists", "pederast", "pedo",
   "pedos", "piss", "pissed", "pisser", "pisses", "pissing", "pissy", "polack", "polacks", "porn",
   "porno", "pornos", "pussies", "pussy", "queef", "queefs", "rape", "raped", "raper", "rapes",
@@ -32,4 +32,14 @@ window.T9_INAPPROPRIATE = [
   "spiks", "squaw", "squaws", "tard", "tards", "tits", "titties", "titty", "trannies", "tranny",
   "turd", "turds", "twat", "twats", "wank", "wanked", "wanker", "wankers", "wanking", "wanks",
   "wetback", "wetbacks", "whore", "whored", "whores", "whoring", "whorish", "wops",
+];
+
+// Puzzle blockers: words so familiar and so charged that no puzzle should
+// ever be able to make a player think of them. Any puzzle whose blanks
+// could be filled in to spell one of these (e.g. "__gge_s") is never
+// offered, in Practice or Daily, even though the word itself could never
+// count as an answer.
+window.T9_PUZZLE_BLOCKERS = [
+  "faggot", "faggots", "negress", "negro", "negroes", "negroid", "nigga", "niggas", "niggaz", "nigger",
+  "niggered", "niggers",
 ];
