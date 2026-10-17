@@ -103,6 +103,84 @@
     (u) => `<svg viewBox="0 0 64 64"><defs><radialGradient id="jw${u}" cx=".36" cy=".3" r=".78"><stop offset="0" stop-color="#ffffff"/><stop offset=".5" stop-color="#f6f4ef"/><stop offset=".82" stop-color="#dcd7cd"/><stop offset="1" stop-color="#aaa396"/></radialGradient><radialGradient id="jd${u}" cx=".36" cy=".3" r=".78"><stop offset=".45" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".38"/></radialGradient><clipPath id="jc${u}"><circle cx="32" cy="32" r="27"/></clipPath></defs><circle cx="32" cy="32" r="27" fill="url(#jw${u})"/><g clip-path="url(#jc${u})"><path d="M12.5 46.8 C13.1 47.9 14.2 49.3 15.1 49.9 C16 50.5 16.9 50.4 17.9 50.5 C18.9 50.5 20.4 50.9 21.2 50.4 C21.9 49.9 22.6 48.3 22.2 47.2 C21.7 46.2 19.6 45 18.5 44.2 C17.4 43.4 16.8 43.4 15.7 42.6 C14.7 41.9 12.9 39.7 12.2 39.8 C11.4 39.9 11.2 42 11.2 43.2 C11.3 44.3 11.8 45.7 12.5 46.8Z" fill="#e8433f"/><path d="M9.6 40.2 C9.7 40.4 10 41 10.1 41 C10.2 41.1 10.4 40.8 10.4 40.6 C10.5 40.4 10.6 40 10.5 39.8 C10.4 39.6 10.1 39.4 9.9 39.3 C9.8 39.3 9.6 39.3 9.6 39.5 C9.5 39.6 9.5 39.9 9.6 40.2Z" fill="#e8433f"/><path d="M12.2 39.3 C12.4 39.3 12.8 39.3 12.9 39 C12.9 38.8 12.7 38.1 12.5 37.8 C12.3 37.5 11.9 37.3 11.7 37.3 C11.5 37.3 11.2 37.6 11.1 37.9 C11.1 38.3 11.2 39 11.4 39.2 C11.5 39.5 11.9 39.4 12.2 39.3Z" fill="#e8433f"/><path d="M38.6 10.8 C37.4 10.5 36.3 10.1 35.7 10.4 C35.1 10.6 35.2 11.5 35 12 C34.8 12.5 34.7 12.7 34.6 13.4 C34.5 14.1 33.8 15.8 34.3 16.3 C34.8 16.8 36.8 16.4 37.8 16.3 C38.9 16.3 39.8 16.4 40.5 16 C41.2 15.7 41.6 15 41.9 14.4 C42.2 13.7 43 12.5 42.4 11.9 C41.8 11.3 39.7 11 38.6 10.8Z" fill="#ff8c1a"/><path d="M35.4 19.5 C35.3 19.6 35.2 19.7 35.2 19.9 C35.2 20.1 35.3 20.5 35.5 20.5 C35.7 20.6 36 20.4 36.2 20.3 C36.3 20.2 36.4 19.9 36.3 19.8 C36.3 19.6 36.1 19.3 36 19.2 C35.8 19.2 35.5 19.3 35.4 19.5Z" fill="#ff8c1a"/><path d="M44.5 12.8 C44.5 12.6 44.3 12.2 44.1 12.1 C43.9 11.9 43.4 11.8 43.2 11.8 C42.9 11.8 42.6 11.9 42.6 12.1 C42.7 12.3 43.1 12.5 43.3 12.7 C43.6 12.9 43.9 13.1 44.1 13.1 C44.3 13.1 44.5 12.9 44.5 12.8Z" fill="#ff8c1a"/><path d="M31.8 20.3 C32.8 21.5 35.5 23 37.2 23.1 C38.9 23.2 40.5 21.6 41.9 20.9 C43.3 20.3 45.7 20.1 45.7 19 C45.7 18 42.7 16.1 41.9 14.8 C41.1 13.6 41.8 12.3 40.9 11.7 C40.1 11.1 38.3 11.3 36.7 11.3 C35.2 11.3 32.8 11 31.9 11.7 C31 12.4 31.5 14 31.4 15.4 C31.4 16.8 30.9 19 31.8 20.3Z" fill="#f5c71a"/><path d="M50.1 19.5 C50.3 19.4 50.4 19 50.3 18.7 C50.2 18.3 49.8 17.8 49.5 17.6 C49.2 17.4 48.8 17.5 48.6 17.6 C48.5 17.8 48.5 18.2 48.6 18.5 C48.8 18.8 49.1 19.2 49.3 19.3 C49.6 19.5 50 19.6 50.1 19.5Z" fill="#f5c71a"/><path d="M47 16.4 C47.2 16.2 46.9 15.7 46.7 15.3 C46.5 14.9 46.2 14.3 45.8 14.1 C45.5 14 44.8 14 44.6 14.2 C44.3 14.4 44.2 14.9 44.4 15.3 C44.6 15.7 45.3 16.5 45.7 16.6 C46.1 16.8 46.8 16.7 47 16.4Z" fill="#f5c71a"/><path d="M15.6 15.6 C16.3 15.9 18.7 14.1 20.1 14.3 C21.5 14.5 22.8 17.1 23.9 16.8 C25.1 16.5 26.3 13.9 27.2 12.7 C28.1 11.6 29.3 10.6 29.2 9.9 C29 9.2 27.1 8.9 26.2 8.6 C25.3 8.3 24.9 7.7 24 7.9 C23 8 21.8 8.8 20.4 9.5 C19.1 10.3 16.7 11.4 15.9 12.4 C15.1 13.4 14.9 15.3 15.6 15.6Z" fill="#3cbf5a"/><path d="M18.2 21.3 C18.4 20.9 18.3 20.3 18.1 20.1 C17.9 19.9 17.3 19.7 17 19.9 C16.6 20.1 16.2 20.8 16.2 21.1 C16.1 21.5 16.2 21.9 16.4 22.1 C16.6 22.2 17.1 22.4 17.4 22.3 C17.7 22.2 18.1 21.6 18.2 21.3Z" fill="#3cbf5a"/><path d="M24.5 19.6 C24.6 19.8 24.8 20.1 25.1 20.1 C25.3 20.1 25.6 19.9 25.8 19.8 C25.9 19.6 26.1 19.3 26 19.1 C26 18.9 25.8 18.7 25.6 18.6 C25.4 18.6 24.9 18.7 24.8 18.9 C24.6 19 24.5 19.4 24.5 19.6Z" fill="#3cbf5a"/><path d="M17.9 44.1 C16.8 42.9 16.4 41.4 15.4 40.7 C14.4 40 13 39.6 12 39.7 C11 39.7 9.7 40 9.5 41 C9.4 42 10.6 44.4 11.3 45.8 C12 47.1 12.7 48.1 13.9 49.2 C15.1 50.3 17 52.1 18.2 52.5 C19.5 52.8 20.6 52.1 21.3 51.2 C22 50.4 23 48.8 22.4 47.6 C21.8 46.4 19.1 45.2 17.9 44.1Z" fill="#2f86e8"/><path d="M22.7 54.3 C22.9 54.5 23.4 54.7 23.7 54.8 C24 54.8 24.5 54.7 24.5 54.6 C24.5 54.4 24.1 54.1 23.8 53.9 C23.5 53.7 23.2 53.6 22.9 53.5 C22.6 53.5 22.1 53.5 22 53.6 C22 53.8 22.4 54.1 22.7 54.3Z" fill="#2f86e8"/><path d="M22.1 54.7 C22 54.8 22.4 55.1 22.7 55.3 C22.9 55.5 23.3 55.7 23.6 55.7 C23.9 55.8 24.3 55.8 24.4 55.7 C24.5 55.6 24.5 55.3 24.3 55.1 C24.1 55 23.5 54.8 23.1 54.7 C22.8 54.6 22.2 54.6 22.1 54.7Z" fill="#2f86e8"/><path d="M54.3 30.4 C54.6 31.9 54 34.2 54.4 35 C54.7 35.8 55.9 35.1 56.5 35.1 C57.1 35 57.7 35.6 58.1 34.8 C58.4 34 58.6 31.6 58.5 30.2 C58.4 28.8 57.9 27.4 57.5 26.5 C57.1 25.5 56.7 25 56.1 24.5 C55.6 24.1 54.8 23.5 54.2 23.8 C53.6 24.1 52.6 25.2 52.6 26.3 C52.6 27.4 54 29 54.3 30.4Z" fill="#9b5de5"/><path d="M53.3 37.8 C53.3 37.9 53.5 37.9 53.7 37.8 C53.8 37.7 53.9 37.3 54 37.1 C54 36.9 53.8 36.7 53.7 36.7 C53.6 36.6 53.4 36.7 53.3 36.8 C53.2 36.9 53.2 37.2 53.2 37.3 C53.1 37.5 53.2 37.7 53.3 37.8Z" fill="#9b5de5"/><path d="M55.2 38.2 C55 38.4 54.8 38.8 54.7 39.2 C54.6 39.5 54.4 40.1 54.5 40.4 C54.5 40.6 54.8 40.8 55.1 40.6 C55.3 40.5 55.6 39.8 55.7 39.4 C55.9 39 55.9 38.3 55.8 38.1 C55.7 37.9 55.3 38.1 55.2 38.2Z" fill="#9b5de5"/><path d="M45.2 43.1 C45.2 44.3 44.5 45.7 44.9 46.5 C45.2 47.2 46.4 47.8 47.4 47.7 C48.4 47.6 49.7 46.6 50.6 45.8 C51.5 44.9 52.6 43.6 53 42.5 C53.4 41.4 53.4 39.9 53.1 39 C52.8 38 52.1 37 51.3 36.9 C50.6 36.8 49.8 38 48.7 38.4 C47.7 38.7 45.7 38.4 45.1 39.2 C44.6 40 45.3 41.8 45.2 43.1Z" fill="#ff4fa3"/><path d="M53.5 35.1 C53.4 35.4 53.4 35.9 53.5 36.1 C53.7 36.4 53.9 36.6 54.1 36.6 C54.3 36.5 54.7 35.9 54.7 35.6 C54.8 35.3 54.6 34.9 54.5 34.7 C54.3 34.5 54.2 34.5 54 34.5 C53.8 34.6 53.5 34.8 53.5 35.1Z" fill="#ff4fa3"/><path d="M43 43.3 C43.2 43.1 43.2 42.7 43.1 42.4 C43 42.2 42.8 41.9 42.6 41.9 C42.4 41.9 42 42.2 41.9 42.4 C41.7 42.7 41.6 42.9 41.7 43.2 C41.7 43.4 41.9 43.7 42.2 43.7 C42.4 43.7 42.9 43.5 43 43.3Z" fill="#ff4fa3"/><path d="M50.4 13.2 C49.7 12.3 46.9 10.9 45.6 10.1 C44.4 9.3 44.1 9 42.8 8.5 C41.5 8 38.2 7 37.7 7.2 C37.3 7.5 39.4 9.1 40.1 9.9 C40.7 10.7 40.9 10.8 41.5 11.9 C42.1 13 42.5 16 43.5 16.5 C44.5 17.1 46.1 15.3 47.2 15.1 C48.4 15 49.7 15.8 50.3 15.5 C50.8 15.1 51.2 14.1 50.4 13.2Z" fill="#e8433f"/><path d="M51.4 18.3 C51.1 17.9 50.5 17.3 50.3 17.3 C50.1 17.2 50 17.8 50 18.1 C50 18.4 50.2 18.8 50.3 19.1 C50.5 19.4 50.9 19.8 51.2 19.9 C51.5 20 51.9 19.9 52 19.7 C52 19.4 51.7 18.7 51.4 18.3Z" fill="#e8433f"/><path d="M36 6 C36.2 6 36.4 5.9 36.4 5.9 C36.3 5.8 36 5.6 35.7 5.6 C35.4 5.5 34.9 5.5 34.6 5.5 C34.3 5.5 33.9 5.6 33.9 5.6 C33.9 5.7 34.5 5.8 34.8 5.9 C35.2 6 35.7 6 36 6Z" fill="#e8433f"/><path d="M19.3 26.9 C20 26.6 20.6 24.5 20.9 23.5 C21.1 22.5 20.8 21.6 20.6 20.9 C20.4 20.2 20 20 19.6 19.2 C19.2 18.3 19 15.9 18.2 15.9 C17.4 15.9 15.4 17.8 14.7 18.9 C14 20 14.3 21.2 14.1 22.3 C14 23.5 13.4 25.1 13.8 25.6 C14.1 26.1 15.5 25.1 16.4 25.3 C17.4 25.6 18.5 27.2 19.3 26.9Z" fill="#ff8c1a"/><path d="M13.4 18 C13.4 17.9 12.9 18.1 12.7 18.2 C12.5 18.4 12.2 18.7 12.1 18.9 C12 19.1 11.9 19.5 12 19.6 C12.1 19.8 12.3 20.1 12.5 20 C12.7 19.8 12.9 19.3 13.1 18.9 C13.2 18.6 13.5 18.1 13.4 18Z" fill="#ff8c1a"/><path d="M21.4 24.6 C21.4 25 21.5 25.6 21.8 25.8 C22 26 22.6 25.8 22.9 25.6 C23.2 25.5 23.7 25.1 23.7 24.9 C23.8 24.6 23.5 24.2 23.2 24 C23 23.8 22.5 23.5 22.2 23.6 C21.9 23.7 21.5 24.2 21.4 24.6Z" fill="#ff8c1a"/><path d="M25.8 45.9 C26.7 44.9 27 43 27 41.3 C27 39.7 26.9 37.3 25.9 36 C24.9 34.8 22.7 34.2 21.1 33.8 C19.6 33.3 17.9 33.1 16.7 33.6 C15.5 34.1 14.1 35.6 13.9 36.9 C13.6 38.2 14.7 40.2 15.3 41.5 C15.9 42.9 16.4 44 17.5 45 C18.5 45.9 20.2 47.2 21.5 47.3 C22.9 47.4 24.9 46.9 25.8 45.9Z" fill="#f5c71a"/><path d="M18.6 31.2 C18.8 31.5 19.3 31.6 19.6 31.6 C19.9 31.5 20.5 31.3 20.6 31 C20.7 30.7 20.5 30.2 20.3 29.9 C20.1 29.6 19.8 29.2 19.5 29.2 C19.2 29.2 18.8 29.6 18.6 30 C18.5 30.3 18.5 30.9 18.6 31.2Z" fill="#f5c71a"/><path d="M13.2 32.5 C13 32.2 12.5 32.1 12.2 32.2 C11.9 32.3 11.5 32.8 11.4 33.2 C11.4 33.6 11.6 34.4 11.8 34.7 C12 34.9 12.5 34.8 12.7 34.7 C13 34.6 13.4 34.3 13.4 34 C13.5 33.6 13.4 32.8 13.2 32.5Z" fill="#f5c71a"/><path d="M48.3 15 C48.3 16 50.7 18.7 50.9 20.1 C51.2 21.6 49.4 22.7 49.7 23.8 C50.1 24.8 52 26 52.9 26.4 C53.8 26.9 54.4 26.5 55.1 26.4 C55.7 26.4 56.6 26.8 56.7 26.1 C56.8 25.4 56.3 23.7 55.9 22.3 C55.5 21 55.3 19.3 54.5 18.1 C53.7 16.8 52 15.1 51 14.6 C49.9 14.1 48.3 14.1 48.3 15Z" fill="#3cbf5a"/><path d="M57.9 25.8 C58 25.9 58.1 26.2 58.1 26.3 C58.2 26.5 58.3 26.7 58.3 26.6 C58.3 26.6 58.2 26.2 58.2 25.9 C58.1 25.7 58 25.4 58 25.3 C57.9 25.2 57.9 25.2 57.9 25.3 C57.9 25.4 57.9 25.6 57.9 25.8Z" fill="#3cbf5a"/><path d="M51.6 31 C51.6 31.2 52 31.4 52.2 31.5 C52.4 31.6 52.6 31.6 52.7 31.4 C52.9 31.2 53 30.7 52.9 30.5 C52.9 30.2 52.6 30 52.4 29.9 C52.3 29.9 52.1 30 51.9 30.2 C51.8 30.3 51.5 30.7 51.6 31Z" fill="#3cbf5a"/><circle cx="32" cy="32" r="27" fill="url(#jd${u})"/></g><circle cx="32" cy="32" r="27" fill="none" stroke="#9e978a" stroke-width="1"/><ellipse cx="22" cy="18" rx="7.5" ry="4" fill="#fff" opacity=".85" transform="rotate(-32 22 18)"/><circle cx="31" cy="12.5" r="1.4" fill="#fff" opacity=".75"/></svg>`,
   ];
 
+  // Rare icons: exactly one of these turns up in each celebration, picked
+  // at random.
+  const RARE_ICONS = [
+    // Capture ball: red top, white bottom, black band, center button.
+    (u) => `<svg viewBox="0 0 64 64"><defs><radialGradient id="br${u}" cx=".35" cy=".25" r=".8"><stop offset="0" stop-color="#ff6b5e"/><stop offset=".55" stop-color="#e3261b"/><stop offset="1" stop-color="#9c120b"/></radialGradient><radialGradient id="bw${u}" cx=".35" cy=".1" r=".95"><stop offset="0" stop-color="#ffffff"/><stop offset=".6" stop-color="#eceef1"/><stop offset="1" stop-color="#b9bec6"/></radialGradient><clipPath id="bc${u}"><circle cx="32" cy="32" r="27"/></clipPath></defs>
+      <g clip-path="url(#bc${u})"><rect x="0" y="0" width="64" height="32" fill="url(#br${u})"/><rect x="0" y="32" width="64" height="32" fill="url(#bw${u})"/><rect x="0" y="29" width="64" height="6" fill="#1d1d1f"/></g>
+      <circle cx="32" cy="32" r="27" fill="none" stroke="#1d1d1f" stroke-width="2.5"/>
+      <circle cx="32" cy="32" r="9" fill="#1d1d1f"/><circle cx="32" cy="32" r="6.3" fill="url(#bw${u})"/><circle cx="32" cy="32" r="3.6" fill="none" stroke="#c4c8ce" stroke-width="1"/>
+      <ellipse cx="21" cy="15" rx="7" ry="3.6" fill="#fff" opacity=".55" transform="rotate(-30 21 15)"/></svg>`,
+
+    // Troll doll: a huge, frizzy, wild shock of pink hair (with stray
+    // fly-aways) over a small body with feet; big nose, wide grin.
+    (u) => `<svg viewBox="0 0 64 64"><defs><linearGradient id="th${u}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffb3e0"/><stop offset=".5" stop-color="#ff5cb8"/><stop offset="1" stop-color="#e8329a"/></linearGradient><radialGradient id="ts${u}" cx=".4" cy=".35" r=".75"><stop offset="0" stop-color="#ffd9b8"/><stop offset="1" stop-color="#d9935f"/></radialGradient></defs>
+      <path d="M14.8 31.2 Q11.2 31.7 10.7 27.5 M15.6 22.7 Q16.3 17.1 11 17.5 M19 15.8 Q14.8 13.1 16.4 8.6 M24.8 11 Q23.8 6.3 23.2 4.6 M32.3 9.3 Q28.5 4.5 31.8 2.3 M40.7 11.9 Q47.8 9.8 41.2 3.5 M46.6 18.2 Q51.1 16.3 49 11 M48.5 23.1 Q54 23.8 51.7 18.3 M49.1 32.1 Q52.7 33 52.3 27.1" fill="none" stroke="#ff5cb8" stroke-width=".9" stroke-linecap="round"/>
+      <path d="M18.5 36.1 Q14.9 35.8 13.1 34.5 L16.3 34.9 Q15.4 32.7 11.9 32.8 L17.1 33.6 Q15.5 30.5 10.7 30.3 L17.4 32.2 Q15.1 29.7 11.3 28.5 L17.4 30.5 Q13.6 29.8 11.3 25.3 L17.3 28.6 Q16.3 23.9 10.5 21.7 L17.8 26.8 Q14.5 24.1 12.8 20.3 L17.6 24.2 Q15.8 21 12 15.5 L18.4 22.2 Q15 20.7 12.7 13.4 L19.3 20 Q18.9 16.5 16.5 14.4 L21.2 19.3 Q18.5 15.3 18.8 11.7 L22.9 17.9 Q19.3 13.9 20.4 7.7 L24.2 15.4 Q25 11.2 22.1 5 L26.4 14.7 Q28.5 9.8 26.6 6.1 L28.3 12 Q33.2 9.4 29.3 2.9 L30.8 13.5 Q29.3 9.4 31.6 1.1 L33.2 12.8 Q34.2 9.5 35.1 1.4 L35.3 14.6 Q34.6 9.8 38.4 2.4 L38.1 12.7 Q39.3 11.1 41.8 3.4 L40.3 13.9 Q42.7 12.9 42.6 9.5 L41.7 16.7 Q40.7 13.1 46.1 9.2 L43.6 17.8 Q44.7 16.1 49 10.7 L44.4 20.4 Q48.1 19.5 49.8 14.2 L45.2 22.7 Q46.6 20.5 50 19.8 L47.1 23.5 Q48.2 22.9 50.4 21.5 L47 26.1 Q47.2 23.5 53.9 21.5 L46.6 28.6 Q48.2 26.3 53.6 24.9 L47.4 30.1 Q49.1 30.1 54.2 27.9 L47.1 32 Q48.5 31 52.2 31.1 L46.4 33.8 Q48.2 31.3 53.1 32 L47.1 35.1 Q48.9 35.4 52.9 34.4 L45.5 36.1 L43 41 L21 41 Z" fill="url(#th${u})" stroke="#c2187a" stroke-width=".8" stroke-linejoin="round"/>
+      <path d="M33 36 Q26.6 25.9 16 18.4 M31.7 36 Q31.9 22.2 35.9 10.4 M31.7 36 Q27 23.4 28.2 13.4 M27.3 36 Q23.3 31.7 13.5 31 M30.9 36 Q24.8 29.1 16 23.3 M35.5 36 Q30.7 23.9 22.2 11.6 M30.9 36 Q38.1 28.8 47.8 21.4 M27 36 Q38.4 30.1 45.9 21.7 M31.2 36 Q41.2 27.5 46.3 21 M31.7 36 Q26.3 25.2 22 10.6 M31.2 36 Q33.5 23.1 35.4 11.9 M32.9 36 Q44 30.5 50.9 25.1 M34.4 36 Q31 22.3 27.1 7.3 M34.3 36 Q26 31.7 16.3 24.5 M29.5 36 Q28.4 26.6 25.1 15.4 M29.8 36 Q36.1 34.8 47.6 31.8 M35.4 36 Q45.7 31 50.3 28.3 M29.4 36 Q38.5 34.8 48.9 31.8 M33.5 36 Q41.2 27.4 47.4 18.1 M36 36 Q25.2 27.7 18.7 17.6 M32.7 36 Q33.4 24.8 29.4 9.9 M27.2 36 Q22.1 30.3 16.7 25.5 M36.3 36 Q45 31.2 48.9 28.2 M37.1 36 Q36.1 21.7 31.5 8.7 M37.6 36 Q41 30.3 50.4 27.2 M27.3 36 Q38.4 27.7 44.6 21.3" fill="none" stroke="#c2187a" stroke-width=".7" opacity=".6"/>
+      <path d="M33 36 Q26.6 25.9 16 18.4 M31.7 36 Q31.9 22.2 35.9 10.4 M31.7 36 Q27 23.4 28.2 13.4 M27.3 36 Q23.3 31.7 13.5 31 M30.9 36 Q24.8 29.1 16 23.3 M35.5 36 Q30.7 23.9 22.2 11.6 M30.9 36 Q38.1 28.8 47.8 21.4 M27 36 Q38.4 30.1 45.9 21.7 M31.2 36 Q41.2 27.5 46.3 21 M31.7 36 Q26.3 25.2 22 10.6 M31.2 36 Q33.5 23.1 35.4 11.9 M32.9 36 Q44 30.5 50.9 25.1 M34.4 36 Q31 22.3 27.1 7.3 M34.3 36 Q26 31.7 16.3 24.5 M29.5 36 Q28.4 26.6 25.1 15.4 M29.8 36 Q36.1 34.8 47.6 31.8 M35.4 36 Q45.7 31 50.3 28.3 M29.4 36 Q38.5 34.8 48.9 31.8 M33.5 36 Q41.2 27.4 47.4 18.1 M36 36 Q25.2 27.7 18.7 17.6 M32.7 36 Q33.4 24.8 29.4 9.9 M27.2 36 Q22.1 30.3 16.7 25.5 M36.3 36 Q45 31.2 48.9 28.2 M37.1 36 Q36.1 21.7 31.5 8.7 M37.6 36 Q41 30.3 50.4 27.2 M27.3 36 Q38.4 27.7 44.6 21.3" fill="none" stroke="#ffd0ec" stroke-width=".4" opacity=".7" transform="translate(.8 -.4)"/>
+      <ellipse cx="20" cy="42" rx="2.6" ry="3.8" fill="url(#ts${u})"/><ellipse cx="44" cy="42" rx="2.6" ry="3.8" fill="url(#ts${u})"/>
+      <ellipse cx="32" cy="42.5" rx="11" ry="9.5" fill="url(#ts${u})"/>
+      <circle cx="27.5" cy="39.5" r="2.4" fill="#fff"/><circle cx="36.5" cy="39.5" r="2.4" fill="#fff"/><circle cx="27.9" cy="39.9" r="1.5" fill="#3b2a1a"/><circle cx="36.1" cy="39.9" r="1.5" fill="#3b2a1a"/>
+      <ellipse cx="32" cy="44" rx="3.6" ry="3" fill="#e9a978"/><ellipse cx="31" cy="43.1" rx="1.2" ry=".8" fill="#ffe2c8" opacity=".8"/>
+      <path d="M26 47.3 Q32 51.5 38 47.3" fill="none" stroke="#8a4a2a" stroke-width="1.3" stroke-linecap="round"/>
+      <ellipse cx="32" cy="55.5" rx="5.6" ry="5" fill="url(#ts${u})"/>
+      <ellipse cx="25.5" cy="54" rx="1.8" ry="3.2" fill="url(#ts${u})" transform="rotate(30 25.5 54)"/><ellipse cx="38.5" cy="54" rx="1.8" ry="3.2" fill="url(#ts${u})" transform="rotate(-30 38.5 54)"/>
+      <ellipse cx="27.8" cy="61" rx="3.6" ry="2" fill="url(#ts${u})"/><ellipse cx="36.2" cy="61" rx="3.6" ry="2" fill="url(#ts${u})"/>
+      <g fill="none" stroke="#b97a4c" stroke-width=".6"><path d="M26 61.5 v1.2 M27.6 61.8 v1.1 M34.4 61.8 v1.1 M36 61.5 v1.2"/></g></svg>`,
+
+    // Paperclip assistant: a bent-wire clip with eyebrows and big eyes,
+    // lids lowered just a little, with lower lids.
+    (u) => `<svg viewBox="0 0 64 64"><defs><linearGradient id="cl${u}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7c8591"/><stop offset=".5" stop-color="#eef1f4"/><stop offset="1" stop-color="#8a939e"/></linearGradient><clipPath id="ce${u}"><ellipse cx="25" cy="23" rx="6" ry="7"/><ellipse cx="39" cy="23" rx="6" ry="7"/></clipPath></defs>
+      <path d="M27 50 V25 a5.5 5.5 0 0 1 11 0 V53 a8.5 8.5 0 0 1 -17 0 V17 a11.5 11.5 0 0 1 23 0 V46" fill="none" stroke="#4f5660" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M27 50 V25 a5.5 5.5 0 0 1 11 0 V53 a8.5 8.5 0 0 1 -17 0 V17 a11.5 11.5 0 0 1 23 0 V46" fill="none" stroke="url(#cl${u})" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <ellipse cx="25" cy="23" rx="6" ry="7" fill="#fff"/><ellipse cx="39" cy="23" rx="6" ry="7" fill="#fff"/>
+      <g clip-path="url(#ce${u})">
+        <circle cx="26.6" cy="24.6" r="3" fill="#111"/><circle cx="40.6" cy="24.6" r="3" fill="#111"/><circle cx="27.6" cy="23.6" r=".9" fill="#fff"/><circle cx="41.6" cy="23.6" r=".9" fill="#fff"/>
+        <rect x="17" y="14" width="30" height="6.8" fill="#d9dde2"/>
+        <path d="M17 20.8 H33" stroke="#2a2f36" stroke-width="1.6"/><path d="M31 20.8 H47" stroke="#2a2f36" stroke-width="1.6"/>
+      </g>
+      <g fill="none" stroke="#2a2f36" stroke-width="1.2"><ellipse cx="25" cy="23" rx="6" ry="7"/><ellipse cx="39" cy="23" rx="6" ry="7"/></g>
+      <path d="M19.5 27.8 Q25 31.3 30.5 27.8" fill="none" stroke="#2a2f36" stroke-width="1.1" stroke-linecap="round"/><path d="M33.5 27.8 Q39 31.3 44.5 27.8" fill="none" stroke="#2a2f36" stroke-width="1.1" stroke-linecap="round"/>
+      <path d="M18.5 12.5 Q24 9.5 30 11.5" fill="none" stroke="#2a2f36" stroke-width="2.4" stroke-linecap="round"/><path d="M34 10.5 Q40 7.5 45.5 10" fill="none" stroke="#2a2f36" stroke-width="2.4" stroke-linecap="round"/></svg>`,
+
+    (u) => {
+      // Traced from the classic running-man silhouette (on an 800x600
+      // canvas, scaled down below): head, torso and bent front arm as one
+      // solid shape, legs as even-width strokes with square-cut feet, and a
+      // thick black outline that merges between head and body.
+      const torso = 'M362 216 L403 224 C410 245 420 257 437 259 C455 264 490 262 519 253 L542 286 C525 300 480 322 450 319 C430 318 415 315 405 312 L394 342 L405 395 L335 420 L306 375 C310 340 312 315 312 300 C318 280 325 262 337 250 C345 235 352 224 362 216 Z';
+      const back = 'M345 380 C330 450 265 490 192 508';
+      const front = 'M372 368 C440 395 495 430 531 500';
+      const W = 58;
+      const O = 66;
+      return `<svg viewBox="0 0 64 64"><g transform="translate(-7.6 -0.2) scale(0.106)">
+        <path d="${torso}" fill="#141414" stroke="#141414" stroke-width="${O}" stroke-linejoin="miter" stroke-miterlimit="3"/>
+        <path d="${back} L160 517" fill="none" stroke="#141414" stroke-width="${W + O}"/>
+        <path d="${front} L548 528" fill="none" stroke="#141414" stroke-width="${W + O}"/>
+        <circle cx="420" cy="116" r="104" fill="#141414"/>
+        <path d="${torso}" fill="#fcc80d"/>
+        <path d="${back}" fill="none" stroke="#fcc80d" stroke-width="${W}"/>
+        <path d="${front}" fill="none" stroke="#fcc80d" stroke-width="${W}"/>
+        <circle cx="420" cy="116" r="73" fill="#fcc80d"/></g></svg>`;
+    },
+
+    // Wheeled sneaker: a bright, kid-colored high-top with a wheel set up
+    // inside the heel, only its lower half showing below the sole.
+    (u) => `<svg viewBox="0 0 64 64"><defs><linearGradient id="sk${u}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5ec8ff"/><stop offset="1" stop-color="#1f7fe0"/></linearGradient><radialGradient id="sw${u}" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#ffe066"/><stop offset="1" stop-color="#ff8a00"/></radialGradient><clipPath id="sv${u}"><path d="M0 48 H64 V64 H0 Z"/></clipPath></defs>
+      <path d="M6 42 C6 34 8 26 12 21 C16 18 21 19 23 22 C27 27 33 30 41 32 C50 34 57 36 58 41 L58 46 L6 46 Z" fill="url(#sk${u})" stroke="#174f9c" stroke-width="1.5" stroke-linejoin="round"/>
+      <path d="M12 21 C15 18 21 18 23 22 L22 28 C18 27 14 26 11 26 Z" fill="#ff3fa4"/>
+      <path d="M44 33 C50 34.5 56 36.5 57.5 41 L57.5 44 L45 44 C44 40 43.5 36 44 33 Z" fill="#ffffff" opacity=".9"/>
+      <path d="M13 34 C23 35 33 38 43 38.5" fill="none" stroke="#8ef02b" stroke-width="3.4" stroke-linecap="round"/>
+      <g stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"><line x1="27" y1="27" x2="30" y2="31"/><line x1="31" y1="29" x2="34" y2="32.5"/><line x1="35" y1="30.5" x2="38" y2="33.5"/></g>
+      <circle cx="9" cy="35" r="1.4" fill="#ffe14d"/><circle cx="18" cy="41" r="1.1" fill="#ffe14d"/><circle cx="30" cy="42.5" r="1.2" fill="#ff3fa4"/><circle cx="51" cy="40.5" r="1" fill="#8ef02b"/>
+      <rect x="5" y="44" width="54" height="7" rx="3" fill="#ffd21f" stroke="#e0a800" stroke-width="1"/>
+      <rect x="8" y="47" width="14" height="5" rx="2" fill="#5a3b00"/>
+      <g clip-path="url(#sv${u})"><circle cx="15" cy="51.5" r="6" fill="#7a3d00"/><circle cx="15" cy="51.5" r="4.4" fill="url(#sw${u})"/><circle cx="15" cy="51.5" r="1.6" fill="#fff6d6"/></g>
+      <ellipse cx="22" cy="24" rx="5" ry="1.6" fill="#fff" opacity=".6" transform="rotate(30 22 24)"/></svg>`,
+  ];
+
   function buzzPhone(phone) {
     const total = BURSTS[BURSTS.length - 1] + BURST_MS;
     const steps = 10;
@@ -122,8 +200,8 @@
   let flyerCount = 0;
   let layer = null;
 
-  // How many icons one celebration throws: each of the nine once, plus
-  // repeats.
+  // How many icons one celebration throws: each of the nine regular ones
+  // once, five repeats, and one rare icon.
   const FLYER_COUNT = 15;
 
   // Icons spread evenly over the landing zone (best-of-several random
@@ -226,7 +304,11 @@
       const j = Math.floor(Math.random() * (i + 1));
       [deck[i], deck[j]] = [deck[j], deck[i]];
     }
-    while (deck.length < FLYER_COUNT) deck.push(ICONS[Math.floor(Math.random() * ICONS.length)]);
+    while (deck.length < FLYER_COUNT - 1) deck.push(ICONS[Math.floor(Math.random() * ICONS.length)]);
+    // One rare icon per celebration, dealt into a random spot. It looks
+    // and flies like the rest -- spotting the rare ones is up to the player.
+    const rareSpot = Math.floor(Math.random() * FLYER_COUNT);
+    deck.splice(rareSpot, 0, RARE_ICONS[Math.floor(Math.random() * RARE_ICONS.length)]);
 
     for (let i = 0; i < FLYER_COUNT; i++) {
       const el = document.createElement("div");
@@ -350,32 +432,26 @@
     }
   }
 
-  // Game-show "wrong answer" buzzer for an incorrect guess: a flat, low,
-  // steady tone (two slightly detuned sawtooth waves, so it has that harsh
-  // buzzy beat), held for under half a second with no change in pitch.
+  // Wrong-answer tone for an incorrect guess: one clean, flat, low note
+  // (a single triangle wave -- soft like a sine, but with just enough
+  // overtone to carry on a phone speaker), held briefly with soft edges.
   function scheduleBuzzer(ctx, t0) {
     const master = ctx.createGain();
-    master.gain.value = 0.16;
+    master.gain.value = 0.3;
     master.connect(ctx.destination);
-    const lowpass = ctx.createBiquadFilter();
-    lowpass.type = "lowpass";
-    lowpass.frequency.value = 1400;
+    const osc = ctx.createOscillator();
+    osc.type = "triangle";
+    osc.frequency.value = 110;
     const env = ctx.createGain();
-    const end = t0 + 0.42;
+    const end = t0 + 0.32;
     env.gain.setValueAtTime(0, t0);
-    env.gain.linearRampToValueAtTime(0.8, t0 + 0.01);
-    env.gain.setValueAtTime(0.8, end - 0.04);
+    env.gain.linearRampToValueAtTime(0.9, t0 + 0.02);
+    env.gain.setValueAtTime(0.9, end - 0.07);
     env.gain.linearRampToValueAtTime(0, end);
-    lowpass.connect(env);
+    osc.connect(env);
     env.connect(master);
-    for (const freq of [98, 103.5]) {
-      const osc = ctx.createOscillator();
-      osc.type = "sawtooth";
-      osc.frequency.value = freq;
-      osc.connect(lowpass);
-      osc.start(t0);
-      osc.stop(end + 0.02);
-    }
+    osc.start(t0);
+    osc.stop(end + 0.02);
   }
 
   // A quick "dee-dl-ee" for each correct answer: three short square-wave
