@@ -234,7 +234,7 @@
     const missedEl = document.getElementById("hang-missed");
     const solvedEl = document.getElementById("hang-solved");
     const attemptsEl = document.getElementById("hang-attempts");
-    const dailyLabelEl = document.getElementById("daily-label");
+    const modeLabelEl = document.getElementById("screen-mode-label");
     const dailyResultsEl = document.getElementById("daily-results");
     const dailyRowsEl = document.getElementById("daily-rows");
     const modeToggleBtn = document.getElementById("mode-toggle");
@@ -584,9 +584,7 @@
     // Redraws everything about the current puzzle (or the Daily results),
     // e.g. after switching modes or moving on to another puzzle.
     function renderAll() {
-      // A non-breaking space keeps the status bar the same height in
-      // Practice, so switching modes never nudges the screen.
-      dailyLabelEl.textContent = mode === "daily" ? `Daily #${daily.number}` : "\u00a0";
+      modeLabelEl.textContent = mode === "daily" ? `Daily #${daily.number}` : "Practice";
 
       const p = currentPuzzle();
       const showResults = !p;
@@ -818,8 +816,10 @@
 
       if (p.found.size === p.answers.length) {
         winPuzzle();
-      } else if (mode === "daily") {
-        saveDaily();
+      } else {
+        // The last answer gets the full celebration instead.
+        window.T9Celebrate.chime();
+        if (mode === "daily") saveDaily();
       }
     }
 
@@ -857,6 +857,7 @@
     // Once a puzzle is over, the Give up key moves on: a fresh puzzle in
     // Practice, the next of the three in Daily, then the Daily results.
     function nextPuzzle() {
+      window.T9Celebrate.clear();
       if (mode === "practice") {
         newPracticePuzzle();
       } else {
@@ -872,6 +873,7 @@
     function setMode(newMode) {
       if (newMode === mode) return;
       mode = newMode;
+      window.T9Celebrate.clear();
       if (mode === "daily") loadDaily();
       modeToggleBtn.setAttribute("aria-checked", String(mode === "daily"));
       document.querySelectorAll(".mode-label").forEach((el) => {

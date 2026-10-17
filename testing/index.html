@@ -327,8 +327,8 @@
     background: linear-gradient(125deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.04) 36%, transparent 37%);
     pointer-events: none;
   }
-  /* Three columns so "Daily #X" (Daily mode only) sits exactly centered
-     between the signal bars and the battery. */
+  /* Three columns so the mode ("Practice" or "Daily #X") sits exactly
+     centered between the signal bars and the battery. */
   .phone-status {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
@@ -574,10 +574,13 @@
   #keypad button.next-key:hover:not(:disabled) {
     background: linear-gradient(180deg, #9db1ff 0%, #5d79f7 60%, #4460e0 100%);
   }
-  /* Puzzle-solved celebration (js/celebrate.js): icons fly across the
-     whole window on a layer that never blocks taps or causes scrolling. */
+  /* Puzzle-solved celebration (js/celebrate.js): icons land on a layer
+     covering the whole page (so they scroll with the phone) that clips
+     anything off the page and lets taps through everywhere except on the
+     icons themselves, which can be dragged aside. */
+  body { position: relative; }
   .celebrate-layer {
-    position: fixed;
+    position: absolute;
     inset: 0;
     overflow: hidden;
     pointer-events: none;
@@ -585,9 +588,15 @@
   }
   .celebrate-flyer {
     position: absolute;
-    left: 0;
     will-change: transform;
     filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.45));
+    pointer-events: auto;
+    touch-action: none;
+    cursor: grab;
+  }
+  .celebrate-flyer.dragging {
+    cursor: grabbing;
+    filter: drop-shadow(0 8px 10px rgba(0, 0, 0, 0.5));
   }
   .celebrate-flyer svg { display: block; width: 100%; height: 100%; }
 </style>
@@ -641,7 +650,7 @@
           <div class="phone-screen">
             <div class="phone-status" aria-hidden="true">
               <span class="phone-signal"><i></i><i></i><i></i><i></i></span>
-              <span id="daily-label"></span>
+              <span id="screen-mode-label"></span>
               <span class="phone-battery"><i></i></span>
             </div>
             <div class="phone-screen-body">
@@ -691,14 +700,14 @@
     </div>
   </div>
 
-  <div id="version-label">v0.26 · testing</div>
+  <div id="version-label">v0.27 · testing</div>
 
   <!-- Testing build: rules and word list are shared with the live site one
        folder up; this page and its app.js are the testing copies. -->
   <script src="../js/t9-logic.js?v=49"></script>
-  <script src="../js/words.js?v=59"></script>
+  <script src="../js/words.js?v=60"></script>
   <script src="../js/inappropriate-words.js?v=2"></script>
-  <script src="js/celebrate.js?v=6"></script>
-  <script src="js/app.js?v=63"></script>
+  <script src="js/celebrate.js?v=7"></script>
+  <script src="js/app.js?v=64"></script>
 </body>
 </html>
