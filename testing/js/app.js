@@ -144,8 +144,6 @@
     const foundListEl = document.getElementById("hang-found-list");
     const difficultyEl = document.getElementById("hang-difficulty");
     const missedEl = document.getElementById("hang-missed");
-    const solvedEl = document.getElementById("hang-solved");
-    const attemptsEl = document.getElementById("hang-attempts");
     const modeLabelEl = document.getElementById("screen-mode-label");
     const dailyResultsEl = document.getElementById("daily-results");
     const dailyRowsEl = document.getElementById("daily-rows");
@@ -155,7 +153,6 @@
     const PRACTICE_STORAGE_KEY = "t9tangle-practice-solved";
 
     let mode = "practice";
-    let solvedCount = 0;
 
     // A puzzle: the hidden word, which positions are blank, every valid
     // answer, plus the player's progress on it. Practice keeps one current
@@ -520,7 +517,6 @@
       updateCounter();
       renderFoundList();
       renderScreenMessage(p.message);
-      attemptsEl.textContent = String(p.attempts);
 
       setKeypadDisabled(p.complete);
       if (p.complete) {
@@ -707,7 +703,6 @@
       render();
 
       p.attempts++;
-      attemptsEl.textContent = String(p.attempts);
       if (mode === "daily") saveDaily();
 
       if (INAPPROPRIATE_SET.has(guess)) {
@@ -778,8 +773,6 @@
     }
 
     function winPuzzle() {
-      solvedCount++;
-      solvedEl.textContent = String(solvedCount);
       if (mode === "practice") countPracticeSolve();
       finishPuzzle();
       window.T9Celebrate.celebrate(document.querySelector(".phone"));

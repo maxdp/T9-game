@@ -136,16 +136,6 @@
   button:hover:not(:disabled) { background: #3a54d6; }
   button:disabled { opacity: 0.5; cursor: default; }
 
-  #stats {
-    margin-top: 28px;
-    display: flex;
-    justify-content: center;
-    gap: 24px;
-    color: #a0a0c0;
-    font-size: 0.9rem;
-  }
-  #stats b { color: #f2f2f2; font-size: 1.1rem; display: block; }
-
   #hang-difficulty {
     display: inline-block;
     font-size: 0.8rem;
@@ -696,14 +686,9 @@
         <div class="phone-mic" aria-hidden="true"></div>
       </div>
     </div>
-
-    <div id="stats">
-      <div>Puzzles solved<b id="hang-solved">0</b></div>
-      <div>Attempts<b id="hang-attempts">0</b></div>
-    </div>
   </div>
 
-  <div id="version-label">v0.41 · testing</div>
+  <div id="version-label">v0.42 · testing</div>
 
   <!-- Testing build: rules and word list are shared with the live site one
        folder up; this page and its app.js are the testing copies. -->
@@ -713,6 +698,6 @@
   <script src="../js/puzzles.js?v=1"></script>
   <script src="../js/daily.js?v=1"></script>
   <script src="js/celebrate.js?v=17"></script>
-  <script src="js/app.js?v=69"></script>
+  <script src="js/app.js?v=70"></script>
 </body>
 </html>
