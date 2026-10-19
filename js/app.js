@@ -6,7 +6,6 @@
     MAX_VALID_ANSWERS,
     DIFFICULTY_LABELS,
     difficultyForPuzzle,
-    rarestRankOf,
     isBlocked,
     buildPools,
     seededShuffle,
@@ -144,17 +143,16 @@
     const foundListEl = document.getElementById("hang-found-list");
     const difficultyEl = document.getElementById("hang-difficulty");
     const missedEl = document.getElementById("hang-missed");
-    const solvedEl = document.getElementById("hang-solved");
-    const attemptsEl = document.getElementById("hang-attempts");
     const modeLabelEl = document.getElementById("screen-mode-label");
     const dailyResultsEl = document.getElementById("daily-results");
     const dailyRowsEl = document.getElementById("daily-rows");
     const modeToggleBtn = document.getElementById("mode-toggle");
 
     const DAILY_STORAGE_KEY = "t9tangle-daily";
+    const PRACTICE_STORAGE_KEY = "t9tangle-practice-solved";
+    const DAILY_CHOSEN_KEY = "t9tangle-daily-chosen";
 
     let mode = "practice";
-    let solvedCount = 0;
 
     // A puzzle: the hidden word, which positions are blank, every valid
     // answer, plus the player's progress on it. Practice keeps one current
@@ -225,10 +223,11 @@
 
     // Only offers puzzles with MIN_VALID_ANSWERS..MAX_VALID_ANSWERS valid
     // answers AND the requested difficulty (see js/puzzles.js), and never a
-    // blocked one, retrying draws until one lands. Random word+blank draws
-    // rarely come out Easy (about 4% of the time), so a target is needed;
-    // simulating this loop found a worst case of 812 tries, under half the
-    // 2000-try cap.
+    // blocked one, retrying draws until one lands. Only about 6% of random
+    // word+blank draws come out Easy (11% Medium), so a target is needed;
+    // simulating this loop 3,000 times per target took about 16 tries on
+    // average for Easy (worst 153) and 9 for Medium (worst 68), far under
+    // the 2000-try cap.
     function generatePuzzle(targetDifficulty) {
       let word;
       let blanks;
@@ -243,7 +242,7 @@
           answers.length >= MIN_VALID_ANSWERS &&
           answers.length <= MAX_VALID_ANSWERS &&
           !isBlocked(patternOf(word, blanks))
-            ? difficultyForPuzzle(rarestRankOf(answers), blanks.size, answers.length)
+            ? difficultyForPuzzle(answers, blanks.size)
             : null;
         tries++;
       } while (difficulty !== targetDifficulty && tries < 2000);
@@ -251,7 +250,7 @@
         word,
         blanks,
         answers,
-        difficulty: difficultyForPuzzle(rarestRankOf(answers), blanks.size, answers.length),
+        difficulty: difficultyForPuzzle(answers, blanks.size),
         found: new Set(),
         complete: false,
         attempts: 0,
@@ -485,7 +484,18 @@
     // Redraws everything about the current puzzle (or the Daily results),
     // e.g. after switching modes or moving on to another puzzle.
     function renderAll() {
-      modeLabelEl.textContent = mode === "daily" ? `Daily #${daily.number}` : "Practice";
+      // In Practice the header also counts today's solved Practice puzzles
+      // ("Practice (X solved)").
+      // In Daily, "(n/3)" counts up through the Easy, Medium and Hard puzzles
+      // so a newcomer can see there's more than one; the results screen
+      // after all three shows just "Daily #X".
+      if (mode === "practice") {
+        modeLabelEl.textContent = `Practice (${practiceSolvedToday()} solved)`;
+      } else {
+        const total = daily.puzzles.length;
+        modeLabelEl.textContent =
+          `Daily #${daily.number}` + (daily.index < total ? ` (${daily.index + 1}/${total})` : "");
+      }
 
       const p = currentPuzzle();
       const showResults = !p;
@@ -508,7 +518,6 @@
       updateCounter();
       renderFoundList();
       renderScreenMessage(p.message);
-      attemptsEl.textContent = String(p.attempts);
 
       setKeypadDisabled(p.complete);
       if (p.complete) {
@@ -583,6 +592,10 @@
       }
       if (!isPlayable() || activeTarget === null) return;
 
+      // Starting to type over a blank that already holds a letter clears
+      // that letter right away, so the blank shows only the new letter
+      // being cycled in.
+      if (pendingKey !== group) filledMap.delete(activeTarget);
       pendingCount = pendingKey === group ? pendingCount + 1 : 1;
       pendingKey = group;
       clearPendingTimer();
@@ -695,7 +708,6 @@
       render();
 
       p.attempts++;
-      attemptsEl.textContent = String(p.attempts);
       if (mode === "daily") saveDaily();
 
       if (INAPPROPRIATE_SET.has(guess)) {
@@ -741,9 +753,32 @@
       renderAll();
     }
 
+    // Practice puzzles solved today (Central time), kept in this browser so
+    // the header's count survives a reload and starts over at Central
+    // midnight. Without storage it still counts, just for this page load.
+    let practiceSolvedFallback = { dateKey: null, count: 0 };
+    function practiceSolvedToday() {
+      const dateKey = centralDateKey();
+      let saved = practiceSolvedFallback;
+      try {
+        saved = JSON.parse(localStorage.getItem(PRACTICE_STORAGE_KEY)) || saved;
+      } catch (e) {
+        // Fall back to the in-memory count.
+      }
+      return saved.dateKey === dateKey ? saved.count | 0 : 0;
+    }
+    function countPracticeSolve() {
+      const record = { dateKey: centralDateKey(), count: practiceSolvedToday() + 1 };
+      practiceSolvedFallback = record;
+      try {
+        localStorage.setItem(PRACTICE_STORAGE_KEY, JSON.stringify(record));
+      } catch (e) {
+        // Counted in memory only.
+      }
+    }
+
     function winPuzzle() {
-      solvedCount++;
-      solvedEl.textContent = String(solvedCount);
+      if (mode === "practice") countPracticeSolve();
       finishPuzzle();
       window.T9Celebrate.celebrate(document.querySelector(".phone"));
     }
@@ -779,11 +814,31 @@
 
     // ---- Mode toggle ----------------------------------------------------
 
+    // Once a player has switched to Daily, every later visit opens in Daily;
+    // until then (new players) the page opens in Practice.
+    function rememberDailyChosen() {
+      try {
+        localStorage.setItem(DAILY_CHOSEN_KEY, "1");
+      } catch (e) {
+        // Not remembered; the next visit just opens in Practice.
+      }
+    }
+    function hasChosenDaily() {
+      try {
+        return localStorage.getItem(DAILY_CHOSEN_KEY) === "1";
+      } catch (e) {
+        return false;
+      }
+    }
+
     function setMode(newMode) {
       if (newMode === mode) return;
       mode = newMode;
       window.T9Celebrate.clear();
-      if (mode === "daily") loadDaily();
+      if (mode === "daily") {
+        loadDaily();
+        rememberDailyChosen();
+      }
       modeToggleBtn.setAttribute("aria-checked", String(mode === "daily"));
       document.querySelectorAll(".mode-label").forEach((el) => {
         el.classList.toggle("active", el.dataset.mode === mode);
@@ -814,5 +869,6 @@
     newPracticePuzzle();
     resetGuessInProgress();
     renderAll();
+    if (hasChosenDaily()) setMode("daily");
   })();
 })();

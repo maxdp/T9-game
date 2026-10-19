@@ -8,14 +8,14 @@
 (() => {
   const { WORDS_GOOD, WORDS_GOOD_RANK } = window.T9_WORDS;
 
-  const MIN_VALID_ANSWERS = 3;
+  const MIN_VALID_ANSWERS = 2;
   const MAX_VALID_ANSWERS = 8;
   const DIFFICULTY_LABELS = ["Easy", "Medium", "Hard"];
 
   // Word -> frequency rank (1 = most common, higher = rarer).
   const WORD_RANK = new Map(WORDS_GOOD.map((w, i) => [w, WORDS_GOOD_RANK[i]]));
 
-  // Difficulty combines three metrics into a 3-9 point score:
+  // Difficulty adds up five factors into a 4-14 point score:
   //
   // 1. Rarity of the rarest valid answer — WORDS_GOOD split into rarity
   //    quartiles by rank (cutoffs are the actual 25th/50th/75th percentile
@@ -24,10 +24,15 @@
   //    changes); the bottom (most-common) quartile is worth 1 point, the
   //    2nd 2, the 3rd and 4th (rarest half) 3.
   // 2. Number of blanks (2-6): 2 is worth 1 point, 3 worth 2, 4-6 worth 3.
-  // 3. Number of valid answers (3-8): 3-4 is worth 1 point, 5-6 worth 2,
+  // 3. Number of valid answers (2-8): 2-4 is worth 1 point, 5-6 worth 2,
   //    7-8 worth 3.
+  // 4. Word length (4-8): 4-5 is worth 1 point, 6 worth 2, 7-8 worth 3.
+  // 5. Wraparound split: 2 points if at least one answer *requires* a sum
+  //    that straddles the end and start of the word (e.g. almonds, which
+  //    only works as [LM][O][N][D][SA]); 0 otherwise. An answer that merely
+  //    reads around the end, like spur (4,1,2,3), doesn't count.
   //
-  // Summing gives 3-9 points, classified 3-4 Easy / 5-6 Medium / 7-9 Hard.
+  // Totals are labeled 4-6 Easy / 7-8 Medium / 9+ Hard.
   const RARITY_QUARTILES = (() => {
     const sortedRanks = [...WORDS_GOOD_RANK].sort((a, b) => a - b);
     const n = sortedRanks.length;
@@ -50,11 +55,34 @@
     if (answerCount <= 6) return 2;
     return 3;
   }
-  function difficultyForPuzzle(rarestRank, blankCount, answerCount) {
+  function lengthPoints(length) {
+    if (length <= 5) return 1;
+    if (length <= 6) return 2;
+    return 3;
+  }
+
+  // Whether a word only works with a sum split across its ends: it has a
+  // circular grouping (it's a good word) but no plain left-to-right one.
+  const REQUIRES_SPLIT = new Map();
+  function requiresSplit(word) {
+    if (!REQUIRES_SPLIT.has(word)) {
+      REQUIRES_SPLIT.set(word, window.T9.findLinearGrouping(window.T9.wordToDigits(word)) === null);
+    }
+    return REQUIRES_SPLIT.get(word);
+  }
+  function splitPoints(answers) {
+    return answers.some(requiresSplit) ? 2 : 0;
+  }
+
+  function difficultyForPuzzle(answers, blankCount) {
     const points =
-      rarityPoints(rarestRank) + blankPoints(blankCount) + answerPoints(answerCount);
-    if (points <= 4) return "Easy";
-    if (points <= 6) return "Medium";
+      rarityPoints(rarestRankOf(answers)) +
+      blankPoints(blankCount) +
+      answerPoints(answers.length) +
+      lengthPoints(answers[0].length) +
+      splitPoints(answers);
+    if (points <= 6) return "Easy";
+    if (points <= 8) return "Medium";
     return "Hard";
   }
 
@@ -100,7 +128,7 @@
       const count = entry.answers.length;
       if (count < MIN_VALID_ANSWERS || count > MAX_VALID_ANSWERS) return;
       if (isBlocked(pattern)) return;
-      const label = difficultyForPuzzle(rarestRankOf(entry.answers), entry.blankCount, count);
+      const label = difficultyForPuzzle(entry.answers, entry.blankCount);
       pools[label].push({ pattern, answers: entry.answers, difficulty: label });
     });
     return pools;

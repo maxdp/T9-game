@@ -6,7 +6,6 @@
     MAX_VALID_ANSWERS,
     DIFFICULTY_LABELS,
     difficultyForPuzzle,
-    rarestRankOf,
     isBlocked,
     buildPools,
     seededShuffle,
@@ -224,10 +223,11 @@
 
     // Only offers puzzles with MIN_VALID_ANSWERS..MAX_VALID_ANSWERS valid
     // answers AND the requested difficulty (see js/puzzles.js), and never a
-    // blocked one, retrying draws until one lands. Random word+blank draws
-    // rarely come out Easy (about 4% of the time), so a target is needed;
-    // simulating this loop found a worst case of 812 tries, under half the
-    // 2000-try cap.
+    // blocked one, retrying draws until one lands. Only about 6% of random
+    // word+blank draws come out Easy (11% Medium), so a target is needed;
+    // simulating this loop 3,000 times per target took about 16 tries on
+    // average for Easy (worst 153) and 9 for Medium (worst 68), far under
+    // the 2000-try cap.
     function generatePuzzle(targetDifficulty) {
       let word;
       let blanks;
@@ -242,7 +242,7 @@
           answers.length >= MIN_VALID_ANSWERS &&
           answers.length <= MAX_VALID_ANSWERS &&
           !isBlocked(patternOf(word, blanks))
-            ? difficultyForPuzzle(rarestRankOf(answers), blanks.size, answers.length)
+            ? difficultyForPuzzle(answers, blanks.size)
             : null;
         tries++;
       } while (difficulty !== targetDifficulty && tries < 2000);
@@ -250,7 +250,7 @@
         word,
         blanks,
         answers,
-        difficulty: difficultyForPuzzle(rarestRankOf(answers), blanks.size, answers.length),
+        difficulty: difficultyForPuzzle(answers, blanks.size),
         found: new Set(),
         complete: false,
         attempts: 0,

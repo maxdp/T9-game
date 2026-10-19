@@ -122,4 +122,4 @@ function isGoodWord(word) {
   return findSequentialGrouping(wordToDigits(word)) !== null;
 }
 
-window.T9 = { PRESS_COUNTS, wordToDigits, findSequentialGrouping, isGoodWord };
+window.T9 = { PRESS_COUNTS, wordToDigits, findLinearGrouping, findSequentialGrouping, isGoodWord };

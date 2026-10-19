@@ -49,18 +49,58 @@
       <circle cx="32" cy="44" r="12.5" fill="#eceef0" stroke="#c9cdd2" stroke-width="1"/>
       <circle cx="32" cy="44" r="4.8" fill="#fbfbfb" stroke="#c9cdd2" stroke-width="1"/>
       <g fill="#8f979f"><rect x="29.5" y="33.6" width="5" height="1.6" rx=".6"/><path d="M40.5 42.5 l2.5 1.5 -2.5 1.5z M43 42.5 l2.5 1.5 -2.5 1.5z"/><path d="M23.5 42.5 l-2.5 1.5 2.5 1.5z M21 42.5 l-2.5 1.5 2.5 1.5z"/><path d="M29.8 52.3 l2.6 1.5 -2.6 1.5z"/><rect x="33.1" y="52.3" width="1" height="3"/><rect x="34.5" y="52.3" width="1" height="3"/></g></svg>`,
-    // burned CD
-    (u) => `<svg viewBox="0 0 64 64"><defs><linearGradient id="cd${u}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f4f7fa"/><stop offset=".5" stop-color="#d2d9e0"/><stop offset="1" stop-color="#eef2f5"/></linearGradient></defs>
-      <circle cx="32" cy="32" r="29" fill="url(#cd${u})" stroke="#9aa3ad" stroke-width="1.5"/>
-      <g fill="none" stroke-width="7" opacity=".5"><circle cx="32" cy="32" r="21" stroke="#ff8ad1" stroke-dasharray="18 114"/><circle cx="32" cy="32" r="21" stroke="#ffe36e" stroke-dasharray="14 118" stroke-dashoffset="-18"/><circle cx="32" cy="32" r="21" stroke="#7fe0ff" stroke-dasharray="18 114" stroke-dashoffset="-32"/><circle cx="32" cy="32" r="21" stroke="#a6ff9e" stroke-dasharray="14 118" stroke-dashoffset="-50"/><circle cx="32" cy="32" r="21" stroke="#ff8ad1" stroke-dasharray="18 114" stroke-dashoffset="-66"/><circle cx="32" cy="32" r="21" stroke="#ffe36e" stroke-dasharray="14 118" stroke-dashoffset="-84"/><circle cx="32" cy="32" r="21" stroke="#7fe0ff" stroke-dasharray="18 114" stroke-dashoffset="-98"/><circle cx="32" cy="32" r="21" stroke="#a6ff9e" stroke-dasharray="14 118" stroke-dashoffset="-116"/></g>
-      <circle cx="32" cy="32" r="11" fill="#f7f9fb" stroke="#b5bdc6" stroke-width="1"/>
-      <circle cx="32" cy="32" r="7.5" fill="none" stroke="#cfd5db" stroke-width="1"/>
-      <circle cx="32" cy="32" r="4" fill="#1b1b2f"/></svg>`,
-    // :-) text bubble
-    (u) => `<svg viewBox="0 0 64 64"><defs><linearGradient id="sb${u}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#dce4ff"/></linearGradient></defs>
-      <path d="M8 10 h48 a5 5 0 0 1 5 5 v24 a5 5 0 0 1 -5 5 h-30 l-11 10 v-10 h-7 a5 5 0 0 1 -5 -5 v-24 a5 5 0 0 1 5 -5 z" fill="url(#sb${u})" stroke="#4f6df5" stroke-width="2.5" stroke-linejoin="round"/>
-      <rect x="9" y="12" width="46" height="5" rx="2.5" fill="#fff" opacity=".7"/>
-      <text x="32" y="34" text-anchor="middle" font-family="Courier New, monospace" font-weight="700" font-size="19" fill="#1b1b2f">:-)</text></svg>`,
+    // portable CD player: closed silver lid with the wavy-W walkman logo,
+    // body barely bigger than a disc, chunky headphones plugged in (dark
+    // cups, orange foam on the inner, ear-facing sides)
+    (u) => `<svg viewBox="0 0 64 64"><defs><linearGradient id="dm${u}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#eef1f4"/><stop offset=".55" stop-color="#b4bbc3"/><stop offset="1" stop-color="#8a929b"/></linearGradient><radialGradient id="dl${u}" cx=".38" cy=".3" r=".85"><stop offset="0" stop-color="#ffffff"/><stop offset=".6" stop-color="#d3d8de"/><stop offset="1" stop-color="#a7afb8"/></radialGradient><radialGradient id="dp${u}" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#ffb35c"/><stop offset="1" stop-color="#e46a12"/></radialGradient></defs>
+      <rect x="5" y="24" width="39" height="38" rx="17" fill="url(#dm${u})" stroke="#6f7781" stroke-width="1.2"/>
+      <circle cx="24.5" cy="42" r="15.6" fill="#8d959e"/>
+      <circle cx="24.5" cy="42" r="14.8" fill="url(#dl${u})"/>
+      <circle cx="24.5" cy="42" r="11.2" fill="none" stroke="#b9c0c8" stroke-width=".6"/>
+      <path d="M13 34.5 A14 14 0 0 1 29.5 28.6" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" opacity=".8"/>
+      <g transform="translate(13.5 31.04) scale(0.0397)" fill="#3a3f46"><path d="M41 222 C49.3 222 57.3 231.3 62 238 C66.7 244.7 66.3 253.7 69 262 C71.7 270.3 73.3 281.7 78 288 C82.7 294.3 89.7 301.2 97 300 C104.3 298.8 116.3 290.8 122 281 C127.7 271.2 126.3 253.5 131 241 C135.7 228.5 141.7 214.2 150 206 C158.3 197.8 170.7 192 181 192 C191.3 192 205.2 197.8 212 206 C218.8 214.2 218.3 230.5 222 241 C225.7 251.5 227.8 262.7 234 269 C240.2 275.3 249 279.5 259 279 C269 278.5 285.7 276 294 266 C302.3 256 306 232 309 219 C312 206 307.2 198.5 312 188 C316.8 177.5 325.3 162.8 338 156 C350.7 149.2 372.5 145.3 388 147 C403.5 148.7 421.7 156.2 431 166 C440.3 175.8 444 192 444 206 C444 220 438.3 238.5 431 250 C423.7 261.5 410.3 269.8 400 275 C389.7 280.2 379.3 276.8 369 281 C358.7 285.2 344.8 290.5 338 300 C331.2 309.5 330.2 326.5 328 338 C325.8 349.5 329.7 358.7 325 369 C320.3 379.3 309.3 394.3 300 400 C290.7 405.7 280.5 404 269 403 C257.5 402 239.8 402.8 231 394 C222.2 385.2 220.2 362.5 216 350 C211.8 337.5 211.8 327 206 319 C200.2 311 189.8 303.7 181 302 C172.2 300.3 159.7 303 153 309 C146.3 315 143.7 327 141 338 C138.3 349 140.7 364.7 137 375 C133.3 385.3 125.7 395 119 400 C112.3 405 104.8 405.5 97 405 C89.2 404.5 78.3 404 72 397 C65.7 390 62.7 375 59 363 C55.3 351 55.2 332.7 50 325 C44.8 317.3 35.3 320.2 28 317 C20.7 313.8 10.7 314 6 306 C1.3 298 -1 280.3 0 269 C1 257.7 5.2 245.8 12 238 C18.8 230.2 32.7 222 41 222Z"/><ellipse cx="483" cy="341" rx="71" ry="64"/></g>
+      <g fill="#5b636c"><rect x="41.3" y="42" width="2.4" height="4" rx="1"/><rect x="41.3" y="48" width="2.4" height="4" rx="1"/></g>
+      <rect x="39.5" y="25" width="4.6" height="3.4" rx=".8" fill="#2a2d32"/>
+      <path d="M27 15 C26 1 60 1 59 15" fill="none" stroke="#3a3e45" stroke-width="4.4" stroke-linecap="round"/>
+      <path d="M27 15 C26 1 60 1 59 15" fill="none" stroke="#9aa1aa" stroke-width="1.6" stroke-linecap="round"/>
+      <rect x="23" y="13" width="8" height="17" rx="3.5" fill="#2f3237"/><rect x="55" y="13" width="8" height="17" rx="3.5" fill="#2f3237"/>
+      <rect x="24.5" y="16" width="2" height="11" rx="1" fill="#4c5058"/><rect x="59.5" y="16" width="2" height="11" rx="1" fill="#4c5058"/>
+      <ellipse cx="32.3" cy="21.5" rx="3.6" ry="8.2" fill="url(#dp${u})"/><ellipse cx="53.7" cy="21.5" rx="3.6" ry="8.2" fill="url(#dp${u})"/>
+      <g fill="#c4550c" opacity=".55"><circle cx="31.8" cy="18" r=".55"/><circle cx="33" cy="22.5" r=".55"/><circle cx="31.6" cy="26" r=".55"/><circle cx="54.2" cy="18" r=".55"/><circle cx="53" cy="22.5" r=".55"/><circle cx="54.4" cy="26" r=".55"/></g>
+      <path d="M27 30 C26.5 33.5 33 34 35 30.5 C37 27 40 29 41.8 27" fill="none" stroke="#2a2d32" stroke-width="1.5" stroke-linecap="round"/></svg>`,
+    // sticker rhinestones: a pink round, blue square and purple heart
+    // stick-on gem, overlapping at off angles, with a couple of sparkles
+    (u) => `<svg viewBox="0 0 64 64"><g transform="rotate(18 45 21)">
+      <rect x="34.1" y="10.1" width="21.8" height="21.8" rx="1.2" fill="#e9edf2" stroke="#aab2bc" stroke-width=".6"/>
+      <path d="M35 11 L55 11 L49.5 16.5 L40.5 16.5 Z" fill="#71dbf5"/>
+      <path d="M55 11 L55 31 L49.5 25.5 L49.5 16.5 Z" fill="#21b3d8"/>
+      <path d="M55 31 L35 31 L40.5 25.5 L49.5 25.5 Z" fill="#18819c"/>
+      <path d="M35 31 L35 11 L40.5 16.5 L40.5 25.5 Z" fill="#46cff2"/>
+      <rect x="40.5" y="16.5" width="9" height="9" fill="#66d8f5"/>
+      <path d="M42 20.5 L44.5 18" stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity=".9"/></g>
+      <g transform="rotate(-14 24 26)">
+      <circle cx="24" cy="26" r="14.9" fill="#e9edf2" stroke="#aab2bc" stroke-width=".6"/>
+      <circle cx="24" cy="26" r="14" fill="#a6296b"/>
+      <path d="M30.5 23.3 L36.9 20.6 L38 26 L36.9 31.4 L30.5 28.7 Z" fill="#ff65b6"/>
+      <path d="M30.5 28.7 L36.9 31.4 L33.9 35.9 L29.4 38.9 L26.7 32.5 Z" fill="#c3307d"/>
+      <path d="M26.7 32.5 L29.4 38.9 L24 40 L18.6 38.9 L21.3 32.5 Z" fill="#ff49a9"/>
+      <path d="M21.3 32.5 L18.6 38.9 L14.1 35.9 L11.1 31.4 L17.5 28.7 Z" fill="#c3307d"/>
+      <path d="M17.5 28.7 L11.1 31.4 L10 26 L11.1 20.6 L17.5 23.3 Z" fill="#ff65b6"/>
+      <path d="M17.5 23.3 L11.1 20.6 L14.1 16.1 L18.6 13.1 L21.3 19.5 Z" fill="#e03790"/>
+      <path d="M21.3 19.5 L18.6 13.1 L24 12 L29.4 13.1 L26.7 19.5 Z" fill="#ff82c4"/>
+      <path d="M26.7 19.5 L29.4 13.1 L33.9 16.1 L36.9 20.6 L30.5 23.3 Z" fill="#e03790"/>
+      <path d="M30.5 23.3 L30.5 28.7 L26.7 32.5 L21.3 32.5 L17.5 28.7 L17.5 23.3 L21.3 19.5 L26.7 19.5 Z" fill="#ff6fbb" stroke="#ffa9d6" stroke-width=".4"/>
+      <path d="M19.1 25.3 L23.3 20.8" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".85"/></g>
+      <g transform="rotate(-16 38 44)">
+      <path d="M38 55.9 C34.5 52.4 24 46.1 24 39.8 C24 32.1 33.8 30 38 36.3 C42.2 30 52 32.1 52 39.8 C52 46.1 41.5 52.4 38 55.9 Z" fill="#e9edf2" stroke="#aab2bc" stroke-width=".6" transform="translate(38 44) scale(1.12) translate(-38 -44)"/>
+      <path d="M38 55.9 C34.5 52.4 24 46.1 24 39.8 C24 32.1 33.8 30 38 36.3 C42.2 30 52 32.1 52 39.8 C52 46.1 41.5 52.4 38 55.9 Z" fill="#6d41a0"/>
+      <path d="M38 55.9 L30.3 43.3 L30.3 35.6 L38 40.5 Z" fill="#af7dea"/>
+      <path d="M38 55.9 L45.7 43.3 L45.7 35.6 L38 40.5 Z" fill="#9358da"/>
+      <path d="M31 41.9 L38 48.2 L45 41.9 L38 40.5 Z" fill="#c8a6f1"/>
+      <path d="M28.9 36.3 L33.1 33.5" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".9"/></g>
+      <path d="M55 35.6 Q55.5 38.5 58.4 39 Q55.5 39.5 55 42.4 Q54.5 39.5 51.6 39 Q54.5 38.5 55 35.6 Z" fill="#fff"/>
+      <path d="M9 44.4 Q9.4 46.6 11.6 47 Q9.4 47.4 9 49.6 Q8.6 47.4 6.4 47 Q8.6 46.6 9 44.4 Z" fill="#fff"/>
+      </svg>`,
     // green kick scooter
     (u) => `<svg viewBox="0 0 64 64"><defs><linearGradient id="dk${u}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eef1f4"/><stop offset="1" stop-color="#99a2ab"/></linearGradient></defs>
       <path d="M45 9 L50 45" stroke="#2f9a2f" stroke-width="4.5" stroke-linecap="round"/>
