@@ -49,16 +49,16 @@
       <circle cx="32" cy="44" r="12.5" fill="#eceef0" stroke="#c9cdd2" stroke-width="1"/>
       <circle cx="32" cy="44" r="4.8" fill="#fbfbfb" stroke="#c9cdd2" stroke-width="1"/>
       <g fill="#8f979f"><rect x="29.5" y="33.6" width="5" height="1.6" rx=".6"/><path d="M40.5 42.5 l2.5 1.5 -2.5 1.5z M43 42.5 l2.5 1.5 -2.5 1.5z"/><path d="M23.5 42.5 l-2.5 1.5 2.5 1.5z M21 42.5 l-2.5 1.5 2.5 1.5z"/><path d="M29.8 52.3 l2.6 1.5 -2.6 1.5z"/><rect x="33.1" y="52.3" width="1" height="3"/><rect x="34.5" y="52.3" width="1" height="3"/></g></svg>`,
-    // portable CD player: closed silver lid with the WALKMAN wordmark, body
-    // barely bigger than a disc, chunky headphones plugged in (dark cups,
-    // orange foam on the inner, ear-facing sides)
+    // portable CD player: closed silver lid with the wavy-W walkman logo,
+    // body barely bigger than a disc, chunky headphones plugged in (dark
+    // cups, orange foam on the inner, ear-facing sides)
     (u) => `<svg viewBox="0 0 64 64"><defs><linearGradient id="dm${u}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#eef1f4"/><stop offset=".55" stop-color="#b4bbc3"/><stop offset="1" stop-color="#8a929b"/></linearGradient><radialGradient id="dl${u}" cx=".38" cy=".3" r=".85"><stop offset="0" stop-color="#ffffff"/><stop offset=".6" stop-color="#d3d8de"/><stop offset="1" stop-color="#a7afb8"/></radialGradient><radialGradient id="dp${u}" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#ffb35c"/><stop offset="1" stop-color="#e46a12"/></radialGradient></defs>
       <rect x="5" y="24" width="39" height="38" rx="17" fill="url(#dm${u})" stroke="#6f7781" stroke-width="1.2"/>
       <circle cx="24.5" cy="42" r="15.6" fill="#8d959e"/>
       <circle cx="24.5" cy="42" r="14.8" fill="url(#dl${u})"/>
       <circle cx="24.5" cy="42" r="11.2" fill="none" stroke="#b9c0c8" stroke-width=".6"/>
       <path d="M13 34.5 A14 14 0 0 1 29.5 28.6" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" opacity=".8"/>
-      <text x="24.5" y="43.7" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-weight="700" font-size="4.6" letter-spacing=".15" fill="#3a3f46">WALKMAN</text>
+      <g transform="translate(13.5 31.04) scale(0.0397)" fill="#3a3f46"><path d="M41 222 C49.3 222 57.3 231.3 62 238 C66.7 244.7 66.3 253.7 69 262 C71.7 270.3 73.3 281.7 78 288 C82.7 294.3 89.7 301.2 97 300 C104.3 298.8 116.3 290.8 122 281 C127.7 271.2 126.3 253.5 131 241 C135.7 228.5 141.7 214.2 150 206 C158.3 197.8 170.7 192 181 192 C191.3 192 205.2 197.8 212 206 C218.8 214.2 218.3 230.5 222 241 C225.7 251.5 227.8 262.7 234 269 C240.2 275.3 249 279.5 259 279 C269 278.5 285.7 276 294 266 C302.3 256 306 232 309 219 C312 206 307.2 198.5 312 188 C316.8 177.5 325.3 162.8 338 156 C350.7 149.2 372.5 145.3 388 147 C403.5 148.7 421.7 156.2 431 166 C440.3 175.8 444 192 444 206 C444 220 438.3 238.5 431 250 C423.7 261.5 410.3 269.8 400 275 C389.7 280.2 379.3 276.8 369 281 C358.7 285.2 344.8 290.5 338 300 C331.2 309.5 330.2 326.5 328 338 C325.8 349.5 329.7 358.7 325 369 C320.3 379.3 309.3 394.3 300 400 C290.7 405.7 280.5 404 269 403 C257.5 402 239.8 402.8 231 394 C222.2 385.2 220.2 362.5 216 350 C211.8 337.5 211.8 327 206 319 C200.2 311 189.8 303.7 181 302 C172.2 300.3 159.7 303 153 309 C146.3 315 143.7 327 141 338 C138.3 349 140.7 364.7 137 375 C133.3 385.3 125.7 395 119 400 C112.3 405 104.8 405.5 97 405 C89.2 404.5 78.3 404 72 397 C65.7 390 62.7 375 59 363 C55.3 351 55.2 332.7 50 325 C44.8 317.3 35.3 320.2 28 317 C20.7 313.8 10.7 314 6 306 C1.3 298 -1 280.3 0 269 C1 257.7 5.2 245.8 12 238 C18.8 230.2 32.7 222 41 222Z"/><ellipse cx="483" cy="341" rx="71" ry="64"/></g>
       <g fill="#5b636c"><rect x="41.3" y="42" width="2.4" height="4" rx="1"/><rect x="41.3" y="48" width="2.4" height="4" rx="1"/></g>
       <rect x="39.5" y="25" width="4.6" height="3.4" rx=".8" fill="#2a2d32"/>
       <path d="M27 15 C26 1 60 1 59 15" fill="none" stroke="#3a3e45" stroke-width="4.4" stroke-linecap="round"/>
