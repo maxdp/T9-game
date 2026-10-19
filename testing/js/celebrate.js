@@ -49,26 +49,25 @@
       <circle cx="32" cy="44" r="12.5" fill="#eceef0" stroke="#c9cdd2" stroke-width="1"/>
       <circle cx="32" cy="44" r="4.8" fill="#fbfbfb" stroke="#c9cdd2" stroke-width="1"/>
       <g fill="#8f979f"><rect x="29.5" y="33.6" width="5" height="1.6" rx=".6"/><path d="M40.5 42.5 l2.5 1.5 -2.5 1.5z M43 42.5 l2.5 1.5 -2.5 1.5z"/><path d="M23.5 42.5 l-2.5 1.5 2.5 1.5z M21 42.5 l-2.5 1.5 2.5 1.5z"/><path d="M29.8 52.3 l2.6 1.5 -2.6 1.5z"/><rect x="33.1" y="52.3" width="1" height="3"/><rect x="34.5" y="52.3" width="1" height="3"/></g></svg>`,
-    // portable CD player: clear lid showing the disc, chunky headphones
-    // with orange foam pads plugged in
-    (u) => `<svg viewBox="0 0 64 64"><defs><linearGradient id="dm${u}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f1f3f6"/><stop offset=".55" stop-color="#b9c0c8"/><stop offset="1" stop-color="#8d959e"/></linearGradient><radialGradient id="dl${u}" cx=".4" cy=".35" r=".75"><stop offset="0" stop-color="#e8edf3"/><stop offset="1" stop-color="#9aa3ad"/></radialGradient><radialGradient id="dp${u}" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#ffb35c"/><stop offset="1" stop-color="#e46a12"/></radialGradient></defs>
-      <rect x="3" y="23" width="44" height="39" rx="15" fill="url(#dm${u})" stroke="#6f7781" stroke-width="1.2"/>
-      <circle cx="24" cy="41" r="16" fill="#7d858f"/>
-      <circle cx="24" cy="41" r="15" fill="url(#dl${u})"/>
-      <circle cx="24" cy="41" r="11.5" fill="#f4f7fa" opacity=".9"/>
-      <g fill="none" stroke-width="5" opacity=".55"><circle cx="24" cy="41" r="8" stroke="#ff8ad1" stroke-dasharray="7 43"/><circle cx="24" cy="41" r="8" stroke="#ffe36e" stroke-dasharray="6 44" stroke-dashoffset="-7"/><circle cx="24" cy="41" r="8" stroke="#7fe0ff" stroke-dasharray="7 43" stroke-dashoffset="-13"/><circle cx="24" cy="41" r="8" stroke="#a6ff9e" stroke-dasharray="6 44" stroke-dashoffset="-20"/><circle cx="24" cy="41" r="8" stroke="#ff8ad1" stroke-dasharray="7 43" stroke-dashoffset="-26"/><circle cx="24" cy="41" r="8" stroke="#ffe36e" stroke-dasharray="6 44" stroke-dashoffset="-33"/><circle cx="24" cy="41" r="8" stroke="#7fe0ff" stroke-dasharray="7 43" stroke-dashoffset="-39"/></g>
-      <circle cx="24" cy="41" r="3.6" fill="#d8dde3" stroke="#8d959e" stroke-width=".8"/><circle cx="24" cy="41" r="1.5" fill="#5b636c"/>
-      <path d="M13 32 A15 15 0 0 1 30 27.5" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".7"/>
-      <rect x="17" y="57.2" width="14" height="3.6" rx="1" fill="#3c5a3a"/><rect x="18" y="58" width="9" height="2" fill="#9fd08a" opacity=".8"/>
-      <g fill="#5b636c"><circle cx="42.5" cy="45" r="1.6"/><circle cx="42.5" cy="50" r="1.6"/><circle cx="42.5" cy="55" r="1.6"/></g>
-      <rect x="41" y="24" width="4.6" height="3.4" rx=".8" fill="#2a2d32"/>
-      <path d="M30 21 C29 4 56 4 55 21" fill="none" stroke="#3a3e45" stroke-width="4.4" stroke-linecap="round"/>
-      <path d="M30 21 C29 4 56 4 55 21" fill="none" stroke="#9aa1aa" stroke-width="1.6" stroke-linecap="round"/>
-      <rect x="25.5" y="13" width="10" height="16" rx="3.5" fill="#2f3237"/><rect x="50" y="13" width="10" height="16" rx="3.5" fill="#2f3237"/>
-      <rect x="31" y="16" width="2.2" height="10" rx="1" fill="#4c5058"/><rect x="52.3" y="16" width="2.2" height="10" rx="1" fill="#4c5058"/>
-      <ellipse cx="25.5" cy="21" rx="4.6" ry="8.6" fill="url(#dp${u})"/><ellipse cx="59.2" cy="21" rx="4.2" ry="8.4" fill="url(#dp${u})"/>
-      <g stroke="#c4550c" stroke-width=".5" opacity=".6"><circle cx="24.5" cy="18" r=".5"/><circle cx="26.5" cy="22" r=".5"/><circle cx="24" cy="25" r=".5"/><circle cx="59" cy="17.5" r=".5"/><circle cx="60" cy="22.5" r=".5"/><circle cx="58.4" cy="25.5" r=".5"/></g>
-      <path d="M30.5 29 C30 34 36 35 37.5 31 C39 27 42 29 43.2 26" fill="none" stroke="#2a2d32" stroke-width="1.5" stroke-linecap="round"/></svg>`,
+    // portable CD player: closed silver lid with the WALKMAN wordmark, body
+    // barely bigger than a disc, chunky headphones plugged in (dark cups,
+    // orange foam on the inner, ear-facing sides)
+    (u) => `<svg viewBox="0 0 64 64"><defs><linearGradient id="dm${u}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#eef1f4"/><stop offset=".55" stop-color="#b4bbc3"/><stop offset="1" stop-color="#8a929b"/></linearGradient><radialGradient id="dl${u}" cx=".38" cy=".3" r=".85"><stop offset="0" stop-color="#ffffff"/><stop offset=".6" stop-color="#d3d8de"/><stop offset="1" stop-color="#a7afb8"/></radialGradient><radialGradient id="dp${u}" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#ffb35c"/><stop offset="1" stop-color="#e46a12"/></radialGradient></defs>
+      <rect x="5" y="24" width="39" height="38" rx="17" fill="url(#dm${u})" stroke="#6f7781" stroke-width="1.2"/>
+      <circle cx="24.5" cy="42" r="15.6" fill="#8d959e"/>
+      <circle cx="24.5" cy="42" r="14.8" fill="url(#dl${u})"/>
+      <circle cx="24.5" cy="42" r="11.2" fill="none" stroke="#b9c0c8" stroke-width=".6"/>
+      <path d="M13 34.5 A14 14 0 0 1 29.5 28.6" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" opacity=".8"/>
+      <text x="24.5" y="43.7" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-weight="700" font-size="4.6" letter-spacing=".15" fill="#3a3f46">WALKMAN</text>
+      <g fill="#5b636c"><rect x="41.3" y="42" width="2.4" height="4" rx="1"/><rect x="41.3" y="48" width="2.4" height="4" rx="1"/></g>
+      <rect x="39.5" y="25" width="4.6" height="3.4" rx=".8" fill="#2a2d32"/>
+      <path d="M27 15 C26 1 60 1 59 15" fill="none" stroke="#3a3e45" stroke-width="4.4" stroke-linecap="round"/>
+      <path d="M27 15 C26 1 60 1 59 15" fill="none" stroke="#9aa1aa" stroke-width="1.6" stroke-linecap="round"/>
+      <rect x="23" y="13" width="8" height="17" rx="3.5" fill="#2f3237"/><rect x="55" y="13" width="8" height="17" rx="3.5" fill="#2f3237"/>
+      <rect x="24.5" y="16" width="2" height="11" rx="1" fill="#4c5058"/><rect x="59.5" y="16" width="2" height="11" rx="1" fill="#4c5058"/>
+      <ellipse cx="32.3" cy="21.5" rx="3.6" ry="8.2" fill="url(#dp${u})"/><ellipse cx="53.7" cy="21.5" rx="3.6" ry="8.2" fill="url(#dp${u})"/>
+      <g fill="#c4550c" opacity=".55"><circle cx="31.8" cy="18" r=".55"/><circle cx="33" cy="22.5" r=".55"/><circle cx="31.6" cy="26" r=".55"/><circle cx="54.2" cy="18" r=".55"/><circle cx="53" cy="22.5" r=".55"/><circle cx="54.4" cy="26" r=".55"/></g>
+      <path d="M27 30 C26.5 33.5 33 34 35 30.5 C37 27 40 29 41.8 27" fill="none" stroke="#2a2d32" stroke-width="1.5" stroke-linecap="round"/></svg>`,
     // sticker rhinestones: a pink round, blue square and purple heart
     // stick-on gem, overlapping at off angles, with a couple of sparkles
     (u) => `<svg viewBox="0 0 64 64"><g transform="rotate(18 45 21)">
