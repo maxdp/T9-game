@@ -7,366 +7,366 @@ window.T9_DAILY = {
     ["__sing fusing hosing nosing","_edi__ median medium tedium","___ng_ grange twangs twinge"], // #2 2026-10-17
     ["_n__r ender enter under","__aw_ing drawling spawning trawling","__n____n henchman tungsten wingspan"], // #3 2026-10-18
     ["_al_e_ balded halted talked walked","g__g_ing gargling giggling goggling","a___c_ abduct abject addict"], // #4 2026-10-19
-    ["re_a_ds regards rewards","___na hyena sauna","_a_p_t_ palpate warpath"], // #5 2026-10-20
-    ["sp__ spec spur","_o__nt moment potent","s_____ed sheathed smuggled spangled squawked steadied stranded"], // #6 2026-10-21
-    ["fa_e_ faced facet fader fared","_ogg_ing goggling toggling","__d____s puddings weddings"], // #7 2026-10-22
-    ["s_un_ sauna stung stunt swung","_i_ding birding finding","p____n person pigpen popgun"], // #8 2026-10-23
-    ["_cu_ scud scum scut","m__t_n marten mitten mutton","t_a____ toaster traders trammed tramped trapped tsarina twaddle"], // #9 2026-10-24
-    ["ten__ tench tends tents","i_pa__ impact impala impart","_it_____ dithered litigate withered"], // #10 2026-10-25
-    ["__tch ditch pitch witch","_it_e_ kitted mitten pithed tithed","_e_r__e_ betrayed yearlies"], // #11 2026-10-26
-    ["c__s cuds cups cuts","__th_ meths pithy","s_u__ing smudging smutting spudding studding stumping"], // #12 2026-10-27
-    ["_o_rd board hoard","_o_t_d boated pouted touted","b____ed birdied bobbled bounced bravoed bridled"], // #13 2026-10-28
-    ["dec__ decaf decal decay","str__ed strafed strayed","__ette_ abetted whetted"], // #14 2026-10-29
-    ["ai_e_ aider ailed aired","a_d_c_ abduct addict","_is____ dishrag disrupt mislead misread"], // #15 2026-10-30
-    ["b_tter_ betters butters","_r__d_a grandma grandpa","_on_e_ed bonneted mongered pondered wondered"], // #16 2026-10-31
-    ["_ap_ed sapped zapped","par_noi_ paranoia paranoid","___vi__ braving leaving staving"], // #17 2026-11-01
-    ["sau__ sauna saute","re_en_s regents repents","___mpin_ clamping cramping stumping"], // #18 2026-11-02
-    ["_r_ut grout trout","__d__y midday midway","_o___red compared mongered mothered pondered wondered"], // #19 2026-11-03
-    ["c_an_ing changing chanting","__rn_d darned warned","____or__ enamored mentored"], // #20 2026-11-04
-    ["_nt__ antes enter","g__ter getter gutter","_an__in_ bandying handling"], // #21 2026-11-05
-    ["stu__ stung stunt","re_e_t_ regents repents","_d____o_ addition adoption"], // #22 2026-11-06
-    ["tr_c_ trace track","_u__y lumpy ruddy rummy yummy","_utl____ outliers outlives outlooks"], // #23 2026-11-07
-    ["_tun_ stung stunt","___nd_a grandma grandpa","go____ goatee gonged gotten gouged"], // #24 2026-11-08
-    ["gr_u_ group grout","_i_ters jitters titters","____av__ engraved upheaval"], // #25 2026-11-09
-    ["__ds cuds feds reds","j__k__ jacked jacket","_o_bi__ bobbing hobbing"], // #26 2026-11-10
-    ["_ark_d marked parked","r__ard_ regards rewards","_roup__ grouper groupie trouper"], // #27 2026-11-11
-    ["__ps cups reps","_ain_d gained pained","g___l___ gargling gentling giggling goggling"], // #28 2026-11-12
-    ["g_ou_ group grout","___umed assumed resumed","re_u___ regular reputes requiem resumed"], // #29 2026-11-13
-    ["a__er after aider alder alter","_e_akes remakes retakes","e___nde_ engender extender"], // #30 2026-11-14
-    ["a__n_ acing along","m___ay midday midway","h_ld___ holding holdout"], // #31 2026-11-15
-    ["re__y ready repay","de_u__ deduct deputy","___nt_ jaunty twenty"], // #32 2026-11-16
-    ["dun__ dunce dungs","bu__ers bummers bumpers butters","_r____r arbiter grinder grouper premier printer prouder trouper wringer"], // #33 2026-11-17
-    ["s_ee_ speed steed steep sweep sweet","__c_et jacket packet","___r_i__ alarming bearding coursing emerging yearlies"], // #34 2026-11-18
-    ["__aped leaped reaped","l___y leggy lumpy","re__is__ realisms realists"], // #35 2026-11-19
-    ["_ide_ aider wider","br__ing bracing braving braying","__dowin_ endowing widowing"], // #36 2026-11-20
-    ["d_nge_ danger dinged","l___h loath lymph","_i_dl_ng diddling middling piddling"], // #37 2026-11-21
-    ["__yed keyed toyed","_eep__ beeped deepen teepee","h___m_n hangman headman"], // #38 2026-11-22
-    ["__d_y badly ruddy","p_u_ed plumed pouted","__ra_o__ parabola paranoia paranoid"], // #39 2026-11-23
-    ["_a_el babel camel lapel","l__en_ lament latent","h_gg_r_ haggard huggers"], // #40 2026-11-24
-    ["thr___ thread threat","_ing_r singer zinger","g_____s garrets garters genders gimlets graders graters guffaws guineas"], // #41 2026-11-25
-    ["__dg_ lodge ridge","du___ ducal dudes duets dunce dungs dupes","e_____n_ ejecting emerging enacting endowing erupting exacting exponent"], // #42 2026-11-26
-    ["o__er odder otter","_u___es aunties jungles","s__m__n_ stemming stumping"], // #43 2026-11-27
-    ["__a_n drain grain plain train","ham_e_ hamlet hammer hamper","__b_t__ arbiter debated"], // #44 2026-11-28
-    ["_alk_d talked walked","e__ted edited elated emoted","_e___nt pendant reprint serpent"], // #45 2026-11-29
-    ["_enta_ dental mental","_o__y dopey downy","_ett__ed fettered lettered"], // #46 2026-11-30
-    ["pla__ place plain","g_a_ers graders graters","a__pt___ adoption adoptive"], // #47 2026-12-01
-    ["b__el babel betel","up__n_ upland upping upwind","_ra___g bracing braving braying grazing"], // #48 2026-12-02
-    ["h__ted halted hunted","_o__ng hosing nosing","_e_l_s__ realisms realists"], // #49 2026-12-03
-    ["t___k think track","ge__e_ geared getter geyser","___l_a_ dahlias mislead paellas"], // #50 2026-12-04
-    ["t_w__ towel tower","p__ters potters punters","s__ri__ sparing staring"], // #51 2026-12-05
-    ["th__s thuds thugs","_aggl_d gaggled waggled","____ma__ grammars milkmaid shipmate teammate"], // #52 2026-12-06
-    ["z_n_ zany zing","m__ua_ manual mutual","t_p__ing tippling toppling"], // #53 2026-12-07
-    ["g__re genre glare","t__d_rs tenders traders","e____led entailed entitled"], // #54 2026-12-08
-    ["r___r rater rawer","_edd__ meddle peddle","___to_ laptop mutton tattoo wanton"], // #55 2026-12-09
-    ["__ars agars maars","m____y midday midway","_r_ft_n_ drafting grafting"], // #56 2026-12-10
-    ["b_an_ beano beany","ste_mi__ steaming stemming","__ea__e_ preached sheathed steadied"], // #57 2026-12-11
-    ["_e_ea_ defeat repeat","_o_l_ng bowling howling","wh___ie_ whammies whiskies"], // #58 2026-12-12
-    ["_ile_ ailed piled tiled","du___g dugong duping","_r__kin_ pranking wreaking"], // #59 2026-12-13
-    ["_it_e mitre title","___ve grave peeve waive","___l__d applaud mislead stalled"], // #60 2026-12-14
-    ["ado__ adore adorn","m_d__y midday midway","c_ampin_ clamping cramping"], // #61 2026-12-15
-    ["ba_m_ balmy barmy","stee__d steeled steered","____gi__ changing chugging deluging emerging flagging smudging"], // #62 2026-12-16
-    ["do_e_ doper dopey dowel","p_nt_ pinto punts","p_a____s phantoms plateaus"], // #63 2026-12-17
-    ["__aned beaned moaned","_ugo__ dugong dugout","_an___n_ bandying handguns handling"], // #64 2026-12-18
-    ["han__ hands hangs hanky","bo_ti__ bolting booting","_e__te_ debated negated reputes"], // #65 2026-12-19
-    ["vet_e_ vetoes vetted","t_l__ talon telex tiled tulip","_e__acle pentacle tentacle"], // #66 2026-12-20
-    ["__ain drain grain plain train","bar__d barded barged","g_ou___ grouper groupie"], // #67 2026-12-21
-    ["be__t beast beret","_it_ered dithered withered","___de_s genders graders headers ladders powders tenders traders warders"], // #68 2026-12-22
-    ["f_a__ flame frame","ex_e_d expend extend","_a_g_e_ bangles gaggled waggled"], // #69 2026-12-23
-    ["__tes antes metes mutes","p_int_r pointer printer","_p__t_r spitter spotter"], // #70 2026-12-24
-    ["p_in_ point print","__ra_e aerate karate","r_d_i__ redbird redoing"], // #71 2026-12-25
-    ["thr__ three throw","ran_e_ ranged ranted","__p_te_ amputee reputes tipster"], // #72 2026-12-26
-    ["r__er rater rawer","_un__e_ aunties jungles","_ea___s beaters headers heaters leagues"], // #73 2026-12-27
-    ["t__ed tiled tired toyed tried","de__c_ deduct detach detect","___nt__g chanting shantung"], // #74 2026-12-28
-    ["_yi__ dying tying","wa__ed walked warned wasted","t____n_ tagging tamping tangent tapping tendons tensing tsarina"], // #75 2026-12-29
-    ["l_g_ legs lugs","m__d_e meddle muddle","_o_ge__ dodgers joggers"], // #76 2026-12-30
-    ["__re_d agreed thread","___gged dragged twigged","_____ry mastery perjury"], // #77 2026-12-31
-    ["e_ten_ extend extent","bl__i_g blaring blowing","t_t__r_ titters totters"], // #78 2027-01-01
-    ["le__ legs lets","_h__k think whelk","_apt___d baptised baptized"], // #79 2027-01-02
-    ["__oud aloud proud","__nde_s genders tenders","___tt___ smutting stetting"], // #80 2027-01-03
-    ["ho_e_s homers hotels","_u_nin_ cunning running","___nk__g planking pranking"], // #81 2027-01-04
-    ["m__er miter mower","___est attest tamest","_nde____ underarm underdog undertow"], // #82 2027-01-05
-    ["_ra_k track wrack","wa_n__ walnut warned","__nd_n_ bandana finding pendant tendons"], // #83 2027-01-06
-    ["_eem_ deems teems","_e_ged legged merged","b_____a bandana bravura"], // #84 2027-01-07
-    ["t__ce trace twice","__theads fatheads potheads","_r__ki_g pranking wreaking"], // #85 2027-01-08
-    ["ma_ke_ marked market","t_in_e_ thinker thinner","t__i_gs timings tubings"], // #86 2027-01-09
-    ["sw___ swami sweep sweet swung","_e_c_ deuce mecca react tench wench","__u_g__g chugging smudging"], // #87 2027-01-10
-    ["__cal decal ducal","p_ranoi_ paranoia paranoid","__aff__ chaffed staffed"], // #88 2027-01-11
-    ["__wel dowel towel","_ram_e_ trammed tramped","___l_d ambled angled bawled mauled pealed tabled whaled"], // #89 2027-01-12
-    ["__o_e adore phone","pu__er pumper purser putter","__ddlin_ diddling huddling middling piddling toddling"], // #90 2027-01-13
-    ["_unc_ dunce munch punch","_eav__ leaves weaved","e__e__e_ engender esteemed extender"], // #91 2027-01-14
-    ["s__ak speak steak","__ra_ aural mural","__art__ smarter starter swarthy"], // #92 2027-01-15
-    ["la__r lager lamer later","ja__in_ jagging jamming","__sr___ disrupt misread"], // #93 2027-01-16
-    ["ne__e_ needed nephew","_ecante_ decanter recanted","_en__c_e pentacle tentacle"], // #94 2027-01-17
-    ["__gs fugs legs lugs rugs","int_n_s intends intents","__g_a_e_ engraved luggages"], // #95 2027-01-18
-    ["d_i_g doing dying","bla__d bladed blamed","__ad_in_ cladding toadying"], // #96 2027-01-19
-    ["_lee_ bleed bleep","ma__le mangle mantle","___mers bummers dimmers rammers warmers yammers"], // #97 2027-01-20
-    ["_et_l betel fetal","__ddings puddings weddings","___b_r_d cambered numbered"], // #98 2027-01-21
-    ["ba_te_ baited batter","em___ email ember","_tr__er_ striders stripers"], // #99 2027-01-22
-    ["kid___ kidded kidnap","b__g_r badger bagger beggar","_l_m_ blimp clump flame"], // #100 2027-01-23
-    ["m_te_ metes miter motel mutes","__k_e ankle pekoe","__e____e aperture omelette preamble"], // #101 2027-01-24
-    ["_rgo_ argon ergot","bar_e_ barded barged","g_a__n_ glazing grazing"], // #102 2027-01-25
-    ["g_a_e glare grace grave","_e_end_ defends legends","__n__l_ mandala monthly"], // #103 2027-01-26
-    ["_a_me_ hammer harmed","du_o__ dugong dugout","___ecte_ injected objected rejected"], // #104 2027-01-27
-    ["_p_e_ speed upset","_ur_e_ purged purser","_et__r__ fettered lettered"], // #105 2027-01-28
-    ["temp__ temper temple tempts","_ot_l___ totaling totalled","_ast_d pasted tasted wasted"], // #106 2027-01-29
-    ["t__er tiger timer tower","_e_oing redoing vetoing","w____n wanton warden weaken weapon"], // #107 2027-01-30
-    ["__u_g stung swung","__d_um medium tedium","bl_o__rs bloomers bloopers"], // #108 2027-01-31
-    ["t_ac_ trace track","am_u__ amount ampule","__o_de__ reorders smolders"], // #109 2027-02-01
-    ["_ame_ camel cameo lamer","_a_tle battle mantle","___ee___ agreeing esteemed"], // #110 2027-02-02
-    ["j__ke_ jacked jacket","_o_p_d bopped hopped","_a____n eastern hangman"], // #111 2027-02-03
-    ["_ou_d bound hound","th__c_ thatch thwack","c___pin_ clamping clapping cramping"], // #112 2027-02-04
-    ["f_ce_ faced facet","_erse_ jersey terser","___p__ts ramparts whippets"], // #113 2027-02-05
-    ["a_d_ct abduct addict","spe__er speeder spender","_ig__i_g bighting giggling jiggling wiggling"], // #114 2027-02-06
-    ["b_n_s bands bangs","p__ments payments pigments","t_ppe__ tippers toppers"], // #115 2027-02-07
-    ["__cked jacked packed tacked","_aunte_ daunted jaunted saunter taunted","____m__e preamble shipmate teammate"], // #116 2027-02-08
-    ["l__s legs lets lugs","__wards inwards onwards rewards","_h__m___ shipmate whammies"], // #117 2027-02-09
-    ["sing__ singer single","_e_oe_ redoes vetoes","s___gl_d smuggled spangled"], // #118 2027-02-10
-    ["l_me_ lamer lumen","_ars_ip parsnip warship","tu____ tugger tumult tundra"], // #119 2027-02-11
-    ["__wling bowling howling","__wne_ downed fawned yawned","___n_ng binning cunning evening running"], // #120 2027-02-12
-    ["__lk_d talked walked","hoo__ng hooding hooping hooting","_ad_l_d paddled waddled"], // #121 2027-02-13
-    ["__ed_ deeds weeds","st__ming steaming stemming","s__t___g smutting stetting"], // #122 2027-02-14
-    ["p_i__ point print","te__er temper terser","_e_a_ing menacing rebating remaking renaming retaking"], // #123 2027-02-15
-    ["_e_eat defeat repeat","_int__ minted tinted","_____g_d indulged massaged unhinged"], // #124 2027-02-16
-    ["_ope_ doper dopey","__ast_r plaster toaster","s__ddi_g spudding studding"], // #125 2027-02-17
-    ["ban__d banked banned","_u_ning cunning running","g__d_r_ genders graders"], // #126 2027-02-18
-    ["_iv_d dived jived","b_l_ing bilging bolting","u___r_o_ underdog undertow"], // #127 2027-02-19
-    ["_ea_m realm rearm","t_i__ think third tried twice twist tying","__e_e__ peepers teeters weepers whereas"], // #128 2027-02-20
-    ["bl__p bleep blimp","tr___ed trammed tramped trapped","___u_ate amputate obdurate regulate saturate"], // #129 2027-02-21
-    ["_oa_h loath poach","_i_owing miaowing widowing","o_n___nt ointment ornament"], // #130 2027-02-22
-    ["p___t point print","g_a_e_ geared goatee","ab___ abase abets abort abuts"], // #131 2027-02-23
-    ["hy__a hydra hyena","dra__r_ drapers drawers","_s___e_ aspired assumed usurped"], // #132 2027-02-24
-    ["s__a_ speak steak","me__l_ meddle mettle","_ob_le_ bobbled hobbled"], // #133 2027-02-25
-    ["__mmy rummy yummy","__ame_ blamed reamed","_i___a_s dingbats ginghams windbags"], // #134 2027-02-26
-    ["h__me_ hammer harmed","_id_a_ kidnap midday midway","s_u___n_ smudging smutting spudding studding stumping"], // #135 2027-02-27
-    ["br__d braid breed broad","__rne_ darned garnet warned","h____in_ handling huddling"], // #136 2027-02-28
-    ["_r_ck track wrack","_o__ce_ bounced noticed","_agg_e_ gaggled waggled"], // #137 2027-03-01
-    ["_ma__ email imams","_awn_d fawned yawned","_n__i__ anguish ongoing"], // #138 2027-03-02
-    ["e___l email expel","s__eper steeper sweeper","__an_t_ amanita emanate"], // #139 2027-03-03
-    ["tu__s tubas tunas tutus","p__t_r petter pewter putter","s_r__e_ sprayed strafed strayed"], // #140 2027-03-04
-    ["_e_ms deems geums teems","_e_m_d permed reamed termed","__azi_g glazing grazing"], // #141 2027-03-05
-    ["_r_e_ breed dried tried","_e_tacle pentacle tentacle","f___e_ed fathered fettered"], // #142 2027-03-06
-    ["w__r_ weird where","_em_rs femurs lemurs","__ad__n_ cladding headlong toadying"], // #143 2027-03-07
-    ["_au_t fault vault","__cept_ accepts excepts","_n__s__d unmasked unwashed"], // #144 2027-03-08
-    ["_ea_ns learns yearns","s__ting salting spiting","e___a_e_ embraced engraved"], // #145 2027-03-09
-    ["met__ metes meths","_l_m_d blamed plumed","___ft__g drafting grafting"], // #146 2027-03-10
-    ["__ere there where","le__e_ leaded leaped leaves legged","____ut dugout output walnut"], // #147 2027-03-11
-    ["sl__ sled slew slug slum","__o__t amount prompt","__b___e_ embodied embraced"], // #148 2027-03-12
-    ["b_u_d blued bound","__me_ camel cameo lamer lumen timer","___ta__ agitate cantata upstair"], // #149 2027-03-13
-    ["d__ed diced dived dried","__g_t bigot ergot ingot","__lay_d relayed splayed"], // #150 2027-03-14
-    ["thu__ thuds thugs","ter_a__ terrace terrain","_i_p_r_ diapers dippers tippers"], // #151 2027-03-15
-    ["_e_ch tench wench","g_t_e_ gather getter gotten gutter","c___i_e carbide cowhide cyanide"], // #152 2027-03-16
-    ["m__ed mired mooed moved","s_a_t_r scatter smarter starter","__u_s_n_ coursing cruising"], // #153 2027-03-17
-    ["ki__e_ kidded kitted","d__n_d darned downed","__t_i__ fatties outwits patting rethink vetoing"], // #154 2027-03-18
-    ["th_r_ there third","p_ankin_ planking pranking","_____rn eastern unlearn"], // #155 2027-03-19
-    ["ki___d kidded kitted","bo_e__ bodega bogeys bowels","_a___a_k aardvark cakewalk"], // #156 2027-03-20
-    ["b__nt blunt brunt burnt","h_o_in_ hooding hooping hooting","_a___u_s handguns maximums tantrums"], // #157 2027-03-21
-    ["r__d_ ready ruddy","__rayed sprayed strayed","__g__at_ regulate tugboats"], // #158 2027-03-22
-    ["_oin_ doing going joint point","si____ singer single","d__u_i_g deluding deluging"], // #159 2027-03-23
-    ["_hu_s thuds thugs","mi_d__ midday minded","___te baste brute carte chute crate haste irate saute"], // #160 2027-03-24
-    ["war___ warden warned","_erm_d permed termed","__tt_in_ nettling rattling"], // #161 2027-03-25
-    ["axi__ axial axiom","dra_e_s drapers drawers","ba_____e bankable banknote barrette"], // #162 2027-03-26
-    ["___st beast twist waist","__acing bracing spacing","_eali___ realisms realists"], // #163 2027-03-27
-    ["bl_e_ bleed bleep blued","_u_ti_n auction tuition","t_a__ teaks tease trace track train"], // #164 2027-03-28
-    ["cag__ cager cagey","pa_anoi_ paranoia paranoid","c___e_ chafes chawed cupped"], // #165 2027-03-29
-    ["dr___ drain dried","__n_d boned honed","_n____m anagram interim"], // #166 2027-03-30
-    ["__ets abets duets meets whets","_mpa__ impact impala impart","_rud_e drudge grudge trudge"], // #167 2027-03-31
-    ["ta_le_ tabled tablet","h_k__ hiked hokum","sta___g staling staring staving staying"], // #168 2027-04-01
-    ["w___d weird wired wooed","_o__ment document movement","_e__king remaking retaking"], // #169 2027-04-02
-    ["_ang_ bangs hangs","a_j__t abject adjust","____man hangman headman"], // #170 2027-04-03
-    ["m__el model motel","_unn__g cunning running","_ara____ carapace parabola paranoia paranoid"], // #171 2027-04-04
-    ["_in_ sing zing","_ealis_s realisms realists","b_l_i__ bilging bolting"], // #172 2027-04-05
-    ["_m__s ammos imams","para_o_a parabola paranoia","_l_nk___ planking plankton"], // #173 2027-04-06
-    ["_oi__ doing going joint point","medi__ median medium","__g_l_ haggle juggle"], // #174 2027-04-07
-    ["_um_ed lumped numbed","a___d ailed aired aloud","t_n____ tangent tenders tendons tensing"], // #175 2027-04-08
-    ["_am_s camps lamps ramps vamps","stri_e_s striders stripers","__e__a_ paellas whereas"], // #176 2027-04-09
-    ["s___k speak steak","s___ming steaming stemming","__a__i_s anaemias whammies yearlies"], // #177 2027-04-10
-    ["pe__s peaks peeps","__am_d blamed reamed","re_lis__ realisms realists"], // #178 2027-04-11
-    ["a_t_r after alter","cha__ed chaffed chaired charred","__a_u_t_ evacuate evaluate gratuity"], // #179 2027-04-12
-    ["ste__ steak steed steep stent","ha_t__ halted hatter","_ec___e_ decanter recanted"], // #180 2027-04-13
-    ["_av__ caved naval raved","_o_g_d bogged gonged gouged hogged","t___e tease there three title trace twice"], // #181 2027-04-14
-    ["s__ep steep sweep","_appi_g gapping mapping tapping","__gi__ angina edging egging"], // #182 2027-04-15
-    ["_ewe_ newer sewed","_ow___ bowels downed","__rr___ garrets terrace terrain"], // #183 2027-04-16
-    ["ch_r_ chard charm chart","s__tter scatter shutter spitter spotter","_hi_____ shipmate whippets whiskies whiteout"], // #184 2027-04-17
-    ["j___s jeans jeeps","__n_li_g gentling handling","____di_g bearding branding breading cladding deluding spudding standing studding"], // #185 2027-04-18
-    ["t__d_ tends thuds","s__pper slapper stopper","__ap_er adapter slapper"], // #186 2027-04-19
-    ["_o_nd bound hound","_al__t talent walnut","___aye_ relayed splayed sprayed strayed"], // #187 2027-04-20
-    ["r__ged ranged rugged","j___le jangle juggle","t____er thinker thinner thrower tipster toaster trouper"], // #188 2027-04-21
-    ["_ooe_ mooed wooed","_e_e_ds defends legends","b__m___ booming bummers"], // #189 2027-04-22
-    ["_ep_e_ nephew pepper","_ark__ marked market markup parked","____st adjust aghast attest tamest"], // #190 2027-04-23
-    ["_eca_ decaf decal decay","w_n_e_ wander winded winged","_a_ger_ bangers hangers"], // #191 2027-04-24
-    ["ho_di_g holding hooding","__ni_g awning waning","_r_wli_g drawling trawling"], // #192 2027-04-25
-    ["g_i_t glint guilt","d__d_r dander deader","_u_m____ murmured rummages"], // #193 2027-04-26
-    ["_eg_l legal regal","_am_ing damming damping jamming tamping","p____he_ planchet ploughed preached"], // #194 2027-04-27
-    ["o__s ohms outs","_d__tion addition adoption","re___i__ rebating remaking renaming reputing retaking"], // #195 2027-04-28
-    ["_hrea_ thread threat","_hr___ thread threat","_a_ter_ banters eastern garters mastery ratters waiters"], // #196 2027-04-29
-    ["_o_ned downed moaned","wan___ wander wangle waning wanton","wa___r_ waiters warders warmers"], // #197 2027-04-30
-    ["w__ng wring wrong","r__o__d removed rumored","b_l__ng bilging bolting"], // #198 2027-05-01
-    ["_unt_ aunts punts","ex__n_ expend extend extent","__p__es impales reputes"], // #199 2027-05-02
-    ["b___s bands bangs","ba__er badger bagger batter","in_u_te_ inducted intuited"], // #200 2027-05-03
-    ["g___en garden gotten","_at_ered fathered lathered","___ea_a_ giveaway upheaval"], // #201 2027-05-04
-    ["m__ted melted minted","_un__es aunties jungles","__a_p__g clamping clapping cramping flapping"], // #202 2027-05-05
-    ["_ow_r mower power tower","m_l__d melded melted","e____ing ejecting emerging enacting endowing erupting exacting"], // #203 2027-05-06
-    ["ch__ting chanting cheating","t_n_e_ tinged tinted","___i_led entitled untitled"], // #204 2027-05-07
-    ["_e_ns deans jeans means weans","l_p_o_ lapdog laptop","h____an_ highland homeland"], // #205 2027-05-08
-    ["__eded heeded needed","p_ti____ patience patients","cha___ chafes chains chalks chasms chawed"], // #206 2027-05-09
-    ["_r_in drain grain train","_ende_s genders tenders","r__e__ed rejected repealed"], // #207 2027-05-10
-    ["_ac_et jacket packet","h__gers hangers huggers","_ddi_i__ addition additive"], // #208 2027-05-11
-    ["pit__ pitch pithy","_otte_s potters totters","ru____g rubbing running"], // #209 2027-05-12
-    ["g__i_ genie grain","t__ng_ twangs twinge","ev_____e evacuate evaluate"], // #210 2027-05-13
-    ["w__ch wench witch","_e__nd_ defends legends","_h__g___ changing chugging thuggery"], // #211 2027-05-14
-    ["w_a_ed weaved whaled","dea___ deader dearth","___r_ng blaring fearing rearing sparing staring"], // #212 2027-05-15
-    ["f__s feds fugs","_t__e_ atoned staged stated","p_a__i__ plaiting planking planning pranking"], // #213 2027-05-16
-    ["__mps camps lamps ramps vamps","_o_l_n_ bowling howling","a__u__ abduct abrupt adjust amount ampule argued"], // #214 2027-05-17
-    ["alo__ aloha along aloud","s__de_ snider spaded","___l_e__ outliers smolders"], // #215 2027-05-18
-    ["har_e_ harmed harped","r__ent_ regents repents","___in_t_ nominate ruminate"], // #216 2027-05-19
-    ["d__ay decay delay","ch__ti_g chanting cheating","_____ied embodied steadied"], // #217 2027-05-20
-    ["_rap_ed trapped wrapped","d_m_in_ damming damping","___u_es legumes reputes"], // #218 2027-05-21
-    ["__rned darned warned","_un_s aunts dungs pungs punts tunas","_aste__d hastened mastered"], // #219 2027-05-22
-    ["__um scum slum","s__er_d sabered steered","___tur__ featured pastured ruptured"], // #220 2027-05-23
-    ["m_c_a mecca mocha","bre__ break breed","re____g rearing redoing reeking"], // #221 2027-05-24
-    ["_are_ cared fared","_his__ whisky whists","t_ng_i_g tingeing tonguing"], // #222 2027-05-25
-    ["lea__s learns leaves","_nten_s intends intents","h_a__r_ headers heaters"], // #223 2027-05-26
-    ["_ag_r cager lager","__to_s futons vetoes","____i_g_ dumpings housings muggings puddings weddings wettings"], // #224 2027-05-27
-    ["__ki_g making taking waking","t_pplin_ tippling toppling","_og_____ bogeyman goggling toggling"], // #225 2027-05-28
-    ["tra__ trace track train","__rs_r purser terser","do____s dodgers doglegs"], // #226 2027-05-29
-    ["p_n_s pungs punts","_it__d kitted pithed tithed","__tli___ outliers outlives"], // #227 2027-05-30
-    ["_an_s bands bangs hands hangs","_ot___ gotten hotels potato potent","to_____ toaster toppers totters towpath"], // #228 2027-05-31
-    ["r_d__ ridge ruddy","_e_ate aerate legate","___tl_ battle mantle mettle"], // #229 2027-06-01
-    ["mi__ay midday midway","t_ut__ tauter touted","re___in_ rebating remaking renaming reputing retaking"], // #230 2027-06-02
-    ["n__ded needed nodded","__ju_e jejune jujube","___ber__ cambered numbered"], // #231 2027-06-03
-    ["_ai_t faint waist","_ers__ jersey person terser","s_am__r scamper slammer"], // #232 2027-06-04
-    ["pr_n_ print prong","_erme_ permed termed","___t_es aunties fatties rattles"], // #233 2027-06-05
-    ["wai__ waist waive","win___ winded windup winged","_h__gin_ changing chugging"], // #234 2027-06-06
-    ["_id_ay midday midway","mat___ mattes mature matzah","_ec_____ decanter recanted"], // #235 2027-06-07
-    ["_ate_ cater later rater","thi__e_ thinker thinner","spe____ speeder spender"], // #236 2027-06-08
-    ["_ab_ed nabbed tabled","__di_m medium tedium","__au____ draughts glaucoma"], // #237 2027-06-09
-    ["b_tt_rs betters butters","_at__r batter gather hatter natter","_am_in_ damming damping jamming tamping"], // #238 2027-06-10
-    ["bo_e_ boned boxed","_ant__ mantel mantle ranted wanton","mi____n_ miaowing middling midpoint"], // #239 2027-06-11
-    ["re_ar_s regards rewards","e_te__ extend extent","___dd__g cladding spudding studding"], // #240 2027-06-12
-    ["gui__ guild guilt","___es antes dudes dupes metes mutes","_egat__ negated regatta"], // #241 2027-06-13
-    ["__tel betel motel","u___nd unhand upland upwind","rat___s ratters rattles"], // #242 2027-06-14
-    ["__tted kitted vetted","l_a_e_ leaded leaped leaves","___ia___ ambiance maniacal"], // #243 2027-06-15
-    ["pe__e peeve pekoe","dr___rs drapers drawers","s__e__d sabered steeled steered"], // #244 2027-06-16
-    ["ad_r_ adore adorn","_awn__ fawned yawned","_a__noi_ paranoia paranoid"], // #245 2027-06-17
-    ["__gal legal regal","b_bbin_ bibbing bobbing","_re_c_e_ preached wretched"], // #246 2027-06-18
-    ["_rac_ grace trace track wrack","t_na_ tonal tunas","c__mpi__ clamping cramping"], // #247 2027-06-19
-    ["_yin_ dying tying","__p_ns japans lupins","___nding branding standing"], // #248 2027-06-20
-    ["b__my balmy barmy","__ang_ grange twangs","_o_p_e_ coupled couplet"], // #249 2027-06-21
-    ["mi__ed minded minted","_a_ments garments payments","__t__a_s fatheads notepads potheads rattraps"], // #250 2027-06-22
-    ["_en_al dental mental","_i_h_d pithed tithed","__ee__d cheered steeled steered tweeted"], // #251 2027-06-23
-    ["c__te carte chute crate","yea___ yearns yeasts","_id___ng diddling middling piddling widening widowing"], // #252 2027-06-24
-    ["s_e_d speed spend steed","__sumed assumed resumed","___tin_ bolting booting felting hooting patting routing salting spiting"], // #253 2027-06-25
-    ["__dded kidded nodded","_ed__e meddle peddle wedgie","___di_ baddie bandit pundit"], // #254 2027-06-26
-    ["di__ed dieted dinged","_eap__ leaped reaped weapon","___der__ murdered pondered wondered"], // #255 2027-06-27
-    ["r__ed raced raved","__s_d based eased","h____rs hangers headers heaters huggers"], // #256 2027-06-28
-    ["du__s dudes duets dungs dupes","____p_s accepts excepts","_n_i_e__ indigent infidels"], // #257 2027-06-29
-    ["cha__ chard charm chart","sp_tt_r spitter spotter","human___ humanity humanoid"], // #258 2027-06-30
-    ["se___ setup sewed","_ta_ing staling staring staving staying","f__ti__ fatties felting"], // #259 2027-07-01
-    ["__ird third weird","sa___ sappy sauna saute","s_a_r_d sparred starred"], // #260 2027-07-02
-    ["_oo_d mooed wooed","ba_de_ balded barded","_ra__n_ bracing braving braying grazing"], // #261 2027-07-03
-    ["_ar_e carte large","h_o__ng hooding hooping hooting","b__b__g bibbing bobbing"], // #262 2027-07-04
-    ["_ak_ng making taking waking","___rns learns yearns","__mpe_ dumper hamper jumper lumped pumper temper"], // #263 2027-07-05
-    ["_dor_ adore adorn","lan___ landau landed","cl__pin_ clamping clapping"], // #264 2027-07-06
-    ["s___g stung swung","__s_med assumed resumed","__ca____ decanter escapade recanted"], // #265 2027-07-07
-    ["__k_ng making taking waking","_egg__ beggar legged reggae","_ag_l_d gaggled waggled"], // #266 2027-07-08
-    ["wee__ weeds weeps","ja__ing jagging jamming","g___ing gadding gagging gapping glazing grazing"], // #267 2027-07-09
-    ["_il_d ailed piled tiled","o__e_ odder ogled otter","addi____ addition additive"], // #268 2027-07-10
-    ["_ent_ dents gents tents","_at__n__ patience patients","____a__e ambiance bankable exchange guidance pentacle tentacle"], // #269 2027-07-11
-    ["g___d gored grind guild","__wing hawing mewing","_____on_ headlong megatons"], // #270 2027-07-12
-    ["d_in_ doing dying","___us angus tutus","ji_____ jiggers jitters"], // #271 2027-07-13
-    ["_u_al aural ducal mural","_e_ent_ cements regents repents","_a_ti_g patting salting"], // #272 2027-07-14
-    ["_e__at defeat repeat","_ampin_ damping tamping","ha_____d handhold hankered hastened hazarded"], // #273 2027-07-15
-    ["le__ns learns lemons","tin___ tinged tinted","a__u____ adjutant amputate"], // #274 2027-07-16
-    ["_ro_g prong wrong","_ha__i_g changing chanting","___m__t_ garments payments pigments teammate"], // #275 2027-07-17
-    ["m_rke_ marked market","up___d upland upwind","__rd_ed birdied curdled"], // #276 2027-07-18
-    ["bal__ baldy balmy","sn__er snider sniper","__i_i__ chiding chiming spiting swiping tuition"], // #277 2027-07-19
-    ["_et_s metes meths","_i_pling dimpling tippling","__p_i_e_ baptised baptized impaired"], // #278 2027-07-20
-    ["m__ke_ marked market","_am_ers campers rammers yammers","t__ra__ terrace terrain"], // #279 2027-07-21
-    ["p_ac_ place poach","de___t decant deduct defeat detect","pla___ng plaiting planking planning"], // #280 2027-07-22
-    ["al__r alder alter","in__n_s intends intents","han__a__ handball hangnail"], // #281 2027-07-23
-    ["_oa_d board hoard","h___y hanky hardy harpy","_am_____ cambered lamppost ramparts"], // #282 2027-07-24
-    ["_en_h tench wench","dra_er_ drapers drawers","_lan_in_ planking planning"], // #283 2027-07-25
-    ["s___d sewed speed spend steed","o_t__ otter outdo","_om____d compared homeland"], // #284 2027-07-26
-    ["_ud__ dudes ruddy","wa___d walked warned wasted","_m____te amputate omelette"], // #285 2027-07-27
-    ["_a_et facet valet","k_a__ khaki koala kraft","_oo_l__ bootleg hoodlum"], // #286 2027-07-28
-    ["_o_ing hosing nosing","sta_le_ stalled starlet","__amm__s grammars whammies"], // #287 2027-07-29
-    ["bea__ beano beany beast","n____g naming nosing","____b_ed grumbled trembled"], // #288 2027-07-30
-    ["__rke_ marked market parked","awa__ed awaited awarded","cl___i_g cladding clamming clamping clapping classing"], // #289 2027-07-31
-    ["sta_e_ staged stated","har___ harmed harped","e_a__in_ enacting exacting"], // #290 2027-08-01
-    ["__sed based eased","__eer_d cheered steered","__th_r_d dithered fathered lathered mothered withered"], // #291 2027-08-02
-    ["pac_e_ packed packet","p_o____ phoenix prouder","bo___ng bobbing bolting bonking booming booting bowling"], // #292 2027-08-03
-    ["_p__t spent upset","gam___ gamble gamuts","___di_s bandies caddies laddies"], // #293 2027-08-04
-    ["ha_me_ hammer harmed","b_e_k bleak break","_e_ire_ retired rewired"], // #294 2027-08-05
-    ["b__ned banned beaned","tom___ tomato tomcat","___m_rs bummers dimmers rammers warmers yammers"], // #295 2027-08-06
-    ["_w_ng owing swung","__c_d diced faced laced raced","_oa___ boated goatee moaned"], // #296 2027-08-07
-    ["__ited baited edited","____pt_ accepts excepts","_att_e_ fatties rattles tattled wattled"], // #297 2027-08-08
-    ["__ult fault vault","j_gg_rs jiggers joggers","_n_e_d__ engender underdog"], // #298 2027-08-09
-    ["_tu__ stung stunt","__ndit bandit pundit","_ena__ng menacing renaming"], // #299 2027-08-10
-    ["_r_ce grace trace","___it merit remit","_a_ano__ paranoia paranoid"], // #300 2027-08-11
-    ["_mb_r ember umber","ge__er getter geyser","___m_r__ enamored murmured"], // #301 2027-08-12
-    ["_rai_ braid drain grain train","__s_ng fusing hosing nosing","_hant___ chanting phantoms shantung"], // #302 2027-08-13
-    ["_hr__ three throw","_addie_ caddies laddies","_i__o dingo jingo piano pinto"], // #303 2027-08-14
-    ["w_r_e_ warden warned","str__ers striders stripers","g__zi_g glazing grazing"], // #304 2027-08-15
-    ["_l_ed bleed blued","__n_lin_ gentling handling","g__t__ getter ghetto goatee gotten gutter"], // #305 2027-08-16
-    ["ba__s bands bangs","_a_mers rammers warmers yammers","__o_t___ adoption adoptive"], // #306 2027-08-17
-    ["t__ked tacked talked","stri__rs striders stripers","_a_t_e battle mantle"], // #307 2027-08-18
-    ["ba_e_ babel baker based","ga___d gained gasped","__a_me_ slammer trammed"], // #308 2027-08-19
-    ["_ura_ aural mural","op___ opera opium","c__m_i__ clamming clamping cramming cramping"], // #309 2027-08-20
-    ["__m_le gamble temple","_add_es caddies laddies","_am__n_ damming damping jamming rampant tamping"], // #310 2027-08-21
-    ["_h_ea_ thread threat","in_e__s intends intents","h____a_l handball hangnail"], // #311 2027-08-22
-    ["s__nt spent stent stunt","_h__tin_ chanting cheating","te___r_ teeters tenders"], // #312 2027-08-23
-    ["_h_s ohms this whys","g__ne_ gained garnet","p_an___g planking planning pranking"], // #313 2027-08-24
-    ["j__n_ jeans joint","_u_ged bunged fudged lugged purged rugged","_nt_tl_d entitled untitled"], // #314 2027-08-25
-    ["yea__s yearns yeasts","_ampi_g damping tamping","___y_ng braying okaying spaying staying swaying"], // #315 2027-08-26
-    ["_ui__ guild guilt quiet","__epers peepers weepers","__o__d atoned doodad emoted meowed"], // #316 2027-08-27
-    ["_t_e_ ether otter steed steep","b_bbi_g bibbing bobbing","__ta___ getaway intakes mutagen retakes untamed"], // #317 2027-08-28
-    ["d_n__d danced dinged","_agg_ed gaggled waggled","__rano__ paranoia paranoid"], // #318 2027-08-29
-    ["s_am_ scamp swami","_eg__ds legends regards","a_op____ adoption adoptive"], // #319 2027-08-30
-    ["t_in_ think tying","mang__ manger mangle","_tr___d strafed strayed"], // #320 2027-08-31
-    ["ta_e_t talent tamest","_addle_ paddled waddled","___dings puddings weddings"], // #321 2027-09-01
-    ["fai__ faint faith","ad___t addict adjust advent","__t__s asters biters futons hotels inters mattes vetoes"], // #322 2027-09-02
-    ["__per caper doper piper wiper","d_d__ dados dudes","__m_t_ demote gamuts inmate tempts tomato"], // #323 2027-09-03
-    ["__arm charm rearm","h__t_d halted hunted","_____o_e antelope banknote"], // #324 2027-09-04
-    ["_w_e_ sweep sweet","w___k whelk wrack","g_a__ng glazing grazing"], // #325 2027-09-05
-    ["_ase_ based eased","pa____t_ patients payments","rou___g rouging routing"], // #326 2027-09-06
-    ["m_a_s maars means","re_rin_ rearing reprint","b_ow___ blowing blowout"], // #327 2027-09-07
-    ["s__d scud sled","_o_king bonking honking","_im____ dimmers gimlets timings"], // #328 2027-09-08
-    ["me_e_ melee metes","_ange_ danger manger ranged","h__d_a__ handball headways"], // #329 2027-09-09
-    ["s_u_g stung swung","_a_t_ baste carte faith haste saute","p_a___ pealed plague planet"], // #330 2027-09-10
-    ["_tee_ steed steep","a__r_ abort adore adorn agars","_l_a_ bleak bloat cleat"], // #331 2027-09-11
-    ["_d_e_ idled odder","_addi_g gadding padding wadding","__t_ead_ fatheads potheads"], // #332 2027-09-12
-    ["_rat_ crate irate","gr__d_a grandma grandpa","__al__t_ evaluate realists"], // #333 2027-09-13
-    ["min__d minded minted","b__ded balded barded bended bladed","_ndu____ inducted indulged"], // #334 2027-09-14
-    ["ext_n_ extend extent","la_e_t lament latent","_e__d_r decider decoder weirder"], // #335 2027-09-15
-    ["_os_ng hosing nosing","_la_ing blaring glazing","__t_ea_s fatheads potheads"], // #336 2027-09-16
-    ["th__a_ thread threat","_ead__ deader leaded","c__mping clamping cramping"], // #337 2027-09-17
-    ["_earn_ learns yearns","__lting bolting felting salting","_a_u__ gamuts manual mature"], // #338 2027-09-18
-    ["b_ee_ bleed bleep breed","__ttling nettling rattling","le______ leaguing lemonade lettered"], // #339 2027-09-19
-    ["_a_den garden maiden warden","__o_d aloud broad mooed proud wooed","_a___ums maximums tantrums"], // #340 2027-09-20
-    ["_enc_ tench wench","re__e_ reamed reaped redoes","_r_f_i__ drafting grafting"], // #341 2027-09-21
-    ["__ned boned honed","s__tting smutting stetting","____ue dengue plague"], // #342 2027-09-22
-    ["_oar_ board hoard","brea_in_ breading breaming","___d___d handhold mandated murdered pondered wondered"], // #343 2027-09-23
-    ["_yi_g dying tying","_a_per hamper pauper","___e_i_ interim phoenix sweetie"], // #344 2027-09-24
-    ["_ak__g making taking waking","b___er badger bagger batter","__a__t_ amanita emanate"], // #345 2027-09-25
-    ["p___r piper power","__ase abase phase tease","__ap__r adapter slapper"], // #346 2027-09-26
-    ["__eps deeps jeeps peeps weeps","___rac__ attracts embraced","__ai__ baaing chains"], // #347 2027-09-27
-    ["gr_nd_a grandma grandpa","c_an__ng changing chanting","b_a____g bearding branding"], // #348 2027-09-28
-    ["_e_ks peaks teaks","sn___r snider sniper","___ere_ cheered sabered steered"], // #349 2027-09-29
-    ["_oppe_ bopped hopped","_e_aking remaking retaking","p___ing padding parsing patting"], // #350 2027-09-30
-    ["a__le agile ankle","t__k__ tacked talked","_u___red murdered murmured numbered ruptured"], // #351 2027-10-01
-    ["p_cke_ packed packet","_u_d_ outdo ruddy","c_a____ chaffed chafing chaired changes charred cyanide"], // #352 2027-10-02
-    ["m__ch march munch","wi__e_ winded winged","s_e_ti__ stetting sweating"], // #353 2027-10-03
-    ["_oi_g doing going","_mp_r_ ampere impart","_nt_tle_ entitled untitled"], // #354 2027-10-04
-    ["d_i__ deity doing dried dying","pum_e_ pummel pumper","s_e__i__ steadied steaming stemming stepping stetting sweating"], // #355 2027-10-05
-    ["_hi_ this whiz","ad__tio_ addition adoption","__r__i__ agreeing gargling geranium partying"], // #356 2027-10-06
-    ["_e_ards regards rewards","thu__e_ thudded thumped","ti_____g tingeing tippling"], // #357 2027-10-07
-    ["_akin_ making taking waking","__ce_ diced faced facet laced raced","_a_dy_ng bandying caddying"], // #358 2027-10-08
-    ["_as_e baste haste","w_e__ weeds weeps whelk where whets","_u_b__ humbug numbed"], // #359 2027-10-09
-    ["_le_ sled slew","_ntit_ed entitled untitled","l__e__ lament latent legers lepers"], // #360 2027-10-10
-    ["b__d_ baldy bands","m___en maiden marten mitten","di___r_ diapers diggers dimmers dippers"], // #361 2027-10-11
-    ["ba__y badly baldy balmy barmy","_xt_n_ extend extent","l_ng___ longbow longing"], // #362 2027-10-12
-    ["_t__r ether otter","___ant decant truant","_uma____ humanity humanoid"], // #363 2027-10-13
-    ["ha_m__ hammer harmed","s___er shower singer snider sniper","m____r_d martyred mastered mentored mongered mothered murdered murmured"], // #364 2027-10-14
-    ["pl___ place plain","te__ers teeters tenders","_o__y___ bogeyman toadying"], // #365 2027-10-15
+    ["re_a_ds regards rewards","l__de_ landed lauded leaded","t_n_____ tankards tantrums tentacle tingeing tonguing tungsten tunneled"], // #5 2026-10-20
+    ["sp__ spec spur","st__per steeper stomper stopper","_au____ daunted jaunted saunter taunted"], // #6 2026-10-21
+    ["fa_e_ faced facet fader fared","we___ weans weeds weeps weird wench","__e___e preface presume steeple sweetie treacle"], // #7 2026-10-22
+    ["s_un_ sauna stung stunt swung","__win_ hawing mewing upwind","___dled bridled curdled dawdled fondled paddled waddled"], // #8 2026-10-23
+    ["_cu_ scud scum scut","l_g__ lager legal leggy","__ti___ noticed retinal retinue retired"], // #9 2026-10-24
+    ["ten__ tench tends tents","_atte_ batter fatten hatter mattes natter","an______ anaemias animator annexing antelope antennas anything"], // #10 2026-10-25
+    ["__tch ditch pitch witch","_inge_ dinged pinged singer tinged winged zinger","h____o__ handhold headlong humanoid"], // #11 2026-10-26
+    ["c__s cuds cups cuts","pe__er pepper petter pewter","_e_i_e_ decider retired rewired"], // #12 2026-10-27
+    ["_o_rd board hoard","b__g_d barged bogged bunged","mo______ mongered monogamy monogram mothered mountain mouthing movement"], // #13 2026-10-28
+    ["dec__ decaf decal decay","__w_r mower newer power rawer tower","b_ea_i__ bleating breading breaming"], // #14 2026-10-29
+    ["ai_e_ aider ailed aired","_un_e_ bunged bunted hunted","e___t___ eighteen ejecting enacting entitled erupting etcetera exacting"], // #15 2026-10-30
+    ["b_tter_ betters butters","m_r_e_ marked market marten merged","br_v___ braving bravoed bravura"], // #16 2026-10-31
+    ["_ap_ed sapped zapped","__lted halted melted pelted welted","b__g___ bangers bangles bilging"], // #17 2026-11-01
+    ["sau__ sauna saute","a_r__ aired apron aural","__r_ing birding parsing verging"], // #18 2026-11-02
+    ["_r_ut grout trout","w_l_ed walked welded welted","___tered fettered lettered mastered weltered wintered"], // #19 2026-11-03
+    ["c_an_ing changing chanting","in___ inane index ingot","_ar_n___ marinara paranoia paranoid"], // #20 2026-11-04
+    ["_nt__ antes enter","b_o_i_g blowing booming booting","st____g staling staring staving staying stowing"], // #21 2026-11-05
+    ["stu__ stung stunt","_erm__ merman permed termed","_idd_in_ diddling middling piddling"], // #22 2026-11-06
+    ["tr_c_ trace track","_ang_r danger hangar manger","p__pe_ pauper pepper pigpen pulped pumper"], // #23 2026-11-07
+    ["_tun_ stung stunt","_e_ents cements regents repents","_a_e___ caveats gateway sabered"], // #24 2026-11-08
+    ["gr_u_ group grout","_e__ns learns lemons yearns","s__m_e_ scamper slammer stomper stymied swimmer"], // #25 2026-11-09
+    ["__ds cuds feds reds","_ag__ cager cagey lager","re___ted recanted rejected restated"], // #26 2026-11-10
+    ["_ark_d marked parked","wan___ wander wangle waning wanton","___o_n_ ongoing redoing vetoing"], // #27 2026-11-11
+    ["__ps cups reps","s___t spent stent stunt sweet","_o_te_ boated goatee gotten pouted touted"], // #28 2026-11-12
+    ["g_ou_ group grout","w__i_g waking waning waxing","w___er_d weltered wintered withered wondered"], // #29 2026-11-13
+    ["a__er after aider alder alter","_t___d atoned staged stated","ste____ steeled steeper steeple steered sternum"], // #30 2026-11-14
+    ["a__n_ acing along","__a_m charm realm rearm","b___le_ bangles bobbled bootleg bridled"], // #31 2026-11-15
+    ["re__y ready repay","p__n_ phone piano point print prong","outl___s outliers outlives outlooks"], // #32 2026-11-16
+    ["dun__ dunce dungs","_angl_ dangle jangle mangle tangle wangle","c_e__ed cheered cleared cleaved"], // #33 2026-11-17
+    ["s_ee_ speed steed steep sweep sweet","pa_k__ packed packet parked","am____ amazed ambled amoeba amount ampere ampule amulet"], // #34 2026-11-18
+    ["__aped leaped reaped","_e_p_d beeped keypad leaped reaped","r___ti__ rebating reputing rotating"], // #35 2026-11-19
+    ["_ide_ aider wider","int___s intakes intends intents","b__a_ing bleating breading breaming"], // #36 2026-11-20
+    ["d_nge_ danger dinged","_lo__ aloha along aloud bloat","___m_ing clamming clamping cramming cramping jimmying plumbing stemming stumping"], // #37 2026-11-21
+    ["__yed keyed toyed","__rged barged merged purged","st__le_ stalled starlet steeled"], // #38 2026-11-22
+    ["__d_y badly ruddy","p_o__ phone photo prong proud","____p_ng clamping clapping cramping flapping stepping stumping whelping"], // #39 2026-11-23
+    ["_a_el babel camel lapel","__age_ adages meager staged","s__e_er speeder steeper sweeper sweeter"], // #40 2026-11-24
+    ["thr___ thread threat","a__i_g aahing ageing anting awning","_el___n_ deleting deluding deluging relaxant"], // #41 2026-11-25
+    ["__dg_ lodge ridge","a___n actin adorn apron argon aspen","___r___e aperture barrette laureate"], // #42 2026-11-26
+    ["o__er odder otter","_e_ium cesium medium tedium","p__d_e peddle pledge puddle"], // #43 2026-11-27
+    ["__a_n drain grain plain train","__mu_s femurs gamuts lemurs","___k___d hankered milkmaid milkweed"], // #44 2026-11-28
+    ["_alk_d talked walked","_idd_ing diddling middling piddling","da____ daemon damask danced dander danger dangle darned dazzle"], // #45 2026-11-29
+    ["_enta_ dental mental","m__g_r manger meager mugger","d____r_ declare diapers diggers dimmers dippers dodgers drapers drawers"], // #46 2026-11-30
+    ["pla__ place plain","wa__ers waiters warders warmers","_i_dl__g diddling middling piddling"], // #47 2026-12-01
+    ["b__el babel betel","__nn_ng binning cunning running","t_n__n_ tangent tendons tensing"], // #48 2026-12-02
+    ["h__ted halted hunted","_i_ted dieted kitted minted tinted","__the_ed dithered fathered lathered mothered withered"], // #49 2026-12-03
+    ["t___k think track","e__te_ edited elated emoted","cr___in_ cramming cramping cruising"], // #50 2026-12-04
+    ["t_w__ towel tower","___e_d_ defends intends legends","de__t__g debiting deleting denoting"], // #51 2026-12-05
+    ["th__s thuds thugs","_ea_ers beaters headers heaters","_n_u__ed inducted indulged intuited unturned"], // #52 2026-12-06
+    ["z_n_ zany zing","__ld_d balded melded welded","____i_e_ baptised baptized chalices entailed impaired intuited outlives rejoices"], // #53 2026-12-07
+    ["g__re genre glare","__ai_ braid drain email grain plain train","p____er plaster pointer premier printer prouder"], // #54 2026-12-08
+    ["r___r rater rawer","m_nt__ mantel mantle mental minted","re_a___ redacts regards regatta relayed remakes retakes rewards"], // #55 2026-12-09
+    ["__ars agars maars","_ug_e_ lugged mugger rugged tugger","___ppi_g clapping flapping stepping"], // #56 2026-12-10
+    ["b_an_ beano beany","_er__d merged permed termed","po____s podiums pommels poppers potters powders"], // #57 2026-12-11
+    ["_e_ea_ defeat repeat","s_ee_er speeder steeper sweeper sweeter","___l__e_ chalices outlives parlayed"], // #58 2026-12-12
+    ["_ile_ ailed piled tiled","e__t_d edited elated emoted","___wi_g blowing crewing stowing viewing"], // #59 2026-12-13
+    ["_it_e mitre title","ha___r hammer hamper hangar hatter","_m___i_g emerging impaling smudging smutting"], // #60 2026-12-14
+    ["ado__ adore adorn","_ou_e_ gouged pouted touted","__a_ming alarming clamming cramming"], // #61 2026-12-15
+    ["ba_m_ balmy barmy","__s_n_ fusing hosing nosing","_nt____ entrust intakes intends intents interim untamed"], // #62 2026-12-16
+    ["do_e_ doper dopey dowel","_elte_ melted pelted welted","pr______ pranking preached preamble predator prompter"], // #63 2026-12-17
+    ["__aned beaned moaned","_el__ delay melee telex","_a___ter catheter gangster laughter"], // #64 2026-12-18
+    ["han__ hands hangs hanky","m_tte_ mattes mitten mutter","_i__li_g diddling dimpling giggling jiggling middling piddling tippling wiggling"], // #65 2026-12-19
+    ["vet_e_ vetoes vetted","__en_ blend event hyena spend spent stent","___bing bibbing bobbing hobbing rubbing"], // #66 2026-12-20
+    ["__ain drain grain plain train","__ve_ caved dived jived moved raved","_appi__ gapping mapping tapping"], // #67 2026-12-21
+    ["be__t beast beret","b_o_in_ blowing booming booting","to__l_n_ toddling toggling toppling totaling"], // #68 2026-12-22
+    ["f_a__ flame frame","de__c_ deduct detach detect","gra__i__ grabbing grafting gratuity"], // #69 2026-12-23
+    ["__tes antes metes mutes","__ap__ leaped reaped weapon","_a__l___ gargling handling rattling"], // #70 2026-12-24
+    ["p_in_ point print","gu___ guans guild guilt","__e_t__g bleating cheating ejecting stetting sweating"], // #71 2026-12-25
+    ["thr__ three throw","m_d_a_ median midday midway","_tr____ atriums strafed strayed"], // #72 2026-12-26
+    ["r__er rater rawer","_oo_ing booming booting hooding hooping hooting","w___er__ weltered wintered withered wondered"], // #73 2026-12-27
+    ["t__ed tiled tired toyed tried","_i_er aider miter piper tiger timer wider wiper","__ate_s beaters graters heaters"], // #74 2026-12-28
+    ["_yi__ dying tying","_a_to_ laptop tattoo wanton","h___l___ handling headlong highland homeland huddling"], // #75 2026-12-29
+    ["l_g_ legs lugs","___sts feasts ghosts whists yeasts","__ayi_g braying okaying spaying staying swaying"], // #76 2026-12-30
+    ["__re_d agreed thread","le___d leaded leaped legged","___d__d birdied bridled curdled dawdled fondled paddled thudded waddled"], // #77 2026-12-31
+    ["e_ten_ extend extent","_h_r_ chard charm chart there third where","p_a_k___ planking plankton pranking"], // #78 2027-01-01
+    ["le__ legs lets","stee_e_ steeled steeper steered","_u_te_ bunted gutter hunted mutter putter"], // #79 2027-01-02
+    ["__oud aloud proud","a_i__ acing agile axial axiom","b_n__e_ bandies bangles banjoes"], // #80 2027-01-03
+    ["ho_e_s homers hotels","__pp_d bopped cupped hopped nipped sapped zapped","d___t_n_ debiting deleting denoting drafting"], // #81 2027-01-04
+    ["m__er miter mower","_at__g bating eating hating","_igg_i__ giggling jiggling wiggling"], // #82 2027-01-05
+    ["_ra_k track wrack","_e_med permed reamed termed","___ak__ intakes remakes retakes tweaked"], // #83 2027-01-06
+    ["_eem_ deems teems","_un_s aunts dungs pungs punts tunas","d____t decant deduct defeat detect dugout"], // #84 2027-01-07
+    ["t__ce trace twice","m___al manual mental mutual","__th__ asthma gather method pithed tithed"], // #85 2027-01-08
+    ["ma_ke_ marked market","s__ayed splayed sprayed strayed","___bi__ bibbing bobbing carbide hobbing redbird rubbing"], // #86 2027-01-09
+    ["sw___ swami sweep sweet swung","h___d hazed hiked hoard honed hound","__in_e_ fainter grinder pointer printer thinker thinner wringer"], // #87 2027-01-10
+    ["__cal decal ducal","_an_ers bangers banters hangers","_att_e_ fatties rattles tattled wattled"], // #88 2027-01-11
+    ["__wel dowel towel","s__ge_ sagged singer staged","go____ goatee gonged gotten gouged"], // #89 2027-01-12
+    ["__o_e adore phone","ex___d expend extend exuded","__p_lin_ impaling tippling toppling"], // #90 2027-01-13
+    ["_unc_ dunce munch punch","up__n_ upland upping upwind","___fa__ fanfare guffaws preface welfare"], // #91 2027-01-14
+    ["s__ak speak steak","_elt_d melted pelted welted","__t___ds fatheads notepads potheads"], // #92 2027-01-15
+    ["la__r lager lamer later","g_n__ genie genre gents","__t_l__ rattles tattled wattled"], // #93 2027-01-16
+    ["ne__e_ needed nephew","t_m__t tamest tomcat tumult","___rr__ charred sparred starred"], // #94 2027-01-17
+    ["__gs fugs legs lugs rugs","__lte_ halted melted pelted welted","__i___d aniseed bridled twigged whisked"], // #95 2027-01-18
+    ["d_i_g doing dying","___ser geyser purser terser","ha_____l habitual handball hangnail"], // #96 2027-01-19
+    ["_lee_ bleed bleep","_ap__ caper lapel sappy","sta___d staffed stalled starred starved"], // #97 2027-01-20
+    ["_et_l betel fetal","__nnin_ binning cunning running","___her_d dithered fathered lathered mothered withered"], // #98 2027-01-21
+    ["ba_te_ baited batter","_e_ge_ legged meager merged","__g___g gagging jagging ongoing tagging wagging"], // #99 2027-01-22
+    ["kid___ kidded kidnap","__pin_ duping lupins upping","br____ng branding breading breaming"], // #100 2027-01-23
+    ["m_te_ metes miter motel mutes","_r__ped tramped trapped wrapped","_r___led frazzled grumbled trembled"], // #101 2027-01-24
+    ["_rgo_ argon ergot","__t_nt extent latent potent","_al__ts mallets pallets wallets"], // #102 2027-01-25
+    ["g_a_e glare grace grave","ble__ bleak bleed bleep blend","___s_e_ aniseed dogsled plaster pursued tipster toaster trustee whisked"], // #103 2027-01-26
+    ["_a_me_ hammer harmed","p_r_e_ parked permed purged purser","s_u__e_ saunter shudder shutter snugger spurned"], // #104 2027-01-27
+    ["_p_e_ speed upset","_u_g_ dungs lunge pungs","r_t__i_g rattling retaking rotating"], // #105 2027-01-28
+    ["temp__ temper temple tempts","l_m__ lamer lamps lumen lumpy lymph","___ma___ animator haymaker rummages"], // #106 2027-01-29
+    ["t__er tiger timer tower","_a_ding gadding padding wadding","___i__a_ habitual maniacal parietal sagittal"], // #107 2027-01-30
+    ["__u_g stung swung","__nni_g binning cunning running","_l_m_in_ clamming clamping plumbing"], // #108 2027-01-31
+    ["t_ac_ trace track","ge__e_ geared getter geyser","h___n_ hating hawing hosing"], // #109 2027-02-01
+    ["_ame_ camel cameo lamer","ba___r badger bagger batter","a_g___ angina angled argued"], // #110 2027-02-02
+    ["j__ke_ jacked jacket","ph___ phase phone photo","___tu___ featured gratuity pastured ruptured"], // #111 2027-02-03
+    ["_ou_d bound hound","_er_ed merged permed termed","___a_t_ andante dynasty redacts regatta"], // #112 2027-02-04
+    ["f_ce_ faced facet","m__in_ making mewing muting","___dy_ng bandying caddying toadying"], // #113 2027-02-05
+    ["a_d_ct abduct addict","t_l__ talon telex tiled tulip","__ou___ abounds grouper groupie prouder trouper"], // #114 2027-02-06
+    ["b_n_s bands bangs","gran___ grandad grandma grandpa","wa__er_ waiters warders warmers"], // #115 2027-02-07
+    ["__cked jacked packed tacked","__nd_r dander gander pander wander","___mm__g clamming cramming stemming"], // #116 2027-02-08
+    ["l__s legs lets lugs","_e__le meddle mettle peddle temple","__ade_s graders headers traders"], // #117 2027-02-09
+    ["sing__ singer single","sp__ing spacing sparing spaying spiting","_e__c___ bedecked menacing rejected"], // #118 2027-02-10
+    ["l_me_ lamer lumen","_rg__ argon ergot organ","__m___d hominid removed rumored"], // #119 2027-02-11
+    ["__wling bowling howling","_u_per dumper jumper pumper","__w_e_ bawled downed fawned gawker pewter yawned"], // #120 2027-02-12
+    ["__lk_d talked walked","t__m_ed thumped trammed tramped","__m__rs bummers bumpers campers dimmers rammers yammers"], // #121 2027-02-13
+    ["__ed_ deeds weeds","_aw__d bawled fawned yawned","to____n_ toadying toddling toggling tonguing toppling totaling"], // #122 2027-02-14
+    ["p_i__ point print","c___e carte chute crate","_e_an___ decanter geranium recanted"], // #123 2027-02-15
+    ["_e_eat defeat repeat","po__ers poppers potters powders","w____in_ weighing whelping widening widowing wiggling wreaking"], // #124 2027-02-16
+    ["_ope_ doper dopey","_o_e_s bogeys bowels homers hotels","__nni__ binning cunning running"], // #125 2027-02-17
+    ["ban__d banked banned","d_a__rs diapers drapers drawers","__e___r ejector premier speeder spender steeper sweeper sweeter wielder"], // #126 2027-02-18
+    ["_iv_d dived jived","d__a_ decaf decal decay delay ducal","_ad__ng gadding padding wadding"], // #127 2027-02-19
+    ["_ea_m realm rearm","_and_r dander gander pander wander","__u_g_ drudge grudge trudge"], // #128 2027-02-20
+    ["bl__p bleep blimp","m___d mired mooed moved","r______g rattling rebating remaking renaming reputing retaking rotating rumbaing"], // #129 2027-02-21
+    ["_oa_h loath poach","___my balmy barmy rummy yummy","__nde_ bended dander gander landed minded pander wander winded"], // #130 2027-02-22
+    ["p___t point print","_mp__e ampere ampule impede","_n___l__ entailed entitled untitled"], // #131 2027-02-23
+    ["hy__a hydra hyena","bi__ing bibbing bilging binning birding","ten____ tenders tendons tensing"], // #132 2027-02-24
+    ["s__a_ speak steak","__c_t facet uncut yacht","_r___n_ bracing braving braying crewing eroding grazing"], // #133 2027-02-25
+    ["__mmy rummy yummy","bra__ng bracing braving braying","to__li__ toddling toggling toppling totaling"], // #134 2027-02-26
+    ["h__me_ hammer harmed","d_a_ers diapers drapers drawers","____ba__ beanbags dingbats handball windbags"], // #135 2027-02-27
+    ["br__d braid breed broad","_e_d_ deeds mends ready tends weeds","_o_g_i__ goggling toggling tonguing"], // #136 2027-02-28
+    ["_r_ck track wrack","go___ going golem gored","_a__t facet faint fault valet vault waist yacht"], // #137 2027-03-01
+    ["_ma__ email imams","l__p_ lamps lumpy lymph","_e_t_r_d featured fettered lettered mentored weltered"], // #138 2027-03-02
+    ["e___l email expel","be__e_ beaned beeped bended","tw____d tweaked tweeted twigged"], // #139 2027-03-03
+    ["tu__s tubas tunas tutus","_ra_ped tramped trapped wrapped","___u_s femurs gamuts lemurs"], // #140 2027-03-04
+    ["_e_ms deems geums teems","__r_e carte large puree three","___o_ers bloomers bloopers removers"], // #141 2027-03-05
+    ["_r_e_ breed dried tried","hoo_i__ hooding hooping hooting","__r__ed birdied curdled garaged paraded pursued sprayed strafed strayed"], // #142 2027-03-06
+    ["w__r_ weird where","pe___d pealed pelted permed","u_d_____ underarm underdog undertow"], // #143 2027-03-07
+    ["_au_t fault vault","__t_en fatten gotten mitten","wa___e_ waddled waggled wattled"], // #144 2027-03-08
+    ["_ea_ns learns yearns","___red geared hatred teared","__bbin_ bibbing bobbing hobbing rubbing"], // #145 2027-03-09
+    ["met__ metes meths","__c_d diced faced laced raced","_a_he_e_ catheter fathered lathered"], // #146 2027-03-10
+    ["__ere there where","m_dd__ meddle midday mudder muddle","p_an__ng planking planning pranking"], // #147 2027-03-11
+    ["sl__ sled slew slug slum","_ac__d jacked packed tacked","____ta__ adjutant amputate mountain"], // #148 2027-03-12
+    ["b_u_d blued bound","___ents cements intents regents repents","pi_____ pianist piglets pinkeye pipings"], // #149 2027-03-13
+    ["d__ed diced dived dried","__arred charred sparred starred","___ag__ engaged garaged mutagen"], // #150 2027-03-14
+    ["thu__ thuds thugs","ba_ge_ badger bagger barged","_a____ng bandying caddying gargling handling partying rattling"], // #151 2027-03-15
+    ["_e_ch tench wench","_ur__ aural burka burnt mural puree","__g__e haggle juggle legate reggae"], // #152 2027-03-16
+    ["m__ed mired mooed moved","_el_ed melded melted pelted welded welted","__eam___ breaming preamble steaming"], // #153 2027-03-17
+    ["ki__e_ kidded kitted","__wn_d downed fawned yawned","_i_h__e_ dithered eighteen withered"], // #154 2027-03-18
+    ["th_r_ there third","__be_ babel ember umber","___mer_ bummers chimera dimmers rammers warmers yammers"], // #155 2027-03-19
+    ["ki___d kidded kitted","_eep__ beeped deepen teepee","g_an___ grandad grandma grandpa"], // #156 2027-03-20
+    ["b__nt blunt brunt burnt","det___ detach detain detect","__e_t_ ghetto twenty wreath"], // #157 2027-03-21
+    ["r__d_ ready ruddy","__tent extent latent potent","m__m__ marmot merman muumuu"], // #158 2027-03-22
+    ["_oin_ doing going joint point","d_a_er_ diapers drapers drawers","___t__d abetted abutted platted tattled wattled whetted"], // #159 2027-03-23
+    ["_hu_s thuds thugs","le__r_ legers lemurs lepers","___ne___ bonneted garnered magnesia tunneled"], // #160 2027-03-24
+    ["war___ warden warned","__w_ed bawled downed fawned yawned","___ter__ fettered lettered mastered weltered wintered"], // #161 2027-03-25
+    ["axi__ axial axiom","_ers__ jersey person terser","__w__ng bowling dowsing howling"], // #162 2027-03-26
+    ["___st beast twist waist","t_i__ think third tried twice twist tying","__g_l_d dogsled gaggled waggled"], // #163 2027-03-27
+    ["bl_e_ bleed bleep blued","__dde_ kidded mudder nodded","j__g___ jagging jiggers joggers jungles"], // #164 2027-03-28
+    ["cag__ cager cagey","___ot bigot ergot ingot","__n_o dingo jingo pinto"], // #165 2027-03-29
+    ["dr___ drain dried","w_i__ waist waive weird whine wring","_t___in_ standing steaming stemming stepping stetting studding stumping"], // #166 2027-03-30
+    ["__ets abets duets meets whets","g__te_ getter goatee gotten gutter","g__g___g gargling giggling goggling"], // #167 2027-03-31
+    ["ta_le_ tabled tablet","h_o_ing hooding hooping hooting","_n___a anemia angina enigma"], // #168 2027-04-01
+    ["w___d weird wired wooed","__re__ agreed parent thread threat","____an_ bandana pendant rampant"], // #169 2027-04-02
+    ["_ang_ bangs hangs","__nt_l dental mantel mental","___a_d remand unhand unpaid upland"], // #170 2027-04-03
+    ["m__el model motel","m__ge_ manger meager merged mugger","_ab__ babel kabob rabid taboo"], // #171 2027-04-04
+    ["_in_ sing zing","_ati_g bating eating hating","ma____ed mandated martyred massaged mastered"], // #172 2027-04-05
+    ["_m__s ammos imams","_ig_ling giggling jiggling wiggling","___le__ anklets doglegs gimlets mallets mislead pallets piglets wallets"], // #173 2027-04-06
+    ["_oi__ doing going joint point","__j_cted injected objected rejected","_e_t__ed featured fettered lettered mentored restated weltered"], // #174 2027-04-07
+    ["_um_ed lumped numbed","__i_d dried grind guild third tried weird","_u___ng_ dumpings muggings puddings"], // #175 2027-04-08
+    ["_am_s camps lamps ramps vamps","__pped bopped cupped hopped nipped sapped zapped","f_____e_ fathered featured fettered frazzled"], // #176 2027-04-09
+    ["s___k speak steak","___ra hydra opera ultra","_i_dlin_ diddling middling piddling"], // #177 2027-04-10
+    ["pe__s peaks peeps","_at_er batter gather hatter natter","__t_ed hatred kitted pithed tithed vetted"], // #178 2027-04-11
+    ["a_t_r after alter","re_e__s redeems regents repents","___s__e message presume trustee"], // #179 2027-04-12
+    ["ste__ steak steed steep stent","mu___r mudder mugger mutter","___i___l habitual maniacal parietal sagittal"], // #180 2027-04-13
+    ["_av__ caved naval raved","_oa_e_ boated goatee moaned","__d_ling diddling huddling middling piddling toddling"], // #181 2027-04-14
+    ["s__ep steep sweep","wh___ whelk where whets whine whoop","wa____d waddled waggled wattled"], // #182 2027-04-15
+    ["_ewe_ newer sewed","__s_ng fusing hosing nosing","un__r___ underarm underdog undertow unturned"], // #183 2027-04-16
+    ["ch_r_ chard charm chart","_pa_ing spacing sparing spaying","__g__a__ highland regulate tugboats"], // #184 2027-04-17
+    ["j___s jeans jeeps","b_o_ing blowing booming booting","__r_in_ birding parsing verging"], // #185 2027-04-18
+    ["t__d_ tends thuds","_e__um cesium medium tedium","b_a_____ beanbags bearding branding"], // #186 2027-04-19
+    ["_o_nd bound hound","__si_g fusing hosing nosing","__mmer_ bummers dimmers rammers yammers"], // #187 2027-04-20
+    ["r__ged ranged rugged","_appi_g gapping mapping tapping","w____red weltered wintered withered wondered"], // #188 2027-04-21
+    ["_ooe_ mooed wooed","___ns deans guans jeans means weans","__p___d applaud aspired dappled"], // #189 2027-04-22
+    ["_ep_e_ nephew pepper","_e__es leaves redoes vetoes","e__c___g ejecting enacting exacting"], // #190 2027-04-23
+    ["_eca_ decaf decal decay","s__m_ scamp sigma swami","_e__t___ debiting deleting denoting megatons rebating reputing tempters"], // #191 2027-04-24
+    ["ho_di_g holding hooding","p_r__d parked permed purged","__r_d aired cared fared gored mired pored tired wired"], // #192 2027-04-25
+    ["g_i_t glint guilt","__i_g acing being doing dying going owing tying wring","______ty gratuity humanity maturity"], // #193 2027-04-26
+    ["_eg_l legal regal","p___h pitch poach punch","_on_er_d mongered pondered wondered"], // #194 2027-04-27
+    ["o__s ohms outs","_ea_ing fearing leafing leaving rearing","_a_he___ catheter fatheads fathered lathered"], // #195 2027-04-28
+    ["_hrea_ thread threat","__nd_d bended landed minded winded","_n____s anklets enamels intakes intends intents inwards onwards"], // #196 2027-04-29
+    ["_o_ned downed moaned","tra__e_ trammed tramped trapped","__ggin_ gagging jagging tagging wagging"], // #197 2027-04-30
+    ["w__ng wring wrong","d__n_ deans doing downy dying","s___pe_ scamper slapper steeper stomper stopper sweeper"], // #198 2027-05-01
+    ["_unt_ aunts punts","we__ed weaved welded welted","_a__et garnet hamlet jacket market packet tablet"], // #199 2027-05-02
+    ["b___s bands bangs","_a_dled dawdled paddled waddled","h_n__ hands hangs hanky hinge honed"], // #200 2027-05-03
+    ["g___en garden gotten","a__e_t abject advent ardent attest","__t___ng nettling rattling retaking rotating totaling"], // #201 2027-05-04
+    ["m__ted melted minted","___dle meddle muddle peddle puddle","p___en__ patience patients payments pendents pigments"], // #202 2027-05-05
+    ["_ow_r mower power tower","_iddli_g diddling middling piddling","_ha__i__ changing chanting whammies"], // #203 2027-05-06
+    ["ch__ting chanting cheating","le__ed leaded leaped legged","int____ intakes intends intents interim"], // #204 2027-05-07
+    ["_e_ns deans jeans means weans","k____d keypad kidded kitted","__ayin_ braying okaying spaying staying swaying"], // #205 2027-05-08
+    ["__eded heeded needed","_ra_pe_ tramped trapped wrapped","e_e____ ejector evening eyewash"], // #206 2027-05-09
+    ["_r_in drain grain train","t_a__ed trammed tramped trapped","_____nt_ garments patients payments pendents pennants pigments"], // #207 2027-05-10
+    ["_ac_et jacket packet","man__ manic manly manor","ta___d tabled tacked talked tasted taxied"], // #208 2027-05-11
+    ["pit__ pitch pithy","ta__ing tagging tamping tapping","pa___ng padding parsing patting"], // #209 2027-05-12
+    ["g__i_ genie grain","___ends defends intends legends","m_r___ marked market markup marmot marten merged merman"], // #210 2027-05-13
+    ["w__ch wench witch","u__a_d unhand unpaid upland","pen_____ pendents pennants pentacle"], // #211 2027-05-14
+    ["w_a_ed weaved whaled","d__c_ deuce ditch dunce","_r_a_ areal break broad cream organ urban"], // #212 2027-05-15
+    ["f__s feds fugs","_an_y hanky manly nanny","h___e__ hangers headers heaters hotbeds huggers"], // #213 2027-05-16
+    ["__mps camps lamps ramps vamps","mat___ mattes mature matzah","__d_l_ meddle muddle peddle puddle"], // #214 2027-05-17
+    ["alo__ aloha along aloud","ga___r gander gather gawker","_o_g___g goggling toggling tonguing"], // #215 2027-05-18
+    ["har_e_ harmed harped","wa___d walked warned wasted","_r_a_i__ breading breaming wreaking"], // #216 2027-05-19
+    ["d__ay decay delay","i_pa__ impact impala impart","__b_t___ debiting habitual rebating"], // #217 2027-05-20
+    ["_rap_ed trapped wrapped","e___r ember ender enter ether","__b__i__ debiting embodied rebating"], // #218 2027-05-21
+    ["__rned darned warned","t___er tauter temper terser tugger","___de_e_ murdered pondered wondered"], // #219 2027-05-22
+    ["__um scum slum","wr___ wrack wring wrong","_lan____ planchet planking plankton planning"], // #220 2027-05-23
+    ["m_c_a mecca mocha","_a_ked banked jacked marked packed parked tacked talked walked","___gge_ dragged snugger twigged"], // #221 2027-05-24
+    ["_are_ cared fared","_iggl_ng giggling jiggling wiggling","_u__i__s dumpings muggings outliers outlives puddings"], // #222 2027-05-25
+    ["lea__s learns leaves","_r_te brute crate irate","un_er___ underarm underdog undertow"], // #223 2027-05-26
+    ["_ag_r cager lager","__jec_ed injected objected rejected","__ti_g anting bating eating hating muting"], // #224 2027-05-27
+    ["__ki_g making taking waking","_at_ng bating eating hating","d___i__ dahlias damming damping dowsing"], // #225 2027-05-28
+    ["tra__ trace track train","_it_e_ kitted mitten pithed tithed","___tin_ bolting booting felting hooting patting routing salting spiting"], // #226 2027-05-29
+    ["p_n_s pungs punts","_h_s_s chasms ghosts whists","__m__t hamlet lament moment tamest tomcat tumult"], // #227 2027-05-30
+    ["_an_s bands bangs hands hangs","_rou_er grouper prouder trouper","_a_m___ damming jamming mammoth rammers warmers yammers"], // #228 2027-05-31
+    ["r_d__ ridge ruddy","___ds bands deeds hands mends tends thuds weeds","st__p__ steeper steeple stomper stopper"], // #229 2027-06-01
+    ["mi__ay midday midway","w___e waive where whine","c_am_i_g clamming clamping cramming cramping"], // #230 2027-06-02
+    ["n__ded needed nodded","b_gg__ bagger beggar bogged","___o_ng ongoing redoing vetoing"], // #231 2027-06-03
+    ["_ai_t faint waist","be___d beaned beeped bended","___dg_ dredge drudge grudge pledge trudge"], // #232 2027-06-04
+    ["pr_n_ print prong","ga__ing gadding gagging gapping","___dy_n_ bandying caddying toadying"], // #233 2027-06-05
+    ["wai__ waist waive","__nning binning cunning running","h____a__ handball hangnail headways highland homeland"], // #234 2027-06-06
+    ["_id_ay midday midway","_ar__n barman garden marten warden","___m___r animator haymaker prompter teamster"], // #235 2027-06-07
+    ["_ate_ cater later rater","ra__ers rammers rappers ratters","_r_t_ brute crate irate"], // #236 2027-06-08
+    ["_ab_ed nabbed tabled","_o__n_ hosing moment nosing potent","___ut___ adjutant amputate reputing"], // #237 2027-06-09
+    ["b_tt_rs betters butters","_iddl_ng diddling middling piddling","_han____ changing chanting phantoms shantung"], // #238 2027-06-10
+    ["bo_e_ boned boxed","__ters asters biters inters","_____it_ gratuity humanity maturity"], // #239 2027-06-11
+    ["re_ar_s regards rewards","__er_ opera there where","au_____ auction augment aunties automat"], // #240 2027-06-12
+    ["gui__ guild guilt","_igg_ing giggling jiggling wiggling","_a___nt_ garments patients payments"], // #241 2027-06-13
+    ["__tel betel motel","_u_ter gutter mutter putter","_au_____ jaundice laughter laureate"], // #242 2027-06-14
+    ["__tted kitted vetted","_agg_ng gagging jagging tagging wagging","_u_d____ guidance huddling murdered puddings"], // #243 2027-06-15
+    ["pe__e peeve pekoe","_e_ded bended heeded leaded melded needed welded","t__d__s tenders tendons traders"], // #244 2027-06-16
+    ["ad_r_ adore adorn","_aw_ed bawled fawned yawned","_e_u___ belugas legumes medusas regular reputes requiem resumed"], // #245 2027-06-17
+    ["__gal legal regal","ham_e_ hamlet hammer hamper","st__p___ stepping stripers stumping"], // #246 2027-06-18
+    ["_rac_ grace trace track wrack","_ad__ badly dados fader nadir","__u__n_ abusing rouging routing"], // #247 2027-06-19
+    ["_yin_ dying tying","__l_y baldy balmy delay","_ent____ gentling mentored pentacle tentacle"], // #248 2027-06-20
+    ["b__my balmy barmy","_u_i_g duping fusing muting","r___ers rammers rappers ratters"], // #249 2027-06-21
+    ["mi__ed minded minted","__int faint glint joint point print","wh_____s whammies whippets whiskies"], // #250 2027-06-22
+    ["_en_al dental mental","__led ailed idled ogled piled tiled","__a_ti_g chanting drafting enacting exacting grafting plaiting"], // #251 2027-06-23
+    ["c__te carte chute crate","_n_e_ antes ender enter index under","c_a_p__g clamping clapping cramping"], // #252 2027-06-24
+    ["s_e_d speed spend steed","le__rs legers lemurs lepers","__a_w___ headways miaowing tramways"], // #253 2027-06-25
+    ["__dded kidded nodded","a__ing aahing ageing anting awning","__tte__ betters butters jitters nutters potters ratters titters totters"], // #254 2027-06-26
+    ["di__ed dieted dinged","_i_d_d kidded minded winded","_e_s__ feasts geyser jersey jetsam person terser yeasts"], // #255 2027-06-27
+    ["r__ed raced raved","_um__ lumen lumpy rummy yummy","__ld__ balded melded welded"], // #256 2027-06-28
+    ["du__s dudes duets dungs dupes","_o_ged bogged gonged gouged hogged","g___er_ garters genders graders graters"], // #257 2027-06-29
+    ["cha__ chard charm chart","p___d piled pored proud","___tu__d featured pastured ruptured"], // #258 2027-06-30
+    ["se___ setup sewed","_elt__ melted pelted welted","_o___ed bobbled bounced coupled dogsled fondled hobbled honeyed noticed"], // #259 2027-07-01
+    ["__ird third weird","m_rk__ marked market markup","__n_a_l_ bankable pentacle tentacle"], // #260 2027-07-02
+    ["_oo_d mooed wooed","ch___ing changing chanting cheating chugging","_r_____t artefact browbeat grandest ornament"], // #261 2027-07-03
+    ["_ar_e carte large","___ins chains cumins lupins","__r_ers garters warders warmers"], // #262 2027-07-04
+    ["_ak_ng making taking waking","___oing ongoing redoing vetoing","_a__t__ daunted fainter jaunted manatee saunter taunted"], // #263 2027-07-05
+    ["_dor_ adore adorn","h___y hanky hardy harpy","s___ti_g smutting stetting sweating"], // #264 2027-07-06
+    ["s___g stung swung","re_a_ing rebating remaking renaming retaking","re___in_ rebating remaking renaming reputing retaking"], // #265 2027-07-07
+    ["__k_ng making taking waking","hoo___g hooding hooping hooting","m___s maars means meets mends metes meths mutes"], // #266 2027-07-08
+    ["wee__ weeds weeps","fe_____ fearing federal felting","_____ant adjutant pleasant relaxant"], // #267 2027-07-09
+    ["_il_d ailed piled tiled","__d__d fudged kidded nodded","p____he_ planchet ploughed preached"], // #268 2027-07-10
+    ["_ent_ dents gents tents","_au_e_ lauded mauled pauper tauter","___d_es bandies caddies handles laddies"], // #269 2027-07-11
+    ["g___d gored grind guild","g_and__ grandad grandma grandpa","___e__o_ demeanor underdog undertow"], // #270 2027-07-12
+    ["d_in_ doing dying","_a_der dander gander pander wander","_e_te___ fettered lettered weltered"], // #271 2027-07-13
+    ["_u_al aural ducal mural","_iddlin_ diddling middling piddling","__a_p___ clamping clapping cramping flapping grappler"], // #272 2027-07-14
+    ["_e__at defeat repeat","_u__y lumpy ruddy rummy yummy","___mp__ scamper stomper thumped tramped"], // #273 2027-07-15
+    ["le__ns learns lemons","__ee_ed cheered steeled steered tweeted","g__gl___ gargling giggling goggling"], // #274 2027-07-16
+    ["_ro_g prong wrong","_u_ing duping fusing muting","____na__ hangnail lemonade marinara nominate ruminate"], // #275 2027-07-17
+    ["m_rke_ marked market","__e__d beeped dieted heeded needed","p__n__ng planking planning pranking"], // #276 2027-07-18
+    ["bal__ baldy balmy","_app_ng gapping mapping tapping","_rea__n_ breading breaming wreaking"], // #277 2027-07-19
+    ["_et_s metes meths","_e__l betel decal fetal legal regal","d______s dingbats dragnets draughts dumpings"], // #278 2027-07-20
+    ["m__ke_ marked market","__ca_ decaf decal decay ducal","in___t_d inducted injected intuited"], // #279 2027-07-21
+    ["p_ac_ place poach","te_p__ teepee temper temple tempts","o__l____ omelette outliers outlives outlooks"], // #280 2027-07-22
+    ["al__r alder alter","_ri__ dried grind print tried wring","p_a__i_g plaiting planking planning pranking"], // #281 2027-07-23
+    ["_oa_d board hoard","_e___ds defends legends regards rewards","_an_a___ bankable mandated maniacal tankards"], // #282 2027-07-24
+    ["_en_h tench wench","b_a_ed beaned bladed blamed boated","__ee__r speeder steeper sweeper sweeter"], // #283 2027-07-25
+    ["s___d sewed speed spend steed","h__i_g hating hawing hosing","d___i_g damming damping dowsing"], // #284 2027-07-26
+    ["_ud__ dudes ruddy","_iggli_g giggling jiggling wiggling","re_u___ regular reputes requiem resumed"], // #285 2027-07-27
+    ["_a_et facet valet","__ble_ ambled tabled tablet","__ggi_g gagging jagging tagging wagging"], // #286 2027-07-28
+    ["_o_ing hosing nosing","te__s teaks teems tends tents texts","p___u__ perjury podiums presume pursued"], // #287 2027-07-29
+    ["bea__ beano beany beast","bo___d boated bogged bopped","r_p___s rappels rappers repents reputes"], // #288 2027-07-30
+    ["__rke_ marked market parked","__aded bladed evaded leaded spaded","_o_g__n_ goggling longhand toggling tonguing"], // #289 2027-07-31
+    ["sta_e_ staged stated","_i_de_ kidded minded winded","_la_p_n_ clamping clapping flapping"], // #290 2027-08-01
+    ["__sed based eased","__jecte_ injected objected rejected","a___n__ abounds almonds andante attuned"], // #291 2027-08-02
+    ["pac_e_ packed packet","gr___ grace grain grave grind group grout","_r_n_er grinder printer wringer"], // #292 2027-08-03
+    ["_p__t spent upset","r___y ready repay ruddy rummy","__c_e_ jacked jacket packed packet tacked"], // #293 2027-08-04
+    ["ha_me_ hammer harmed","_utt_r gutter mutter putter","___r__g blaring fearing rearing sparing staring"], // #294 2027-08-05
+    ["b__ned banned beaned","_ap_ing gapping mapping sapling tapping","__d___g gadding padding redoing wadding"], // #295 2027-08-06
+    ["_w_ng owing swung","ru___ ruddy rummy rupee","_om_____ compared homeland nominate somewhat"], // #296 2027-08-07
+    ["__ited baited edited","_addin_ gadding padding wadding","wi___i__ widening widowing wiggling"], // #297 2027-08-08
+    ["__ult fault vault","s__e_ed sabered steeled steered","__w_ing bowling dowsing howling"], // #298 2027-08-09
+    ["_tu__ stung stunt","_ai__ faint faith waist waive","r____e__ ragweeds regiment removers reorders"], // #299 2027-08-10
+    ["_r_ce grace trace","m_r__ march merit mired mural","_n__e_ angled snider sniper"], // #300 2027-08-11
+    ["_mb_r ember umber","_a_l_ badly fault manly vault","bu____s bummers bumpers butters"], // #301 2027-08-12
+    ["_rai_ braid drain grain train","_umpe_ dumper jumper lumped pumper","d__g___ diggers dodgers dragged"], // #302 2027-08-13
+    ["_hr__ three throw","___ee melee puree rupee three","_e___er_ removers reorders tempters"], // #303 2027-08-14
+    ["w_r_e_ warden warned","__a_ns chains learns yearns","__op___ adopted eloping hooping stopper"], // #304 2027-08-15
+    ["_l_ed bleed blued","__inter fainter pointer printer","_i_pe_s diapers dippers tippers"], // #305 2027-08-16
+    ["ba__s bands bangs","_u_p_d cupped gulped lumped pulped","_u__i__ auction aunties cunning outwits pulpits rubbing running tuition"], // #306 2027-08-17
+    ["t__ked tacked talked","__ga_ legal organ regal","_w_n__ twangs twenty twinge"], // #307 2027-08-18
+    ["ba_e_ babel baker based","b_l__ baldy balmy bylaw","_ea____s beanbags headways realisms realists yearlies"], // #308 2027-08-19
+    ["_ura_ aural mural","p__t_r petter pewter putter","___i_g_ parings pipings timings tubings"], // #309 2027-08-20
+    ["__m_le gamble temple","_t__ed atoned staged stated","__mme__ bummers dimmers pommels rammers yammers"], // #310 2027-08-21
+    ["_h_ea_ thread threat","s_u_ scud scum scut slug slum soup spur","_l_n____ planchet planking plankton planning"], // #311 2027-08-22
+    ["s__nt spent stent stunt","_a_k_t jacket market packet","g__g_ing gargling giggling goggling"], // #312 2027-08-23
+    ["_h_s ohms this whys","grand__ grandad grandma grandpa","t__te_s teeters titters totters"], // #313 2027-08-24
+    ["j__n_ jeans joint","w__c_ wench witch wrack","_e_te_e_ fettered lettered weltered"], // #314 2027-08-25
+    ["yea__s yearns yeasts","_et_er getter petter wetter","__ani__ amanita cyanide pianist"], // #315 2027-08-26
+    ["_ui__ guild guilt quiet","__t_rs asters biters inters","_n___t__ animator inducted injected intuited undertow"], // #316 2027-08-27
+    ["_t_e_ ether otter steed steep","re__ing rearing redoing reeking","___tt_r scatter shutter spitter spotter"], // #317 2027-08-28
+    ["d_n__d danced dinged","ban__es bandies bangles banjoes","_i_dl_n_ diddling middling piddling"], // #318 2027-08-29
+    ["s_am_ scamp swami","a__o_ ammos apron argon axiom","__p___g gapping mapping sapling tapping"], // #319 2027-08-30
+    ["t_in_ think tying","b__t_d baited boated bunted","_____ats dingbats kumquats tugboats"], // #320 2027-08-31
+    ["ta_e_t talent tamest","w_n_e_ wander winded winged","__ppin_ gapping mapping tapping"], // #321 2027-09-01
+    ["fai__ faint faith","pu___ punch pungs punts puree","mi_____ mindful mislead misread"], // #322 2027-09-02
+    ["__per caper doper piper wiper","hoo_i_g hooding hooping hooting","_rea_i_g breading breaming wreaking"], // #323 2027-09-03
+    ["__arm charm rearm","b_ea_ing bleating breading breaming","le_____ leafing leaflet leagues leaving legends legumes"], // #324 2027-09-04
+    ["_w_e_ sweep sweet","ste__ing steaming stemming stepping stetting","ma___ maars manic manly manor march matzo"], // #325 2027-09-05
+    ["_ase_ based eased","im_a__ impact impala impart","br___n_ bracing braving braying"], // #326 2027-09-06
+    ["m_a_s maars means","sa___ sappy sauna saute","_la_pin_ clamping clapping flapping"], // #327 2027-09-07
+    ["s__d scud sled","_r_c_ grace trace track wrack","_a_t__s banters fatties garters ratters rattles waiters"], // #328 2027-09-08
+    ["me_e_ melee metes","ti__ed tinged tinted tithed","_oo_i_g booming booting hooding hooping hooting"], // #329 2027-09-09
+    ["s_u_g stung swung","g_tt__ getter gotten gutter","pe_____ peepers pendant perjury permits"], // #330 2027-09-10
+    ["_tee_ steed steep","_al__ baldy balmy halal talon valet","__p__i__ impaling reputing tippling toppling"], // #331 2027-09-11
+    ["_d_e_ idled odder","__ated boated elated stated","p_n__ panic pinto punch pungs punts"], // #332 2027-09-12
+    ["_rat_ crate irate","ch__red chaired charred cheered","___ur_ femurs lemurs mature"], // #333 2027-09-13
+    ["min__d minded minted","me__s means meets mends metes meths","u____d unhand unpaid upland upwind"], // #334 2027-09-14
+    ["ext_n_ extend extent","_as__ based baste eased haste","wa___ed waddled waggled wattled"], // #335 2027-09-15
+    ["_os_ng hosing nosing","_u_c_ dunce munch punch","______ce ambiance carapace guidance jaundice patience"], // #336 2027-09-16
+    ["th__a_ thread threat","_e__nts cements regents repents","_pa_i_g spacing sparing spaying"], // #337 2027-09-17
+    ["_earn_ learns yearns","_a_ded balded barded landed lauded","_i_g_i__ giggling jiggling tingeing wiggling"], // #338 2027-09-18
+    ["b_ee_ bleed bleep breed","gra_d__ grandad grandma grandpa","_____t_l neonatal parietal pedestal sagittal"], // #339 2027-09-19
+    ["_a_den garden maiden warden","_r__g prong wring wrong","_e__i___ realisms realists rejoices weddings wettings"], // #340 2027-09-20
+    ["_enc_ tench wench","_rand__ grandad grandma grandpa","___c__n_ ejecting enacting exacting"], // #341 2027-09-21
+    ["__ned boned honed","h__pe_ hamper harped hopped","cla__in_ cladding clamming clamping clapping classing"], // #342 2027-09-22
+    ["_oar_ board hoard","i_a__ imams inane irate","p___n___ paranoia paranoid planning"], // #343 2027-09-23
+    ["_yi_g dying tying","__t_s antes metes meths mutes tutus","t_t____ tattled titters totters"], // #344 2027-09-24
+    ["_ak__g making taking waking","_at__r batter gather hatter natter","_a__yi__ bandying caddying partying"], // #345 2027-09-25
+    ["p___r piper power","__c__d jacked packed tacked","___lin_ bowling howling sapling staling"], // #346 2027-09-26
+    ["__eps deeps jeeps peeps weeps","_add__s caddies ladders laddies","m_____ng menacing miaowing middling mouthing"], // #347 2027-09-27
+    ["gr_nd_a grandma grandpa","me__a_ median mental merman","_ar____a marinara parabola paranoia"], // #348 2027-09-28
+    ["_e_ks peaks teaks","_em__s femurs lemons lemurs tempts","_la_p_ng clamping clapping flapping"], // #349 2027-09-29
+    ["_oppe_ bopped hopped","_la__d bladed blamed elated","____ui__ gratuity leaguing tonguing"], // #350 2027-09-30
+    ["a__le agile ankle","wa_i_g waking waning waxing","___l__g bowling howling sapling staling"], // #351 2027-10-01
+    ["p_cke_ packed packet","__ute_ pouted tauter touted","____it_ amanita outwits permits pulpits reunite"], // #352 2027-10-02
+    ["m__ch march munch","_aggi_g gagging jagging tagging wagging","_o__e__d bonneted mongered mothered pondered wondered"], // #353 2027-10-03
+    ["_oi_g doing going","__bbing bibbing bobbing hobbing rubbing","_h__e_ chafes chawed shower whaled"], // #354 2027-10-04
+    ["d_i__ deity doing dried dying","_ai_ed baited gained pained","a______e additive adoptive ambiance amputate antelope aperture"], // #355 2027-10-05
+    ["_hi_ this whiz","__ing acing being doing dying going owing tying wring","__ca____ decanter escapade recanted"], // #356 2027-10-06
+    ["_e_ards regards rewards","__cke_ jacked jacket packed packet tacked","__mp_r dumper hamper jumper pumper temper"], // #357 2027-10-07
+    ["_akin_ making taking waking","___e_ds defends intends legends","____ri__ aquarium material maturity outcries"], // #358 2027-10-08
+    ["_as_e baste haste","ma_t__ mantel mantle marten mattes","__m___g damming damping jamming tamping"], // #359 2027-10-09
+    ["_le_ sled slew","___ms deems geums imams teems","__p__t impact impart repeat"], // #360 2027-10-10
+    ["b__d_ baldy bands","c__r_ chard charm chart","_p_r___ sparing sparred spurned"], // #361 2027-10-11
+    ["ba__y badly baldy balmy barmy","wa_i__ waking waning waxing","_and__n_ bandying handguns handling"], // #362 2027-10-12
+    ["_t__r ether otter","__ump clump crump frump","__nki_g bonking honking kinking"], // #363 2027-10-13
+    ["ha_m__ hammer harmed","_ang_e dangle jangle mangle tangle wangle","__t__s asters biters futons hotels inters mattes vetoes"], // #364 2027-10-14
+    ["pl___ place plain","___and remand unhand upland","l___i__ laddies leafing leaving longing"], // #365 2027-10-15
   ],
 };

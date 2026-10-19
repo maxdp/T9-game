@@ -105,6 +105,20 @@
     return BLOCKERS.some((w) => fitsPattern(pattern, w));
   }
 
+  // The single gatekeeper for which puzzles the game may use, shared by
+  // Practice and the Daily pools: returns the puzzle's label, or null if it
+  // isn't allowed. The 2-answer rule must stay the LAST step, after the
+  // label is worked out, since it depends on how labels are defined:
+  // 2-answer puzzles are only there to widen the Easy pool, so any that
+  // would rate Medium or Hard are dropped rather than watering those down.
+  function puzzleLabel(pattern, answers, blankCount) {
+    if (answers.length < MIN_VALID_ANSWERS || answers.length > MAX_VALID_ANSWERS) return null;
+    if (isBlocked(pattern)) return null;
+    const label = difficultyForPuzzle(answers, blankCount);
+    if (answers.length === 2 && label !== "Easy") return null;
+    return label;
+  }
+
   // Every distinct puzzle the rules allow, grouped by difficulty, with
   // blocked ones left out (about 130k patterns; roughly a tenth of a
   // second to build).
@@ -125,11 +139,8 @@
     });
     const pools = { Easy: [], Medium: [], Hard: [] };
     byPattern.forEach((entry, pattern) => {
-      const count = entry.answers.length;
-      if (count < MIN_VALID_ANSWERS || count > MAX_VALID_ANSWERS) return;
-      if (isBlocked(pattern)) return;
-      const label = difficultyForPuzzle(entry.answers, entry.blankCount);
-      pools[label].push({ pattern, answers: entry.answers, difficulty: label });
+      const label = puzzleLabel(pattern, entry.answers, entry.blankCount);
+      if (label) pools[label].push({ pattern, answers: entry.answers, difficulty: label });
     });
     return pools;
   }
@@ -194,6 +205,7 @@
     DIFFICULTY_LABELS,
     WORD_RANK,
     difficultyForPuzzle,
+    puzzleLabel,
     rarestRankOf,
     fitsPattern,
     isBlocked,

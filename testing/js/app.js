@@ -2,11 +2,9 @@
   const { wordToDigits, findSequentialGrouping, PRESS_COUNTS } = window.T9;
   const { DICTIONARY, WORDS_GOOD } = window.T9_WORDS;
   const {
-    MIN_VALID_ANSWERS,
-    MAX_VALID_ANSWERS,
     DIFFICULTY_LABELS,
     difficultyForPuzzle,
-    isBlocked,
+    puzzleLabel,
     buildPools,
     seededShuffle,
     centralDateKey,
@@ -221,13 +219,13 @@
       );
     }
 
-    // Only offers puzzles with MIN_VALID_ANSWERS..MAX_VALID_ANSWERS valid
-    // answers AND the requested difficulty (see js/puzzles.js), and never a
-    // blocked one, retrying draws until one lands. Only about 6% of random
-    // word+blank draws come out Easy (11% Medium), so a target is needed;
-    // simulating this loop 3,000 times per target took about 16 tries on
-    // average for Easy (worst 153) and 9 for Medium (worst 68), far under
-    // the 2000-try cap.
+    // Only offers puzzles the game allows (puzzleLabel in js/puzzles.js:
+    // 2-8 answers, not blocked, 2-answer ones only if Easy) with the
+    // requested difficulty, retrying draws until one lands. Only about 6%
+    // of random word+blank draws come out Easy (6% Medium), so a target is
+    // needed; simulating this loop 3,000 times per target took about 16
+    // tries on average for Easy (worst 134) and 18 for Medium (worst 120),
+    // far under the 2000-try cap.
     function generatePuzzle(targetDifficulty) {
       let word;
       let blanks;
@@ -238,12 +236,8 @@
         word = pickGoodWord();
         blanks = pickBlanks(word);
         answers = computeValidAnswers(word, blanks);
-        difficulty =
-          answers.length >= MIN_VALID_ANSWERS &&
-          answers.length <= MAX_VALID_ANSWERS &&
-          !isBlocked(patternOf(word, blanks))
-            ? difficultyForPuzzle(answers, blanks.size)
-            : null;
+        // null for any puzzle the game doesn't allow (see puzzleLabel).
+        difficulty = puzzleLabel(patternOf(word, blanks), answers, blanks.size);
         tries++;
       } while (difficulty !== targetDifficulty && tries < 2000);
       return {
