@@ -340,6 +340,13 @@
     letter-spacing: 0.06em;
     opacity: 0.9;
   }
+  /* The mode label always stays on one line (so the bar never changes
+     height), tightening its spacing on narrow phones to leave the signal
+     bars and battery clear. */
+  #screen-mode-label { white-space: nowrap; }
+  @media (max-width: 359px) {
+    #screen-mode-label { letter-spacing: 0; font-size: 0.7rem; }
+  }
   .phone-signal { justify-self: start; display: inline-flex; align-items: flex-end; gap: 2px; height: 12px; }
   .phone-signal i { width: 3px; background: #f4f8ff; }
   .phone-signal i:nth-child(1) { height: 4px; }
@@ -703,7 +710,7 @@
     </div>
   </div>
 
-  <div id="version-label">v0.39 · testing</div>
+  <div id="version-label">v0.40 · testing</div>
 
   <!-- Testing build: rules and word list are shared with the live site one
        folder up; this page and its app.js are the testing copies. -->
@@ -713,6 +720,6 @@
   <script src="../js/puzzles.js?v=1"></script>
   <script src="../js/daily.js?v=1"></script>
   <script src="js/celebrate.js?v=17"></script>
-  <script src="js/app.js?v=67"></script>
+  <script src="js/app.js?v=68"></script>
 </body>
 </html>

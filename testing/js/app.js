@@ -152,6 +152,7 @@
     const modeToggleBtn = document.getElementById("mode-toggle");
 
     const DAILY_STORAGE_KEY = "t9tangle-daily";
+    const PRACTICE_STORAGE_KEY = "t9tangle-practice-solved";
 
     let mode = "practice";
     let solvedCount = 0;
@@ -485,11 +486,12 @@
     // Redraws everything about the current puzzle (or the Daily results),
     // e.g. after switching modes or moving on to another puzzle.
     function renderAll() {
+      // In Practice the header also counts today's solved Practice puzzles.
       // In Daily, "(n/3)" counts up through the Easy, Medium and Hard puzzles
       // so a newcomer can see there's more than one; the results screen
       // after all three shows just "Daily #X".
       if (mode === "practice") {
-        modeLabelEl.textContent = "Practice";
+        modeLabelEl.textContent = `Practice (${practiceSolvedToday()} solved today)`;
       } else {
         const total = daily.puzzles.length;
         modeLabelEl.textContent =
@@ -750,9 +752,34 @@
       renderAll();
     }
 
+    // Practice puzzles solved today (Central time), kept in this browser so
+    // the header's count survives a reload and starts over at Central
+    // midnight. Without storage it still counts, just for this page load.
+    let practiceSolvedFallback = { dateKey: null, count: 0 };
+    function practiceSolvedToday() {
+      const dateKey = centralDateKey();
+      let saved = practiceSolvedFallback;
+      try {
+        saved = JSON.parse(localStorage.getItem(PRACTICE_STORAGE_KEY)) || saved;
+      } catch (e) {
+        // Fall back to the in-memory count.
+      }
+      return saved.dateKey === dateKey ? saved.count | 0 : 0;
+    }
+    function countPracticeSolve() {
+      const record = { dateKey: centralDateKey(), count: practiceSolvedToday() + 1 };
+      practiceSolvedFallback = record;
+      try {
+        localStorage.setItem(PRACTICE_STORAGE_KEY, JSON.stringify(record));
+      } catch (e) {
+        // Counted in memory only.
+      }
+    }
+
     function winPuzzle() {
       solvedCount++;
       solvedEl.textContent = String(solvedCount);
+      if (mode === "practice") countPracticeSolve();
       finishPuzzle();
       window.T9Celebrate.celebrate(document.querySelector(".phone"));
     }
