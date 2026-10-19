@@ -591,6 +591,10 @@
       }
       if (!isPlayable() || activeTarget === null) return;
 
+      // Starting to type over a blank that already holds a letter clears
+      // that letter right away, so the blank shows only the new letter
+      // being cycled in.
+      if (pendingKey !== group) filledMap.delete(activeTarget);
       pendingCount = pendingKey === group ? pendingCount + 1 : 1;
       pendingKey = group;
       clearPendingTimer();
