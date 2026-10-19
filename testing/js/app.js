@@ -485,7 +485,16 @@
     // Redraws everything about the current puzzle (or the Daily results),
     // e.g. after switching modes or moving on to another puzzle.
     function renderAll() {
-      modeLabelEl.textContent = mode === "daily" ? `Daily #${daily.number}` : "Practice";
+      // In Daily, "(n/3)" counts up through the Easy, Medium and Hard puzzles
+      // so a newcomer can see there's more than one; the results screen
+      // after all three shows just "Daily #X".
+      if (mode === "practice") {
+        modeLabelEl.textContent = "Practice";
+      } else {
+        const total = daily.puzzles.length;
+        modeLabelEl.textContent =
+          `Daily #${daily.number}` + (daily.index < total ? ` (${daily.index + 1}/${total})` : "");
+      }
 
       const p = currentPuzzle();
       const showResults = !p;
