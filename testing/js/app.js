@@ -151,6 +151,7 @@
 
     const DAILY_STORAGE_KEY = "t9tangle-daily";
     const PRACTICE_STORAGE_KEY = "t9tangle-practice-solved";
+    const DAILY_CHOSEN_KEY = "t9tangle-daily-chosen";
 
     let mode = "practice";
 
@@ -813,11 +814,31 @@
 
     // ---- Mode toggle ----------------------------------------------------
 
+    // Once a player has switched to Daily, every later visit opens in Daily;
+    // until then (new players) the page opens in Practice.
+    function rememberDailyChosen() {
+      try {
+        localStorage.setItem(DAILY_CHOSEN_KEY, "1");
+      } catch (e) {
+        // Not remembered; the next visit just opens in Practice.
+      }
+    }
+    function hasChosenDaily() {
+      try {
+        return localStorage.getItem(DAILY_CHOSEN_KEY) === "1";
+      } catch (e) {
+        return false;
+      }
+    }
+
     function setMode(newMode) {
       if (newMode === mode) return;
       mode = newMode;
       window.T9Celebrate.clear();
-      if (mode === "daily") loadDaily();
+      if (mode === "daily") {
+        loadDaily();
+        rememberDailyChosen();
+      }
       modeToggleBtn.setAttribute("aria-checked", String(mode === "daily"));
       document.querySelectorAll(".mode-label").forEach((el) => {
         el.classList.toggle("active", el.dataset.mode === mode);
@@ -848,5 +869,6 @@
     newPracticePuzzle();
     resetGuessInProgress();
     renderAll();
+    if (hasChosenDaily()) setMode("daily");
   })();
 })();
