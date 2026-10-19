@@ -486,12 +486,13 @@
     // Redraws everything about the current puzzle (or the Daily results),
     // e.g. after switching modes or moving on to another puzzle.
     function renderAll() {
-      // In Practice the header also counts today's solved Practice puzzles.
+      // In Practice the header also counts today's solved Practice puzzles
+      // ("Practice (X solved)").
       // In Daily, "(n/3)" counts up through the Easy, Medium and Hard puzzles
       // so a newcomer can see there's more than one; the results screen
       // after all three shows just "Daily #X".
       if (mode === "practice") {
-        modeLabelEl.textContent = `Practice (${practiceSolvedToday()} solved today)`;
+        modeLabelEl.textContent = `Practice (${practiceSolvedToday()} solved)`;
       } else {
         const total = daily.puzzles.length;
         modeLabelEl.textContent =
