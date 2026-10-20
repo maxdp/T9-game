@@ -32,7 +32,7 @@
   //    only works as [LM][O][N][D][SA]); 0 otherwise. An answer that merely
   //    reads around the end, like spur (4,1,2,3), doesn't count.
   //
-  // Totals are labeled 4-6 Easy / 7-8 Medium / 9+ Hard.
+  // Totals are labeled 4-6 Easy / 7-9 Medium / 10+ Hard.
   const RARITY_QUARTILES = (() => {
     const sortedRanks = [...WORDS_GOOD_RANK].sort((a, b) => a - b);
     const n = sortedRanks.length;
@@ -82,7 +82,7 @@
       lengthPoints(answers[0].length) +
       splitPoints(answers);
     if (points <= 6) return "Easy";
-    if (points <= 8) return "Medium";
+    if (points <= 9) return "Medium";
     return "Hard";
   }
 
