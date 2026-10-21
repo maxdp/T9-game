@@ -489,8 +489,8 @@
     font-weight: 600;
     line-height: 1.35;
     color: #dbe8ff;
-    white-space: pre-line;
   }
+  #tutorial-rule > div + div { margin-top: 8px; }
   #tutorial-rule[hidden] { display: none; }
   .phone-screen-body.tutorial-mode .difficulty-wrap,
   .phone-screen-body.tutorial-mode #hang-counter,
@@ -498,12 +498,17 @@
   .phone-screen-body.tutorial-mode .screen-lists { height: calc(2 * 1.35em); }
   /* Slightly tighter spacing than the other modes so lesson 1's
      four-line rule still fits without growing the screen. */
-  .phone-screen-body.tutorial-mode { justify-content: center; gap: 4px; }
+  .phone-screen-body.tutorial-mode { justify-content: center; gap: 4px; min-height: 0; }
+  .phone-screen.tutorial-mode { height: 236px; }
   .phone-screen-body.tutorial-mode::before {
     content: "";
-    flex: none;
+    flex: 0 1 auto;
     font-size: 0.75rem;
     height: calc(2 * 1.35em);
+    /* The Tutorial's screen is fixed at its usual height. Lesson 1's long
+       rule may not leave room for the full spacer, which gives way (only
+       it can shrink), so that lesson sits a little above center. */
+    min-height: 0;
   }
   .phone-screen-body.tutorial-done::before,
   .phone-screen-body.tutorial-done #hang-tiles,
@@ -838,7 +843,7 @@
     </section>
   </div>
 
-  <div id="version-label">v0.59 · testing</div>
+  <div id="version-label">v0.60 · testing</div>
 
   <!-- Testing build: rules and word list are shared with the live site one
        folder up; this page and its app.js are the testing copies. -->
@@ -848,6 +853,6 @@
   <script src="../js/puzzles.js?v=7"></script>
   <script src="../js/daily.js?v=8"></script>
   <script src="js/celebrate.js?v=17"></script>
-  <script src="js/app.js?v=79"></script>
+  <script src="js/app.js?v=80"></script>
 </body>
 </html>

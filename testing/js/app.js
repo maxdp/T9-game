@@ -575,9 +575,20 @@
       const tutorialDone = inTutorial && tutorialFinished();
       const showResults = !p && !inTutorial;
       screenBodyEl.classList.toggle("tutorial-mode", inTutorial);
+      screenBodyEl.parentElement.classList.toggle("tutorial-mode", inTutorial);
       screenBodyEl.classList.toggle("tutorial-done", tutorialDone);
       tutorialRuleEl.hidden = !inTutorial;
-      if (inTutorial) tutorialRuleEl.textContent = tutorialDone ? TUTORIAL_DONE_TEXT : p.rule;
+      if (inTutorial) {
+        // Each line of the text is its own block, so they can be spaced
+        // apart.
+        tutorialRuleEl.replaceChildren(
+          ...(tutorialDone ? TUTORIAL_DONE_TEXT : p.rule).split("\n").map((line) => {
+            const el = document.createElement("div");
+            el.textContent = line;
+            return el;
+          })
+        );
+      }
       // The header's arrows step through the lessons (and the send-off).
       tutorialPrevBtn.hidden = tutorialNextBtn.hidden = !inTutorial;
       if (inTutorial) {
