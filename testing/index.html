@@ -91,12 +91,14 @@
     position: absolute;
     inset: 0;
     background-size: cover;
-    background-position: center;
+    /* Kept toward the bottom, so the river in the foreground shows. */
+    background-position: 50% 85%;
+    transform-origin: 50% 85%;
     animation: sakura-drift 45s ease-in-out infinite alternate;
   }
-  .sakura-day { background-image: url("img/sakura-day-wide.jpg"); }
+  .sakura-day { background-image: url("img/sakura-day-wide.jpg?v=2"); }
   .sakura-night {
-    background-image: url("img/sakura-night-wide.jpg");
+    background-image: url("img/sakura-night-wide.jpg?v=2");
     opacity: 0;
     transition: opacity 0.8s ease;
   }
@@ -107,7 +109,7 @@
   }
   @keyframes sakura-drift {
     from { transform: scale(1.02) translate(0, 0); }
-    to { transform: scale(1.08) translate(-1%, -1.2%); }
+    to { transform: scale(1.06) translate(-1%, 0); }
   }
   @media (prefers-reduced-motion: reduce) {
     .sakura-photo { animation: none; }
@@ -171,19 +173,20 @@
     line-height: 1.4;
   }
 
+  /* The rule 1 example keys look like the phone's own keys. */
   .key {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 4px;
-    background: linear-gradient(180deg, #343451, #262640);
-    border-radius: 12px;
+    background: linear-gradient(180deg, #ffffff 0%, #e4e7eb 55%, #c8cdd3 100%);
+    border-radius: 16px;
     text-shadow: none;
     font-size: 0.95rem;
-    font-weight: 600;
+    font-weight: 700;
     letter-spacing: 0.04em;
-    color: #e4e4f5;
-    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    color: #2a2e34;
+    box-shadow: 0 2px 0 #8a9198, 0 3px 4px rgba(0, 0, 0, 0.25), inset 0 1px 0 #ffffff;
   }
   .key-letter {
     display: flex;
@@ -194,7 +197,7 @@
   .key-letter-num {
     font-size: 0.5rem;
     font-weight: 600;
-    color: #8a8aa8;
+    color: #6b727b;
     margin-top: 2px;
   }
   .tap-key {
@@ -957,7 +960,7 @@
     </section>
   </div>
 
-  <div id="version-label">v0.68 · testing</div>
+  <div id="version-label">v0.69 · testing</div>
 
   <!-- Testing build: rules and word list are shared with the live site one
        folder up; this page and its app.js are the testing copies. -->
