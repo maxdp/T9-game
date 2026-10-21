@@ -79,14 +79,14 @@ async function checkPage(browser, base, url, isTesting) {
   await page.goto(base + url);
   check("version label shown", /^v\d+\.\d+/.test(await page.textContent("#version-label")), await page.textContent("#version-label"));
   if (await page.$(".mode-option")) {
-    check("new visitors open in the Tutorial", (await page.textContent("#screen-mode-label")) === "Tutorial (1/5)");
+    check("new visitors open in the Tutorial", (await page.textContent("#screen-mode-label")) === "Tutorial (1/6)");
     await typeWord(page, "thas");
     await page.click("#hang-enter");
     check("Tutorial explains a non-word", (await page.textContent("#hang-missed")) === "Incorrect: THAS is not a word");
     await typeWord(page, "this");
     await page.click("#hang-enter");
     await page.waitForTimeout(100);
-    check("Tutorial lesson 1 solves without the celebration", (await page.textContent("#hang-missed")) === "Got it!" && (await page.$$(".celebrate-flyer")).length === 0);
+    check("Tutorial lesson 1 solves without the celebration", (await page.textContent("#hang-missed")) === "Got it!1 2 3 4 is a sequence" && (await page.$$(".celebrate-flyer")).length === 0);
   }
   await switchTo(page, "practice");
   check("first Practice puzzle is Easy", (await page.textContent("#hang-difficulty")) === "Easy");

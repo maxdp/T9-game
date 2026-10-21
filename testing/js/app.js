@@ -37,18 +37,11 @@
     return grouping.groups.findIndex((g) => g.indices.includes(letterIndex));
   }
 
-  // ---------------------------------------------------------------------
-  // Top-of-page rule examples
-  // ---------------------------------------------------------------------
-
-  // Renders a word as one column per letter (its letter colored by merged
-  // group, with its press-count digit small and gray underneath). A
-  // multi-letter group's digits get split parentheses around the first/last
-  // letter of each contiguous run it occupies — e.g. MEANS's merged A+N
-  // shows "(1" / "2)" — so a wraparound merge shows as two separate "(x)"
-  // pieces in their actual positions.
-  function renderExampleWord(container, word, grouping) {
-    container.innerHTML = "";
+  // Where a word's merged groups get parentheses: around the first/last
+  // letter of each contiguous run of a multi-letter group, e.g. MEANS's
+  // merged A+N gives "(1" / "2)". A wraparound merge shows as two separate
+  // "(x)" pieces in their actual positions.
+  function groupMarks(word, grouping) {
     const n = word.length;
     const marks = Array.from({ length: n }, () => ({ open: false, close: false }));
     let i = 0;
@@ -62,6 +55,28 @@
       }
       i = j;
     }
+    return marks;
+  }
+
+  // A word's press counts with its merges marked, e.g. "1 2 (1 2) 4".
+  function sequenceText(word) {
+    const marks = groupMarks(word, findSequentialGrouping(wordToDigits(word)));
+    return word
+      .split("")
+      .map((letter, i) => (marks[i].open ? "(" : "") + PRESS_COUNTS[letter] + (marks[i].close ? ")" : ""))
+      .join(" ");
+  }
+
+  // ---------------------------------------------------------------------
+  // Rule examples
+  // ---------------------------------------------------------------------
+
+  // Renders a word as one column per letter (its letter colored by merged
+  // group, with its press-count digit small and gray underneath), merged
+  // groups' digits in parentheses (see groupMarks).
+  function renderExampleWord(container, word, grouping) {
+    container.innerHTML = "";
+    const marks = groupMarks(word, grouping);
 
     word.split("").forEach((letter, idx) => {
       const wrap = document.createElement("span");
@@ -163,14 +178,14 @@
     const TUTORIAL_LESSONS = [
       {
         pattern: "th_s",
-        rule: "Each letter's value is its number of presses on a T9 keypad. The goal is to find words that make a number sequence like 1 2 3 4",
+        rule: "Each letter's value is its number of presses on a T9 keypad (below)\nThe goal is to find words that make a number sequence like 1 2 3 4",
       },
       { pattern: "hos_", rule: "The sequence can wrap around" },
       { pattern: "mea_s", rule: "Numbers can add together such as 1+2=3" },
       { pattern: "_ong", rule: "Backwards sequences are allowed" },
       { pattern: "whis_ies", rule: "The sequence length can be 4 or longer (here 2+3=5, 2+4=6)" },
     ];
-    const TUTORIAL_DONE_TEXT = "Combine these rules and find all valid words!";
+    const TUTORIAL_DONE_TEXT = "Combine these rules and find all valid words!\nGood luck 🍀";
     let tutorial = null; // { puzzles, index } (index past the last lesson = the send-off)
     function tutorialPuzzle(lesson) {
       const answers = WORDS_GOOD.filter((w) => fitsPattern(lesson.pattern, w));
@@ -414,13 +429,17 @@
       });
     }
 
-    // The screen message a finished puzzle shows.
+    // The screen message a finished puzzle shows. A Tutorial lesson adds
+    // a line showing why its answer works, e.g. "2 3 4 1 is a sequence"
+    // (green when solved, red after giving up).
     function endMessage(p) {
       const missed = p.answers.filter((w) => !p.found.has(w));
-      if (missed.length === 0) {
-        return { text: p.difficulty === "Tutorial" ? "Got it!" : "Got 'em all!", kind: "success" };
-      }
-      return { text: "Missed: " + missed.map((w) => w.toUpperCase()).join(", "), kind: "missed" };
+      const message =
+        missed.length === 0
+          ? { text: p.difficulty === "Tutorial" ? "Got it!" : "Got 'em all!", kind: "success" }
+          : { text: "Missed: " + missed.map((w) => w.toUpperCase()).join(", "), kind: "missed" };
+      if (p.difficulty === "Tutorial") message.detail = `${sequenceText(p.answers[0])} is a sequence`;
+      return message;
     }
 
     // ---- Rendering ------------------------------------------------------
@@ -440,6 +459,10 @@
           shown = letter;
         } else if (filledMap.has(i)) {
           shown = filledMap.get(i);
+        } else if (mode === "tutorial" && p.found.has(p.word)) {
+          // A solved lesson keeps its answer spelled out in the tiles (the
+          // Tutorial has no found-words list).
+          shown = letter;
         } else if (i === activeTarget && pendingKey) {
           shown = groupLetterAt(pendingKey, pendingCount);
           isPreview = true;
@@ -500,6 +523,11 @@
     function renderScreenMessage(message) {
       missedEl.textContent = message ? message.text : "";
       missedEl.className = message ? message.kind : "";
+      if (message && message.detail) {
+        const detail = document.createElement("div");
+        detail.textContent = message.detail;
+        missedEl.appendChild(detail);
+      }
     }
 
     // How a difficulty label reads on screen; the Sunday-only Evil gets
@@ -530,14 +558,12 @@
       // In Daily, "(n/3)" counts up through the Easy, Medium and Hard puzzles
       // so a newcomer can see there's more than one; the results screen
       // after all three shows just "Daily #X".
-      // In Tutorial it counts through the lessons; the send-off after them
-      // shows just "Tutorial".
+      // In Tutorial it counts through the lessons and the send-off after
+      // them (its last screen).
       if (mode === "practice") {
         modeLabelEl.textContent = `Practice (${practiceSolvedToday()} solved)`;
       } else if (mode === "tutorial") {
-        modeLabelEl.textContent = tutorialFinished()
-          ? "Tutorial"
-          : `Tutorial (${tutorial.index + 1}/${TUTORIAL_LESSONS.length})`;
+        modeLabelEl.textContent = `Tutorial (${tutorial.index + 1}/${TUTORIAL_LESSONS.length + 1})`;
       } else {
         const total = daily.puzzles.length;
         modeLabelEl.textContent =
