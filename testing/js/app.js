@@ -2,13 +2,15 @@
   const { wordToDigits, findSequentialGrouping, PRESS_COUNTS } = window.T9;
   const { DICTIONARY, WORDS_GOOD } = window.T9_WORDS;
   const {
-    DIFFICULTY_LABELS,
     difficultyForPuzzle,
     puzzleLabel,
     buildPools,
     seededShuffle,
     centralDateKey,
     dailyNumber,
+    dateKeyForNumber,
+    dailyLabels,
+    isSunday,
   } = window.T9_PUZZLES;
 
   // DICTIONARY lets the game check whether a typed guess is a real word at
@@ -142,6 +144,7 @@
     const difficultyEl = document.getElementById("hang-difficulty");
     const missedEl = document.getElementById("hang-missed");
     const modeLabelEl = document.getElementById("screen-mode-label");
+    const difficultyTaglineEl = document.getElementById("difficulty-tagline");
     const dailyResultsEl = document.getElementById("daily-results");
     const dailyRowsEl = document.getElementById("daily-rows");
     const modeToggleBtn = document.getElementById("mode-toggle");
@@ -277,18 +280,19 @@
       practice.puzzle = generatePuzzle(target);
     }
 
-    // Daily: one Easy, one Medium and one Hard, in that order, read from
-    // the fixed schedule in js/daily.js (built by tools/build-daily.js), so
-    // every player everywhere gets the same three puzzles each Central-time
-    // day -- each scheduled puzzle carries its own answer list, so not even
-    // a word-list update can change it.
+    // Daily: one Easy, one Medium and one Hard (Evil on Sundays), in that
+    // order, read from the fixed schedule in js/daily.js (built by
+    // tools/build-daily.js), so every player everywhere gets the same three
+    // puzzles each Central-time day -- each scheduled puzzle carries its own
+    // answer list, so not even a word-list update can change it.
     function scheduledDay(number) {
       const days = (window.T9_DAILY && window.T9_DAILY.days) || [];
       const day = days[number - 1];
       if (!day) return null;
+      const labels = dailyLabels(dateKeyForNumber(number));
       return day.map((entry, i) => {
         const [pattern, ...answers] = entry.split(" ");
-        return puzzleFromPattern(pattern, answers, DIFFICULTY_LABELS[i]);
+        return puzzleFromPattern(pattern, answers, labels[i]);
       });
     }
 
@@ -298,7 +302,7 @@
     let fallbackPools = null;
     function fallbackDay(number) {
       if (!fallbackPools) fallbackPools = buildPools();
-      return DIFFICULTY_LABELS.map((label) => {
+      return dailyLabels(dateKeyForNumber(number)).map((label) => {
         const pool = fallbackPools[label];
         const day = number - 1;
         const cycle = Math.floor(day / pool.length);
@@ -307,17 +311,31 @@
       });
     }
 
+    // TESTING ONLY: with the Sunday switch on (testing page), Daily shows
+    // the coming Sunday's puzzles (today's, if today is Sunday) instead of
+    // today's, as a throwaway preview that never saves or touches the real
+    // Daily progress.
+    let sundayPreview = false;
+    let realDaily = null; // the real Daily, set aside while previewing
+    function upcomingSundayNumber() {
+      let number = dailyNumber(centralDateKey());
+      while (!isSunday(dateKeyForNumber(number))) number++;
+      return number;
+    }
+
     function loadDaily() {
       const dateKey = centralDateKey();
-      if (daily && daily.dateKey === dateKey) return;
-      const number = dailyNumber(dateKey);
+      const preview = sundayPreview;
+      if (daily && daily.dateKey === dateKey && !!daily.preview === preview) return;
+      const number = preview ? upcomingSundayNumber() : dailyNumber(dateKey);
       daily = {
         dateKey,
         number,
+        preview,
         puzzles: scheduledDay(number) || fallbackDay(number),
         index: 0,
       };
-      restoreDaily();
+      if (!preview) restoreDaily();
     }
 
     // Progress on today's Daily is kept in this browser, so after a reload
@@ -327,6 +345,7 @@
     // windows, blocked site data), in which case Daily still works, just
     // without remembering.
     function saveDaily() {
+      if (daily.preview) return;
       try {
         localStorage.setItem(
           DAILY_STORAGE_KEY,
@@ -461,6 +480,12 @@
       missedEl.className = message ? message.kind : "";
     }
 
+    // How a difficulty label reads on screen; the Sunday-only Evil gets
+    // devils.
+    function difficultyText(label) {
+      return label === "Evil" ? "😈 Evil 😈" : label;
+    }
+
     // The player's score on each Daily puzzle, e.g. "4/4 Easy".
     function renderDailyResults() {
       dailyRowsEl.innerHTML = "";
@@ -469,7 +494,7 @@
         row.textContent = `${p.found.size}/${p.answers.length} `;
         const label = document.createElement("span");
         label.className = "difficulty-" + p.difficulty.toLowerCase();
-        label.textContent = p.difficulty;
+        label.textContent = difficultyText(p.difficulty);
         row.appendChild(label);
         dailyRowsEl.appendChild(row);
       });
@@ -507,8 +532,9 @@
         return;
       }
 
-      difficultyEl.textContent = p.difficulty;
+      difficultyEl.textContent = difficultyText(p.difficulty);
       difficultyEl.className = "difficulty-" + p.difficulty.toLowerCase();
+      difficultyTaglineEl.hidden = p.difficulty !== "Evil";
       updateCounter();
       renderFoundList();
       renderScreenMessage(p.message);
@@ -856,6 +882,31 @@
     const debugWinBtn = document.getElementById("debug-win");
     if (debugWinBtn) debugWinBtn.addEventListener("click", debugWin);
     modeToggleBtn.addEventListener("click", () => setMode(mode === "practice" ? "daily" : "practice"));
+    // TESTING ONLY: the Sunday preview switch exists only on the testing page.
+    const sundayToggleBtn = document.getElementById("sunday-toggle");
+    if (sundayToggleBtn) {
+      sundayToggleBtn.addEventListener("click", () => {
+        sundayPreview = !sundayPreview;
+        sundayToggleBtn.setAttribute("aria-checked", String(sundayPreview));
+        window.T9Celebrate.clear();
+        // Set the real Daily aside untouched while previewing, and put it
+        // back exactly as it was (in-progress answers included) afterwards.
+        if (sundayPreview) {
+          realDaily = daily && !daily.preview ? daily : null;
+          daily = null;
+        } else {
+          daily = realDaily;
+          realDaily = null;
+        }
+        if (mode === "daily") {
+          loadDaily();
+          resetGuessInProgress();
+          renderAll();
+        } else {
+          setMode("daily");
+        }
+      });
+    }
     document.querySelectorAll(".mode-label").forEach((el) => {
       el.addEventListener("click", () => setMode(el.dataset.mode));
     });

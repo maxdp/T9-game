@@ -43,21 +43,23 @@ const days = existing.slice(0, keepCount);
 
 const pools = P.buildPools();
 const byPattern = new Map();
-P.DIFFICULTY_LABELS.forEach((label) => pools[label].forEach((p) => byPattern.set(p.pattern, p)));
+P.ALL_LABELS.forEach((label) => pools[label].forEach((p) => byPattern.set(p.pattern, p)));
 
 // Each difficulty deals from a shuffled deck of its pool; a puzzle already
 // used (in a kept day or earlier in this run) is skipped until the deck
 // has been through every puzzle once. A new round then still skips the
 // most recent half of the pool, so a repeat is never just days after its
 // last showing.
-const decks = P.DIFFICULTY_LABELS.map((label, li) => {
+const keptPatterns = days.flat().map((e) => e.split(" ")[0]);
+const decks = {};
+P.ALL_LABELS.forEach((label) => {
   const pool = pools[label].map((p) => p.pattern);
   const inPool = new Set(pool);
-  const history = days.map((d) => d[li].split(" ")[0]);
-  let used = new Set(history.filter((x) => inPool.has(x)));
+  const history = keptPatterns.filter((x) => inPool.has(x));
+  let used = new Set(history);
   let cycle = 0;
   let order = [];
-  return () => {
+  decks[label] = () => {
     for (;;) {
       if (order.length === 0) {
         if (used.size >= pool.length) used = new Set(history.slice(-Math.floor(pool.length / 2)));
@@ -72,10 +74,12 @@ const decks = P.DIFFICULTY_LABELS.map((label, li) => {
   };
 });
 
+// Easy, Medium, then Hard -- or Evil on Sundays.
 while (days.length < totalDays) {
+  const labels = P.dailyLabels(P.dateKeyForNumber(days.length + 1));
   days.push(
-    decks.map((deal) => {
-      const p = byPattern.get(deal());
+    labels.map((label) => {
+      const p = byPattern.get(decks[label]());
       return [p.pattern, ...p.answers].join(" ");
     })
   );
@@ -87,8 +91,9 @@ const lines = days.map(
 fs.writeFileSync(
   OUT,
   `// The Daily schedule: built by tools/build-daily.js -- edit by re-running
-// it, not by hand. Each day is [Easy, Medium, Hard]; each puzzle is its
-// pattern ("_" for a blank) followed by every answer.
+// it, not by hand. Each day is [Easy, Medium, Hard] ([Easy, Medium, Evil]
+// on Sundays); each puzzle is its pattern ("_" for a blank) followed by
+// every answer.
 window.T9_DAILY = {
   days: [
 ${lines.join("\n")}

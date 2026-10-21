@@ -10,7 +10,10 @@
 
   const MIN_VALID_ANSWERS = 2;
   const MAX_VALID_ANSWERS = 8;
+  // The three Daily slots, in order. (A fourth label, Evil, only ever
+  // replaces Hard in the Daily's last slot on Sundays -- see dailyLabels.)
   const DIFFICULTY_LABELS = ["Easy", "Medium", "Hard"];
+  const ALL_LABELS = ["Easy", "Medium", "Hard", "Evil"];
 
   // Word -> frequency rank (1 = most common, higher = rarer).
   const WORD_RANK = new Map(WORDS_GOOD.map((w, i) => [w, WORDS_GOOD_RANK[i]]));
@@ -32,7 +35,9 @@
   //    only works as [LM][O][N][D][SA]); 0 otherwise. An answer that merely
   //    reads around the end, like spur (4,1,2,3), doesn't count.
   //
-  // Totals are labeled 4-6 Easy / 7-9 Medium / 10+ Hard.
+  // Totals are labeled 4-6 Easy / 7-9 Medium / 10-11 Hard / 12+ Evil.
+  // Evil puzzles never appear in Practice; they're the Sunday Daily's last
+  // puzzle in place of Hard.
   const RARITY_QUARTILES = (() => {
     const sortedRanks = [...WORDS_GOOD_RANK].sort((a, b) => a - b);
     const n = sortedRanks.length;
@@ -83,7 +88,8 @@
       splitPoints(answers);
     if (points <= 6) return "Easy";
     if (points <= 9) return "Medium";
-    return "Hard";
+    if (points <= 11) return "Hard";
+    return "Evil";
   }
 
   function rarestRankOf(answers) {
@@ -137,7 +143,7 @@
         entry.answers.push(w);
       }
     });
-    const pools = { Easy: [], Medium: [], Hard: [] };
+    const pools = { Easy: [], Medium: [], Hard: [], Evil: [] };
     byPattern.forEach((entry, pattern) => {
       const label = puzzleLabel(pattern, entry.answers, entry.blankCount);
       if (label) pools[label].push({ pattern, answers: entry.answers, difficulty: label });
@@ -195,6 +201,16 @@
     const [y, m, d] = dateKey.split("-").map(Number);
     return Math.round((Date.UTC(y, m - 1, d) - DAILY_EPOCH) / 86400000) + 1;
   }
+  // The labels of a day's three Daily puzzles: Easy, Medium, then Hard --
+  // or Evil on Sundays (by the Daily's own Central-time date).
+  function isSunday(dateKey) {
+    const [y, m, d] = dateKey.split("-").map(Number);
+    return new Date(Date.UTC(y, m - 1, d)).getUTCDay() === 0;
+  }
+  function dailyLabels(dateKey) {
+    return isSunday(dateKey) ? ["Easy", "Medium", "Evil"] : DIFFICULTY_LABELS;
+  }
+
   function dateKeyForNumber(number) {
     return new Date(DAILY_EPOCH + (number - 1) * 86400000).toISOString().slice(0, 10);
   }
@@ -203,6 +219,9 @@
     MIN_VALID_ANSWERS,
     MAX_VALID_ANSWERS,
     DIFFICULTY_LABELS,
+    ALL_LABELS,
+    isSunday,
+    dailyLabels,
     WORD_RANK,
     difficultyForPuzzle,
     puzzleLabel,

@@ -149,6 +149,7 @@
   #hang-difficulty.difficulty-easy { background: #1f3a2c; color: #6ee0a0; }
   #hang-difficulty.difficulty-medium { background: #3a3620; color: #ffcf6e; }
   #hang-difficulty.difficulty-hard { background: #3a2024; color: #ff8a8a; }
+  #hang-difficulty.difficulty-evil { background: #33204f; color: #c792ea; }
 
   .hang-tiles {
     display: flex;
@@ -254,6 +255,23 @@
     transition: transform 0.2s ease;
   }
   #mode-toggle[aria-checked="true"] .mode-knob { transform: translateX(22px); }
+  /* TESTING ONLY: the Sunday preview switch below the phone (grey when
+     off, purple when on). */
+  .sunday-switch { margin: 10px 0 0; }
+  #sunday-toggle {
+    position: relative;
+    width: 52px;
+    height: 30px;
+    padding: 0;
+    border-radius: 999px;
+    background: #4a4a66;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.45);
+  }
+  #sunday-toggle:hover { background: #55557a; }
+  #sunday-toggle[aria-checked="true"] { background: #6c45c9; }
+  #sunday-toggle[aria-checked="true"]:hover { background: #7b54d8; }
+  #sunday-toggle[aria-checked="true"] .mode-knob { transform: translateX(22px); }
+  .mode-label-static { font-size: 0.95rem; font-weight: 600; color: #c8c8e0; }
 
   /* ---- Silver flip phone (open, facing the player) ---------------------
      Built in CSS rather than from a photo; the keypad sits in the real
@@ -397,8 +415,25 @@
   #daily-rows .difficulty-easy { color: #6ee0a0; }
   #daily-rows .difficulty-medium { color: #ffcf6e; }
   #daily-rows .difficulty-hard { color: #ff8a8a; }
+  #daily-rows .difficulty-evil { color: #c792ea; }
   .daily-done { margin-top: 8px; font-size: 0.75rem; font-weight: 700; color: #dbe8ff; }
   .phone-screen #hang-difficulty { margin-top: 0; font-size: 0.68rem; padding: 3px 10px; }
+  /* "Sunday special" sits just above the Evil badge, positioned out of the
+     layout so it never moves anything else on the screen. */
+  .difficulty-wrap { position: relative; }
+  #difficulty-tagline {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    line-height: 1;
+    font-size: 0.7rem;
+    font-style: italic;
+    font-weight: 600;
+    color: #c792ea;
+  }
+  #difficulty-tagline[hidden] { display: none; }
   .phone-screen .hang-tiles { gap: 4px; margin: 4px 0 0; flex-wrap: nowrap; }
   .phone-screen .hang-tile {
     width: clamp(24px, 7.4vw, 30px);
@@ -647,7 +682,10 @@
               <span class="phone-battery"><i></i></span>
             </div>
             <div class="phone-screen-body">
-              <div id="hang-difficulty"></div>
+              <div class="difficulty-wrap">
+                <div id="difficulty-tagline" hidden>Sunday special</div>
+                <div id="hang-difficulty"></div>
+              </div>
               <div id="hang-tiles" class="hang-tiles"></div>
               <div id="hang-counter">0 / 0 found</div>
               <div class="screen-lists">
@@ -686,18 +724,25 @@
         <div class="phone-mic" aria-hidden="true"></div>
       </div>
     </div>
+
+    <!-- TESTING ONLY: preview the coming Sunday's Daily (see sundayPreview
+         in app.js). -->
+    <div class="mode-switch sunday-switch">
+      <button type="button" id="sunday-toggle" role="switch" aria-checked="false" aria-label="Preview Sunday's Daily"><span class="mode-knob"></span></button>
+      <span class="mode-label-static">Sunday</span>
+    </div>
   </div>
 
-  <div id="version-label">v0.51 · testing</div>
+  <div id="version-label">v0.52 · testing</div>
 
   <!-- Testing build: rules and word list are shared with the live site one
        folder up; this page and its app.js are the testing copies. -->
   <script src="../js/t9-logic.js?v=50"></script>
   <script src="../js/words.js?v=64"></script>
   <script src="../js/inappropriate-words.js?v=4"></script>
-  <script src="../js/puzzles.js?v=4"></script>
-  <script src="../js/daily.js?v=6"></script>
+  <script src="../js/puzzles.js?v=5"></script>
+  <script src="../js/daily.js?v=7"></script>
   <script src="js/celebrate.js?v=17"></script>
-  <script src="js/app.js?v=74"></script>
+  <script src="js/app.js?v=75"></script>
 </body>
 </html>
