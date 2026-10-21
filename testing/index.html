@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>T9 Tangle (testing)</title>
 <style>
-  :root { color-scheme: light dark; }
+  :root { color-scheme: light; }
   * { box-sizing: border-box; }
   body {
     font-family: system-ui, sans-serif;
@@ -14,14 +14,35 @@
     align-items: center;
     min-height: 100vh;
     margin: 0;
-    background: #1b1b2f;
-    color: #f2f2f2;
+    /* The sakura scene (js/background.js) covers this; it's the color the
+       page shows until the scene draws. */
+    background: #f3e6ee;
+    color: #33223b;
     text-align: center;
     padding: 24px 16px 12px;
   }
+  /* The sakura scene sits behind everything: a small canvas stretched
+     smoothly over the screen (so it looks blurred), with a sharp canvas of
+     drifting petals in front of it. */
+  .sakura-bg {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .sakura-bg canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+  /* Text straight on the scene is dark with a soft light halo, so it
+     stays readable over sky, blossoms and water alike. */
+  h1,
+  p.subtitle,
+  #rules,
+  .mode-label-static {
+    text-shadow: 0 0 2px rgba(255, 255, 255, 0.9), 0 0 8px rgba(255, 255, 255, 0.85);
+  }
   h1 { margin-bottom: 4px; }
-  .title-t9 { color: #ffffff; font-style: italic; }
-  p.subtitle { margin-top: 0; color: #a0a0c0; max-width: 480px; }
+  .title-t9 { color: #2b1d36; font-style: italic; }
+  p.subtitle { margin-top: 0; color: #4a3652; font-weight: 600; max-width: 480px; }
 
   /* The rules, for reference, below the phone: same width as the phone,
      each one numbered at the left beside its example. */
@@ -46,7 +67,7 @@
     justify-self: start;
     font-size: 1.1rem;
     font-weight: 700;
-    color: #a0a0c0;
+    color: #5e4166;
   }
   .rule-row > .key-demo-row,
   .rule-row > .example-word { grid-area: visual; }
@@ -64,7 +85,8 @@
   .example-text {
     margin: 0;
     max-width: 320px;
-    color: #c8c8e0;
+    color: #33223b;
+    font-weight: 500;
     font-size: 0.9rem;
     line-height: 1.4;
   }
@@ -74,8 +96,9 @@
     align-items: center;
     justify-content: center;
     gap: 4px;
-    background: linear-gradient(180deg, #34345198, #262640);
+    background: linear-gradient(180deg, #343451, #262640);
     border-radius: 12px;
+    text-shadow: none;
     font-size: 0.95rem;
     font-weight: 600;
     letter-spacing: 0.04em;
@@ -129,7 +152,7 @@
   .word-letter-num {
     font-size: 0.8rem;
     font-weight: 600;
-    color: #8a8aa8;
+    color: #5d5470;
     margin-top: 4px;
   }
 
@@ -304,7 +327,7 @@
   #sunday-toggle[aria-checked="true"] { background: #6c45c9; }
   #sunday-toggle[aria-checked="true"]:hover { background: #7b54d8; }
   #sunday-toggle[aria-checked="true"] .mode-knob { transform: translateX(22px); }
-  .mode-label-static { font-size: 0.95rem; font-weight: 600; color: #c8c8e0; }
+  .mode-label-static { font-size: 0.95rem; font-weight: 600; color: #33223b; }
 
   /* ---- Silver flip phone (open, facing the player) ---------------------
      Built in CSS rather than from a photo; the keypad sits in the real
@@ -316,7 +339,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    filter: drop-shadow(0 18px 26px rgba(0, 0, 0, 0.55));
+    filter: drop-shadow(0 18px 26px rgba(40, 20, 50, 0.4));
   }
   .phone-lid,
   .phone-base {
@@ -843,7 +866,7 @@
     </section>
   </div>
 
-  <div id="version-label">v0.62 · testing</div>
+  <div id="version-label">v0.63 · testing</div>
 
   <!-- Testing build: rules and word list are shared with the live site one
        folder up; this page and its app.js are the testing copies. -->
@@ -853,6 +876,7 @@
   <script src="../js/puzzles.js?v=8"></script>
   <script src="../js/daily.js?v=8"></script>
   <script src="js/celebrate.js?v=17"></script>
-  <script src="js/app.js?v=82"></script>
+  <script src="js/app.js?v=83"></script>
+  <script src="js/background.js?v=1"></script>
 </body>
 </html>
