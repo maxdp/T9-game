@@ -68,10 +68,10 @@
     text-align: center;
     padding: 24px 16px 12px;
   }
-  /* The sakura scene (js/background.js) sits behind everything, with a
-     canvas of drifting petals in front of it. It's as tall as the screen
-     with the browser's toolbars hidden, so it doesn't redraw as they come
-     and go while scrolling on a phone. */
+  /* The sakura paintings sit behind everything, with a canvas of petals
+     (js/background.js) drifting in front of them. It's as tall as the
+     screen with the browser's toolbars hidden, so nothing jumps as they
+     come and go while scrolling on a phone. */
   .sakura-bg {
     position: fixed;
     left: 0;
@@ -84,8 +84,34 @@
     pointer-events: none;
   }
   .sakura-bg canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
-  /* The old scene fading out after switching dark mode. */
-  .sakura-bg .sakura-fade { transition: opacity 0.7s ease; }
+  /* A wide painting for wider screens and a tall one for phones (and
+     tablets held upright). The night painting fades in over the day one
+     in dark mode. Both drift very slowly, so the scene feels alive. */
+  .sakura-photo {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    animation: sakura-drift 45s ease-in-out infinite alternate;
+  }
+  .sakura-day { background-image: url("img/sakura-day-wide.jpg"); }
+  .sakura-night {
+    background-image: url("img/sakura-night-wide.jpg");
+    opacity: 0;
+    transition: opacity 0.8s ease;
+  }
+  :root[data-theme="dark"] .sakura-night { opacity: 1; }
+  @media (max-aspect-ratio: 4/5) {
+    .sakura-day { background-image: url("img/sakura-day-tall.jpg"); }
+    .sakura-night { background-image: url("img/sakura-night-tall.jpg"); }
+  }
+  @keyframes sakura-drift {
+    from { transform: scale(1.02) translate(0, 0); }
+    to { transform: scale(1.08) translate(-1%, -1.2%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sakura-photo { animation: none; }
+  }
   /* Text straight on the scene is dark with a soft light halo, so it
      stays readable over sky, blossoms and water alike. */
   h1,
@@ -931,7 +957,7 @@
     </section>
   </div>
 
-  <div id="version-label">v0.66 · testing</div>
+  <div id="version-label">v0.67 · testing</div>
 
   <!-- Testing build: rules and word list are shared with the live site one
        folder up; this page and its app.js are the testing copies. -->
@@ -942,6 +968,6 @@
   <script src="../js/daily.js?v=8"></script>
   <script src="js/celebrate.js?v=17"></script>
   <script src="js/app.js?v=84"></script>
-  <script src="js/background.js?v=3"></script>
+  <script src="js/background.js?v=4"></script>
 </body>
 </html>
