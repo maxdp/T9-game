@@ -44,8 +44,8 @@
   // Renders a word as one column per letter (its letter colored by merged
   // group, with its press-count digit small and gray underneath). A
   // multi-letter group's digits get split parentheses around the first/last
-  // letter of each contiguous run it occupies — e.g. PUNTS's merged N+T
-  // shows "(2" / "1)" — so a wraparound merge shows as two separate "(x)"
+  // letter of each contiguous run it occupies — e.g. MEANS's merged A+N
+  // shows "(1" / "2)" — so a wraparound merge shows as two separate "(x)"
   // pieces in their actual positions.
   function renderExampleWord(container, word, grouping) {
     container.innerHTML = "";
@@ -86,31 +86,16 @@
     });
   }
 
-  // PUNTS's own findSequentialGrouping result merges P+U (1+2=3) instead
-  // of N+T — just as valid, but it wouldn't match the "2+1=3" explanation
-  // text, so that grouping is specified directly rather than computed.
-  const PUNTS_GROUPING = {
-    groups: [
-      { indices: [0], sum: 1 },
-      { indices: [1], sum: 2 },
-      { indices: [2, 3], sum: 3 },
-      { indices: [4], sum: 4 },
-    ],
-    sums: [1, 2, 3, 4],
-    direction: "increasing",
-    wrapped: false,
-  };
-
   [
     { id: "ex-this", word: "this" },
-    { id: "ex-spur", word: "spur" },
-    { id: "ex-punts", word: "punts", grouping: PUNTS_GROUPING },
+    { id: "ex-host", word: "host" },
+    { id: "ex-means", word: "means" },
     { id: "ex-song", word: "song" },
     { id: "ex-whiskies", word: "whiskies" },
-  ].forEach(({ id, word, grouping }) => {
+  ].forEach(({ id, word }) => {
     const container = document.getElementById(id);
     if (!container) return;
-    renderExampleWord(container, word, grouping || findSequentialGrouping(wordToDigits(word)));
+    renderExampleWord(container, word, findSequentialGrouping(wordToDigits(word)));
   });
 
   // Colors the title's "TANGLE" letter-for-letter by its own merge
@@ -150,6 +135,8 @@
     const dailyRowsEl = document.getElementById("daily-rows");
     const modeSelectEl = document.getElementById("mode-select");
     const tutorialRuleEl = document.getElementById("tutorial-rule");
+    const tutorialPrevBtn = document.getElementById("tutorial-prev");
+    const tutorialNextBtn = document.getElementById("tutorial-next");
 
     const DAILY_STORAGE_KEY = "t9tangle-daily";
     const PRACTICE_STORAGE_KEY = "t9tangle-practice-solved";
@@ -171,6 +158,8 @@
     // Tutorial: one-blank puzzles that each teach a rule (shown on the
     // screen in place of the difficulty badge), each with exactly one
     // answer and, mostly, tempting wrong ones (THUS, HOSE, MEALS, LONG...).
+    // After the last lesson comes one more screen, the send-off, with the
+    // Start key that moves on to Daily.
     const TUTORIAL_LESSONS = [
       {
         pattern: "th_s",
@@ -182,18 +171,16 @@
       { pattern: "whis_ies", rule: "The sequence length can be 4 or longer (here 2+3=5, 2+4=6)" },
     ];
     const TUTORIAL_DONE_TEXT = "Combine these rules and find all valid words!";
-    let tutorial = null; // { puzzles, index }
+    let tutorial = null; // { puzzles, index } (index past the last lesson = the send-off)
+    function tutorialPuzzle(lesson) {
+      const answers = WORDS_GOOD.filter((w) => fitsPattern(lesson.pattern, w));
+      return Object.assign(puzzleFromPattern(lesson.pattern, answers, "Tutorial"), { rule: lesson.rule });
+    }
     function newTutorial() {
-      tutorial = {
-        index: 0,
-        puzzles: TUTORIAL_LESSONS.map((lesson) => {
-          const answers = WORDS_GOOD.filter((w) => fitsPattern(lesson.pattern, w));
-          return Object.assign(puzzleFromPattern(lesson.pattern, answers, "Tutorial"), { rule: lesson.rule });
-        }),
-      };
+      tutorial = { index: 0, puzzles: TUTORIAL_LESSONS.map(tutorialPuzzle) };
     }
     function tutorialFinished() {
-      return tutorial.index === tutorial.puzzles.length - 1 && tutorial.puzzles[tutorial.index].complete;
+      return tutorial.index >= TUTORIAL_LESSONS.length;
     }
 
     // Tap-input state: every blank position in the puzzle, which one (if
@@ -212,7 +199,7 @@
 
     function currentPuzzle() {
       if (mode === "practice") return practice.puzzle;
-      if (mode === "tutorial") return tutorial.puzzles[tutorial.index];
+      if (mode === "tutorial") return tutorialFinished() ? null : tutorial.puzzles[tutorial.index];
       return daily.index < daily.puzzles.length ? daily.puzzles[daily.index] : null;
     }
 
@@ -543,11 +530,14 @@
       // In Daily, "(n/3)" counts up through the Easy, Medium and Hard puzzles
       // so a newcomer can see there's more than one; the results screen
       // after all three shows just "Daily #X".
-      // In Tutorial it counts through the lessons.
+      // In Tutorial it counts through the lessons; the send-off after them
+      // shows just "Tutorial".
       if (mode === "practice") {
         modeLabelEl.textContent = `Practice (${practiceSolvedToday()} solved)`;
       } else if (mode === "tutorial") {
-        modeLabelEl.textContent = `Tutorial (${tutorial.index + 1}/${tutorial.puzzles.length})`;
+        modeLabelEl.textContent = tutorialFinished()
+          ? "Tutorial"
+          : `Tutorial (${tutorial.index + 1}/${TUTORIAL_LESSONS.length})`;
       } else {
         const total = daily.puzzles.length;
         modeLabelEl.textContent =
@@ -555,18 +545,35 @@
       }
 
       const p = currentPuzzle();
-      const showResults = !p;
-      screenBodyEl.classList.toggle("tutorial-mode", mode === "tutorial");
-      tutorialRuleEl.hidden = mode !== "tutorial";
-      if (mode === "tutorial") {
-        // After the last lesson the rule gives way to the send-off.
-        tutorialRuleEl.textContent = tutorialFinished() ? TUTORIAL_DONE_TEXT : p.rule;
+      const inTutorial = mode === "tutorial";
+      const tutorialDone = inTutorial && tutorialFinished();
+      const showResults = !p && !inTutorial;
+      screenBodyEl.classList.toggle("tutorial-mode", inTutorial);
+      screenBodyEl.classList.toggle("tutorial-done", tutorialDone);
+      tutorialRuleEl.hidden = !inTutorial;
+      if (inTutorial) tutorialRuleEl.textContent = tutorialDone ? TUTORIAL_DONE_TEXT : p.rule;
+      // The header's arrows step through the lessons (and the send-off).
+      tutorialPrevBtn.hidden = tutorialNextBtn.hidden = !inTutorial;
+      if (inTutorial) {
+        tutorialPrevBtn.disabled = tutorial.index === 0;
+        tutorialNextBtn.disabled = tutorialDone;
       }
       screenBodyEl.classList.toggle("show-results", showResults);
       dailyResultsEl.hidden = !showResults;
 
       giveUpBtn.textContent = "Give up";
       giveUpBtn.classList.remove("next-key");
+
+      if (tutorialDone) {
+        // The send-off: just its text and the Start key.
+        renderTiles();
+        setKeypadDisabled(true);
+        giveUpBtn.disabled = false;
+        giveUpBtn.textContent = "Start";
+        giveUpBtn.classList.add("next-key");
+        renderKeypadHighlight();
+        return;
+      }
 
       if (showResults) {
         renderDailyResults();
@@ -589,7 +596,7 @@
         // into the way on to the next puzzle.
         giveUpBtn.disabled = false;
         if (mode === "practice") giveUpBtn.textContent = "New puzzle";
-        else if (mode === "tutorial") giveUpBtn.textContent = tutorialFinished() ? "Start" : "Next puzzle";
+        else if (mode === "tutorial") giveUpBtn.textContent = "Next puzzle";
         else giveUpBtn.textContent = daily.index < daily.puzzles.length - 1 ? "Next puzzle" : "See results";
         giveUpBtn.classList.add("next-key");
       }
@@ -786,12 +793,15 @@
         ? findSequentialGrouping(wordToDigits(guess))
         : null;
       if (!grouping) {
-        // In the tutorial, a wrong guess shows its numbers, so the player
-        // can see why it doesn't work (e.g. "LONG = 3 3 2 1").
-        showScreenMessage(
-          mode === "tutorial" ? `Incorrect: ${guess.toUpperCase()} = ${wordToDigits(guess).join(" ")}` : "Incorrect",
-          "incorrect"
-        );
+        // In the tutorial, a wrong guess says why: it isn't a word at all,
+        // or (a real word) its numbers, e.g. "LONG = 3 3 2 1".
+        let text = "Incorrect";
+        if (mode === "tutorial") {
+          text += DICTIONARY_SET.has(guess)
+            ? `: ${guess.toUpperCase()} = ${wordToDigits(guess).join(" ")}`
+            : `: ${guess.toUpperCase()} is not a word`;
+        }
+        showScreenMessage(text, "incorrect");
         window.T9Celebrate.buzzer();
         return;
       }
@@ -875,21 +885,32 @@
 
     // Once a puzzle is over, the Give up key moves on: a fresh puzzle in
     // Practice, the next of the three in Daily, then the Daily results;
-    // the next lesson in Tutorial, and after the last one, Start (Daily).
+    // the next lesson in Tutorial, then the send-off, whose Start key
+    // moves on to Daily.
     function nextPuzzle() {
-      window.T9Celebrate.clear();
       if (mode === "tutorial") {
-        if (tutorialFinished()) {
-          setMode("daily");
-          return;
-        }
-        tutorial.index++;
-      } else if (mode === "practice") {
+        if (tutorialFinished()) setMode("daily");
+        else goToLesson(tutorial.index + 1);
+        return;
+      }
+      window.T9Celebrate.clear();
+      if (mode === "practice") {
         newPracticePuzzle();
       } else {
         daily.index++;
         saveDaily();
       }
+      resetGuessInProgress();
+      renderAll();
+    }
+
+    // Jumps to a Tutorial lesson (or, one past the last, the send-off).
+    // A lesson always starts fresh, so going back to one replays it.
+    function goToLesson(index) {
+      if (index < 0 || index > TUTORIAL_LESSONS.length) return;
+      window.T9Celebrate.clear();
+      tutorial.index = index;
+      if (index < TUTORIAL_LESSONS.length) tutorial.puzzles[index] = tutorialPuzzle(TUTORIAL_LESSONS[index]);
       resetGuessInProgress();
       renderAll();
     }
@@ -946,10 +967,16 @@
     enterBtn.addEventListener("click", handleEnter);
     giveUpBtn.addEventListener("click", () => {
       const p = currentPuzzle();
-      if (!p) return;
-      if (p.complete) nextPuzzle();
-      else giveUp();
+      if (!p || p.complete) {
+        // Daily's results screen has nothing next; the Tutorial's send-off
+        // has Start.
+        if (p || mode === "tutorial") nextPuzzle();
+      } else {
+        giveUp();
+      }
     });
+    tutorialPrevBtn.addEventListener("click", () => goToLesson(tutorial.index - 1));
+    tutorialNextBtn.addEventListener("click", () => goToLesson(tutorial.index + 1));
     // Only the testing page has the debug 0 key; on live 0 is inert.
     const debugWinBtn = document.getElementById("debug-win");
     if (debugWinBtn) debugWinBtn.addEventListener("click", debugWin);

@@ -80,6 +80,9 @@ async function checkPage(browser, base, url, isTesting) {
   check("version label shown", /^v\d+\.\d+/.test(await page.textContent("#version-label")), await page.textContent("#version-label"));
   if (await page.$(".mode-option")) {
     check("new visitors open in the Tutorial", (await page.textContent("#screen-mode-label")) === "Tutorial (1/5)");
+    await typeWord(page, "thas");
+    await page.click("#hang-enter");
+    check("Tutorial explains a non-word", (await page.textContent("#hang-missed")) === "Incorrect: THAS is not a word");
     await typeWord(page, "this");
     await page.click("#hang-enter");
     await page.waitForTimeout(100);
