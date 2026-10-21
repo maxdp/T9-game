@@ -11,6 +11,7 @@
     dateKeyForNumber,
     dailyLabels,
     isSunday,
+    fitsPattern,
   } = window.T9_PUZZLES;
 
   // DICTIONARY lets the game check whether a typed guess is a real word at
@@ -147,11 +148,14 @@
     const difficultyTaglineEl = document.getElementById("difficulty-tagline");
     const dailyResultsEl = document.getElementById("daily-results");
     const dailyRowsEl = document.getElementById("daily-rows");
-    const modeToggleBtn = document.getElementById("mode-toggle");
+    const modeSelectEl = document.getElementById("mode-select");
+    const tutorialRuleEl = document.getElementById("tutorial-rule");
 
     const DAILY_STORAGE_KEY = "t9tangle-daily";
     const PRACTICE_STORAGE_KEY = "t9tangle-practice-solved";
     const DAILY_CHOSEN_KEY = "t9tangle-daily-chosen";
+    const TUTORIAL_SEEN_KEY = "t9tangle-tutorial-seen";
+    const MODES = ["tutorial", "daily", "practice"];
 
     let mode = "practice";
 
@@ -163,6 +167,34 @@
     //     complete, attempts, message: { text, kind } | null }
     const practice = { puzzle: null, seen: new Set(), isFirst: true };
     let daily = null; // { dateKey, number, puzzles: [3], index } (index 3 = all done)
+
+    // Tutorial: one-blank puzzles that each teach a rule (shown on the
+    // screen in place of the difficulty badge), each with exactly one
+    // answer and, mostly, tempting wrong ones (THUS, HOSE, MEALS, LONG...).
+    const TUTORIAL_LESSONS = [
+      {
+        pattern: "th_s",
+        rule: "Each letter's value is its number of presses on a T9 keypad. The goal is to find words that make a number sequence like 1 2 3 4",
+      },
+      { pattern: "hos_", rule: "The sequence can wrap around" },
+      { pattern: "mea_s", rule: "Numbers can add together such as 1+2=3" },
+      { pattern: "_ong", rule: "Backwards sequences are allowed" },
+      { pattern: "whis_ies", rule: "The sequence length can be 4 or longer (here 2+3=5, 2+4=6)" },
+    ];
+    const TUTORIAL_DONE_TEXT = "Combine these rules and find all valid words!";
+    let tutorial = null; // { puzzles, index }
+    function newTutorial() {
+      tutorial = {
+        index: 0,
+        puzzles: TUTORIAL_LESSONS.map((lesson) => {
+          const answers = WORDS_GOOD.filter((w) => fitsPattern(lesson.pattern, w));
+          return Object.assign(puzzleFromPattern(lesson.pattern, answers, "Tutorial"), { rule: lesson.rule });
+        }),
+      };
+    }
+    function tutorialFinished() {
+      return tutorial.index === tutorial.puzzles.length - 1 && tutorial.puzzles[tutorial.index].complete;
+    }
 
     // Tap-input state: every blank position in the puzzle, which one (if
     // any) is active, what's been filled so far, and the in-progress
@@ -180,6 +212,7 @@
 
     function currentPuzzle() {
       if (mode === "practice") return practice.puzzle;
+      if (mode === "tutorial") return tutorial.puzzles[tutorial.index];
       return daily.index < daily.puzzles.length ? daily.puzzles[daily.index] : null;
     }
 
@@ -397,7 +430,9 @@
     // The screen message a finished puzzle shows.
     function endMessage(p) {
       const missed = p.answers.filter((w) => !p.found.has(w));
-      if (missed.length === 0) return { text: "Got 'em all!", kind: "success" };
+      if (missed.length === 0) {
+        return { text: p.difficulty === "Tutorial" ? "Got it!" : "Got 'em all!", kind: "success" };
+      }
       return { text: "Missed: " + missed.map((w) => w.toUpperCase()).join(", "), kind: "missed" };
     }
 
@@ -508,8 +543,11 @@
       // In Daily, "(n/3)" counts up through the Easy, Medium and Hard puzzles
       // so a newcomer can see there's more than one; the results screen
       // after all three shows just "Daily #X".
+      // In Tutorial it counts through the lessons.
       if (mode === "practice") {
         modeLabelEl.textContent = `Practice (${practiceSolvedToday()} solved)`;
+      } else if (mode === "tutorial") {
+        modeLabelEl.textContent = `Tutorial (${tutorial.index + 1}/${tutorial.puzzles.length})`;
       } else {
         const total = daily.puzzles.length;
         modeLabelEl.textContent =
@@ -518,6 +556,12 @@
 
       const p = currentPuzzle();
       const showResults = !p;
+      screenBodyEl.classList.toggle("tutorial-mode", mode === "tutorial");
+      tutorialRuleEl.hidden = mode !== "tutorial";
+      if (mode === "tutorial") {
+        // After the last lesson the rule gives way to the send-off.
+        tutorialRuleEl.textContent = tutorialFinished() ? TUTORIAL_DONE_TEXT : p.rule;
+      }
       screenBodyEl.classList.toggle("show-results", showResults);
       dailyResultsEl.hidden = !showResults;
 
@@ -544,8 +588,9 @@
         // The whole keypad switches off except the Give up key, which turns
         // into the way on to the next puzzle.
         giveUpBtn.disabled = false;
-        giveUpBtn.textContent =
-          mode === "practice" ? "New puzzle" : daily.index < daily.puzzles.length - 1 ? "Next puzzle" : "See results";
+        if (mode === "practice") giveUpBtn.textContent = "New puzzle";
+        else if (mode === "tutorial") giveUpBtn.textContent = tutorialFinished() ? "Start" : "Next puzzle";
+        else giveUpBtn.textContent = daily.index < daily.puzzles.length - 1 ? "Next puzzle" : "See results";
         giveUpBtn.classList.add("next-key");
       }
       render();
@@ -741,7 +786,12 @@
         ? findSequentialGrouping(wordToDigits(guess))
         : null;
       if (!grouping) {
-        showScreenMessage("Incorrect", "incorrect");
+        // In the tutorial, a wrong guess shows its numbers, so the player
+        // can see why it doesn't work (e.g. "LONG = 3 3 2 1").
+        showScreenMessage(
+          mode === "tutorial" ? `Incorrect: ${guess.toUpperCase()} = ${wordToDigits(guess).join(" ")}` : "Incorrect",
+          "incorrect"
+        );
         window.T9Celebrate.buzzer();
         return;
       }
@@ -799,10 +849,13 @@
       }
     }
 
+    // Tutorial puzzles only get the correct-answer chime, never the full
+    // celebration.
     function winPuzzle() {
       if (mode === "practice") countPracticeSolve();
       finishPuzzle();
-      window.T9Celebrate.celebrate(document.querySelector(".phone"));
+      if (mode === "tutorial") window.T9Celebrate.chime();
+      else window.T9Celebrate.celebrate(document.querySelector(".phone"));
     }
 
     // Lists on the phone's screen only the answers the player didn't find.
@@ -821,10 +874,17 @@
     }
 
     // Once a puzzle is over, the Give up key moves on: a fresh puzzle in
-    // Practice, the next of the three in Daily, then the Daily results.
+    // Practice, the next of the three in Daily, then the Daily results;
+    // the next lesson in Tutorial, and after the last one, Start (Daily).
     function nextPuzzle() {
       window.T9Celebrate.clear();
-      if (mode === "practice") {
+      if (mode === "tutorial") {
+        if (tutorialFinished()) {
+          setMode("daily");
+          return;
+        }
+        tutorial.index++;
+      } else if (mode === "practice") {
         newPracticePuzzle();
       } else {
         daily.index++;
@@ -836,35 +896,45 @@
 
     // ---- Mode toggle ----------------------------------------------------
 
-    // Once a player has switched to Daily, every later visit opens in Daily;
-    // until then (new players) the page opens in Practice.
-    function rememberDailyChosen() {
+    // New players open in the Tutorial. Once a player has left it (or has
+    // ever switched to Daily), every later visit opens in Daily.
+    function remember(key) {
       try {
-        localStorage.setItem(DAILY_CHOSEN_KEY, "1");
+        localStorage.setItem(key, "1");
       } catch (e) {
-        // Not remembered; the next visit just opens in Practice.
+        // Not remembered; the next visit just opens in the Tutorial again.
       }
     }
-    function hasChosenDaily() {
+    function recalls(key) {
       try {
-        return localStorage.getItem(DAILY_CHOSEN_KEY) === "1";
+        return localStorage.getItem(key) === "1";
       } catch (e) {
         return false;
       }
     }
+    function startingMode() {
+      return recalls(DAILY_CHOSEN_KEY) || recalls(TUTORIAL_SEEN_KEY) ? "daily" : "tutorial";
+    }
+
+    function renderModeSelect() {
+      modeSelectEl.dataset.active = String(MODES.indexOf(mode));
+      modeSelectEl.querySelectorAll(".mode-option").forEach((el) => {
+        el.setAttribute("aria-checked", String(el.dataset.mode === mode));
+      });
+    }
 
     function setMode(newMode) {
       if (newMode === mode) return;
+      if (mode === "tutorial") remember(TUTORIAL_SEEN_KEY);
       mode = newMode;
       window.T9Celebrate.clear();
       if (mode === "daily") {
         loadDaily();
-        rememberDailyChosen();
+        remember(DAILY_CHOSEN_KEY);
       }
-      modeToggleBtn.setAttribute("aria-checked", String(mode === "daily"));
-      document.querySelectorAll(".mode-label").forEach((el) => {
-        el.classList.toggle("active", el.dataset.mode === mode);
-      });
+      // Coming back to a finished Tutorial starts it over.
+      if (mode === "tutorial" && (!tutorial || tutorialFinished())) newTutorial();
+      renderModeSelect();
       resetGuessInProgress();
       renderAll();
     }
@@ -883,7 +953,9 @@
     // Only the testing page has the debug 0 key; on live 0 is inert.
     const debugWinBtn = document.getElementById("debug-win");
     if (debugWinBtn) debugWinBtn.addEventListener("click", debugWin);
-    modeToggleBtn.addEventListener("click", () => setMode(mode === "practice" ? "daily" : "practice"));
+    modeSelectEl.querySelectorAll(".mode-option").forEach((el) => {
+      el.addEventListener("click", () => setMode(el.dataset.mode));
+    });
     // TESTING ONLY: the Sunday preview switch exists only on the testing page.
     const sundayToggleBtn = document.getElementById("sunday-toggle");
     if (sundayToggleBtn) {
@@ -909,13 +981,15 @@
         }
       });
     }
-    document.querySelectorAll(".mode-label").forEach((el) => {
-      el.addEventListener("click", () => setMode(el.dataset.mode));
-    });
 
     newPracticePuzzle();
     resetGuessInProgress();
     renderAll();
-    if (hasChosenDaily()) setMode("daily");
+    // Place the selector's thumb on the starting mode without sliding it
+    // there; only later switches animate.
+    modeSelectEl.classList.add("instant");
+    setMode(startingMode());
+    renderModeSelect();
+    requestAnimationFrame(() => requestAnimationFrame(() => modeSelectEl.classList.remove("instant")));
   })();
 })();

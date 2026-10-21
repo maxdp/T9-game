@@ -57,6 +57,14 @@ async function typeWord(page, word) {
     }
   }
 }
+// Switch modes with whichever control the page has: the Tutorial / Daily /
+// Practice selector, or the older Practice/Daily slider.
+async function switchTo(page, mode) {
+  if (await page.$(".mode-option")) return page.click(`.mode-option[data-mode="${mode}"]`);
+  const isDaily = (await page.getAttribute("#mode-toggle", "aria-checked")) === "true";
+  if ((mode === "daily") !== isDaily) await page.click("#mode-toggle");
+}
+
 const pattern = (page) =>
   page.$$eval("#hang-tiles .hang-tile", (ts) =>
     ts.map((t) => (t.classList.contains("blank") ? "_" : t.querySelector(".hang-letter").textContent.toLowerCase())).join("")
@@ -70,6 +78,14 @@ async function checkPage(browser, base, url, isTesting) {
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto(base + url);
   check("version label shown", /^v\d+\.\d+/.test(await page.textContent("#version-label")), await page.textContent("#version-label"));
+  if (await page.$(".mode-option")) {
+    check("new visitors open in the Tutorial", (await page.textContent("#screen-mode-label")) === "Tutorial (1/5)");
+    await typeWord(page, "this");
+    await page.click("#hang-enter");
+    await page.waitForTimeout(100);
+    check("Tutorial lesson 1 solves without the celebration", (await page.textContent("#hang-missed")) === "Got it!" && (await page.$$(".celebrate-flyer")).length === 0);
+  }
+  await switchTo(page, "practice");
   check("first Practice puzzle is Easy", (await page.textContent("#hang-difficulty")) === "Easy");
 
   const answers = await page.evaluate(
@@ -85,7 +101,7 @@ async function checkPage(browser, base, url, isTesting) {
   check("solving by typing celebrates", (await page.textContent("#hang-missed")) === "Got 'em all!" && (await page.$$(".celebrate-flyer")).length > 0);
   await page.click("#hang-give-up");
 
-  await page.click("#mode-toggle");
+  await switchTo(page, "daily");
   const scheduled = await page.evaluate(() => {
     const P = window.T9_PUZZLES;
     return window.T9_DAILY.days[P.dailyNumber(P.centralDateKey()) - 1][0].split(" ")[0];
