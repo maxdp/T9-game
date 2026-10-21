@@ -12,6 +12,7 @@
     dailyLabels,
     isSunday,
     fitsPattern,
+    rarityPercent,
   } = window.T9_PUZZLES;
 
   // DICTIONARY lets the game check whether a typed guess is a real word at
@@ -790,9 +791,10 @@
 
     // ---- Guessing and finishing puzzles -------------------------------
 
+    // Also shows how rare the puzzle's rarest answer is.
     function updateCounter() {
       const p = currentPuzzle();
-      counterEl.textContent = `${p.found.size} / ${p.answers.length} found`;
+      counterEl.textContent = `${p.found.size} / ${p.answers.length} found, ${rarityPercent(p.answers)}% rarity`;
     }
 
     function renderFoundList() {

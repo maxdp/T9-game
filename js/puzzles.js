@@ -40,10 +40,10 @@
   // Totals are labeled 4-6 Easy / 7-9 Medium / 10-11 Hard / 12+ Evil.
   // Evil puzzles never appear in Practice; they're the Sunday Daily's last
   // puzzle in place of Hard.
+  const SORTED_RANKS = [...WORDS_GOOD_RANK].sort((a, b) => a - b);
   const RARITY_QUARTILES = (() => {
-    const sortedRanks = [...WORDS_GOOD_RANK].sort((a, b) => a - b);
-    const n = sortedRanks.length;
-    const pct = (p) => sortedRanks[Math.min(n - 1, Math.floor(p * n))];
+    const n = SORTED_RANKS.length;
+    const pct = (p) => SORTED_RANKS[Math.min(n - 1, Math.floor(p * n))];
     return { q1: pct(0.25), q2: pct(0.5), q3: pct(0.75) };
   })();
 
@@ -102,6 +102,21 @@
 
   function rarestRankOf(answers) {
     return Math.max(...answers.map((w) => WORD_RANK.get(w)));
+  }
+
+  // How rare a puzzle's rarest answer is, shown on screen as "X% rarity":
+  // the percentage of WORDS_GOOD that's more common than it, rounded down
+  // to a multiple of 10 (0-90).
+  function rarityPercent(answers) {
+    const rank = rarestRankOf(answers);
+    let lo = 0;
+    let hi = SORTED_RANKS.length;
+    while (lo < hi) {
+      const mid = (lo + hi) >> 1;
+      if (SORTED_RANKS[mid] < rank) lo = mid + 1;
+      else hi = mid;
+    }
+    return Math.floor((lo * 10) / SORTED_RANKS.length) * 10;
   }
 
   function fitsPattern(pattern, word) {
@@ -235,6 +250,7 @@
     difficultyForPuzzle,
     puzzleLabel,
     rarestRankOf,
+    rarityPercent,
     fitsPattern,
     isBlocked,
     buildPools,
