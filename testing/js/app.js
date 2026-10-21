@@ -106,7 +106,7 @@
     { id: "ex-host", word: "host" },
     { id: "ex-means", word: "means" },
     { id: "ex-song", word: "song" },
-    { id: "ex-whiskies", word: "whiskies" },
+    { id: "ex-jersey", word: "jersey" },
   ].forEach(({ id, word }) => {
     const container = document.getElementById(id);
     if (!container) return;
@@ -183,7 +183,7 @@
       { pattern: "hos_", rule: "The sequence can wrap around" },
       { pattern: "mea_s", rule: "Numbers can add together such as 1+2=3" },
       { pattern: "_ong", rule: "Backwards sequences are allowed" },
-      { pattern: "whis_ies", rule: "The sequence length can be 4 or longer (here 2+3=5, 2+4=6)" },
+      { pattern: "jerse_", rule: "The sequence length can be 4 or longer (here 2+3=5)" },
     ];
     const TUTORIAL_DONE_TEXT = "Combine these rules and find all valid words!\nGood luck 🍀";
     let tutorial = null; // { puzzles, index } (index past the last lesson = the send-off)
@@ -926,8 +926,13 @@
     // moves on to Daily.
     function nextPuzzle() {
       if (mode === "tutorial") {
-        if (tutorialFinished()) setMode("daily");
-        else goToLesson(tutorial.index + 1);
+        if (tutorialFinished()) {
+          // Start gets the correct-answer chime on its way to Daily.
+          window.T9Celebrate.chime();
+          setMode("daily");
+        } else {
+          goToLesson(tutorial.index + 1);
+        }
         return;
       }
       window.T9Celebrate.clear();
