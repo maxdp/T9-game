@@ -79,13 +79,21 @@
     return answers.some(requiresSplit) ? 2 : 0;
   }
 
+  // Each factor's points for a puzzle, plus the total.
+  function difficultyPoints(answers, blankCount) {
+    const parts = {
+      rarity: rarityPoints(rarestRankOf(answers)),
+      blanks: blankPoints(blankCount),
+      answers: answerPoints(answers.length),
+      length: lengthPoints(answers[0].length),
+      split: splitPoints(answers),
+    };
+    parts.total = parts.rarity + parts.blanks + parts.answers + parts.length + parts.split;
+    return parts;
+  }
+
   function difficultyForPuzzle(answers, blankCount) {
-    const points =
-      rarityPoints(rarestRankOf(answers)) +
-      blankPoints(blankCount) +
-      answerPoints(answers.length) +
-      lengthPoints(answers[0].length) +
-      splitPoints(answers);
+    const points = difficultyPoints(answers, blankCount).total;
     if (points <= 6) return "Easy";
     if (points <= 9) return "Medium";
     if (points <= 11) return "Hard";
@@ -223,6 +231,7 @@
     isSunday,
     dailyLabels,
     WORD_RANK,
+    difficultyPoints,
     difficultyForPuzzle,
     puzzleLabel,
     rarestRankOf,
