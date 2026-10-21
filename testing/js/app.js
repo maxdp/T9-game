@@ -23,17 +23,9 @@
 
   // One color per merged group in a solution, so a letter/digit's color
   // shows at a glance which final counting number it contributes to.
-  // Deep enough to read on the light sakura background.
-  const GROUP_COLORS = [
-    "#3159d4",
-    "#13874f",
-    "#b86f00",
-    "#cf3434",
-    "#8338c2",
-    "#0b8282",
-    "#c9561a",
-    "#bb2a79",
-  ];
+  // Letter colors for merged groups (CSS variables, so they suit both the
+  // light and the dark page).
+  const GROUP_COLORS = Array.from({ length: 8 }, (_, i) => `var(--group-${i})`);
 
   function groupIndexForLetter(grouping, letterIndex) {
     return grouping.groups.findIndex((g) => g.indices.includes(letterIndex));
