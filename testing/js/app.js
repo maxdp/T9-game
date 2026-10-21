@@ -571,7 +571,9 @@
 
     // The blank to land on after filling `pos`: the next still-empty blank
     // to its right, or — if there is none — the leftmost still-empty
-    // blank (wrapping around), or null if every blank is now filled.
+    // blank (wrapping around). Once every blank is filled, the next blank
+    // to the right of `pos` (already filled) becomes active, so a run of
+    // letters can be retyped in a row; after the last blank, none is.
     function nextTargetAfter(pos) {
       const idx = activeBlankPositions.indexOf(pos);
       for (let i = idx + 1; i < activeBlankPositions.length; i++) {
@@ -580,7 +582,7 @@
       for (let i = 0; i < activeBlankPositions.length; i++) {
         if (!filledMap.has(activeBlankPositions[i])) return activeBlankPositions[i];
       }
-      return null;
+      return idx + 1 < activeBlankPositions.length ? activeBlankPositions[idx + 1] : null;
     }
 
     // Commits whichever letter the pending key's cycle is currently on
