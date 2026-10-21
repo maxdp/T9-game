@@ -1,15 +1,17 @@
-// Page background: a river lined with cherry trees in full bloom, drawn in
-// code -- petal-covered water down the middle, grassy banks and a footpath
-// on either side, and big old trees with twisting trunks rooted by the
-// water, arching over it into a tunnel of blossom.
-// Dark mode turns it into the same place at night, lit by paper lanterns
-// strung along the water.
+// Page background: a soft, painterly view down a river lined with old
+// cherry trees in full bloom -- thick dark trunks by the water, their
+// limbs rising and dissolving into great loose clouds of blossom that
+// arch over the river, petals on the water and drifting through the air.
+// Dark mode turns it into the same place at night, lit by paper lanterns.
 //
-// The scene is one fixed square picture, scaled to cover the screen and
-// cropped (like a photo), so phones and desktops see the same place. The
-// still parts (sky, banks, water, distant trees) are painted once; the
-// nearer trees are painted once into a few layers that sway in a gently
-// gusting wind, while petals drift on the water and through the air.
+// It's painted rather than drawn: the blossom is hundreds of overlapping
+// soft dabs that thin out into ragged edges, painted both behind and in
+// front of the limbs so the trees melt into their canopies, and the whole
+// scene is painted small and smoothed as it's enlarged, which blurs it
+// like a photo taken with a shallow focus. Phones and desktops get their
+// own framing of the scene (a narrow view down the river, or a wide one
+// with the trees beside the phone). The still parts are painted once; the
+// nearer trees sway in a gently gusting wind as separate layers.
 // requestAnimationFrame stops while the tab is hidden, and anyone who
 // prefers reduced motion gets a still picture.
 (function () {
@@ -29,7 +31,11 @@
   document.body.prepend(wrap);
   const sctx = sceneCanvas.getContext("2d");
   const pctx = petalCanvas.getContext("2d");
-  if (!sctx || !pctx) return;
+  // The scene is painted on a working canvas twice the size of the one on
+  // screen; shrinking it smooths it before the browser enlarges it.
+  const work = document.createElement("canvas");
+  const wctx = work.getContext("2d");
+  if (!sctx || !pctx || !wctx) return;
 
   // The same trees every time (and on every visit).
   function seededRandom(seed) {
@@ -40,82 +46,108 @@
       return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
     };
   }
+  // Roughly bell-shaped, between -1 and 1.
+  const bell = (r) => (r() + r() + r() - 1.5) / 1.5;
 
   // ---- Colors -----------------------------------------------------------
 
   const PALETTES = {
     day: {
-      sky: ["#a9cbe9", "#d5e3ef", "#f3f0f1"],
-      cloud: "rgba(255, 255, 255, 0.75)",
-      cloudShade: "rgba(214, 218, 230, 0.5)",
-      haze: "rgba(250, 236, 242, 0.85)",
-      grass: ["#b3c784", "#7fa352"],
-      tuft: ["rgba(84, 124, 56, 0.45)", "rgba(178, 206, 124, 0.5)"],
-      earth: ["#8a7a62", "#6c5e49"],
-      path: "#e2d5c3",
-      groundPetal: "rgba(250, 222, 232, 0.9)",
-      water: ["#a3b0b8", "#7a8b96"],
-      waterPetal: ["rgba(252, 236, 241, 0.9)", "rgba(244, 214, 225, 0.85)"],
+      sky: ["#b5d2ec", "#dbe7f1", "#f6eef1"],
+      cloud: "#ffffff",
+      haze: "#fbe9ef",
+      grass: ["#b9c98f", "#86a85a"],
+      grassDabs: ["#9cb86b", "#c3d396", "#7a9c4f", "#d9c9c4"],
+      path: "#e6d8cb",
+      earth: "#8d7d65",
+      water: ["#c1ccd3", "#8e9ea9"],
+      waterDabs: ["#f6e3ea", "#ffffff", "#e9c6d2"],
       glint: "255, 255, 255",
-      bark: "#47393a",
-      barkLight: "#6e5d5a",
-      blossom: ["#d99fb2", "#e6b3c3", "#efc4d1", "#f6d4de", "#fbe4eb", "#fff3f6"],
-      body: "#b98a9a",
-      leaf: ["#9bb767", "#86a656"],
+      bark: ["#3a2f2f", "#4d3f3e", "#6b5a57"],
+      shadow: ["#c48ea0", "#cf9daf", "#b9889a"],
+      blossom: ["#e6b1c1", "#edc0ce", "#f3cfda", "#f7dbe3"],
+      light: ["#fcebf0", "#fff6f8", "#ffffff"],
+      leaf: ["#9fb86a", "#b5c77f"],
       petals: ["#f8c8d8", "#fbd9e5", "#f4b6cb"],
       petalAlpha: 0.85,
     },
     night: {
-      sky: ["#060a1c", "#121a3c", "#2c2650"],
-      cloud: "rgba(70, 70, 110, 0.35)",
-      cloudShade: "rgba(30, 30, 60, 0.3)",
-      haze: "rgba(70, 52, 96, 0.7)",
-      grass: ["#202c25", "#151e18"],
-      tuft: ["rgba(8, 16, 10, 0.5)", "rgba(52, 72, 58, 0.4)"],
-      earth: ["#29231f", "#1b1714"],
-      path: "#36303e",
-      groundPetal: "rgba(120, 96, 132, 0.8)",
-      water: ["#1a2238", "#0e1424"],
-      waterPetal: ["rgba(120, 100, 136, 0.5)", "rgba(96, 80, 112, 0.45)"],
-      glint: "190, 200, 255",
-      bark: "#120f15",
-      barkLight: "#2a2230",
-      blossom: ["#2c2337", "#382e45", "#463a55", "#564867", "#69597b", "#7f6e92"],
-      body: "#1d1726",
+      sky: ["#070b1d", "#151b3e", "#2e2752"],
+      cloud: "#4a4a78",
+      haze: "#4c3a68",
+      grass: ["#1f2a26", "#121a16"],
+      grassDabs: ["#18241d", "#26352b", "#101812", "#3a3346"],
+      path: "#2f2a38",
+      earth: "#1c1816",
+      water: ["#1d2540", "#0d1222"],
+      waterDabs: ["#6a5880", "#8a7aa0", "#4c3f5e"],
+      glint: "200, 205, 255",
+      bark: ["#0e0b10", "#17121a", "#2a2230"],
+      shadow: ["#2a2133", "#33293e", "#241c2c"],
+      blossom: ["#4a3d5a", "#57486a", "#66567a", "#76658a"],
+      light: ["#8f7ea3", "#a593b6", "#b9a8c8"],
       leaf: null,
       petals: ["#d9c6e0", "#e8d8ec", "#c9b3d3"],
       petalAlpha: 0.6,
-      lantern: "255, 170, 90",
+      lantern: "#ffa858",
     },
   };
   let pal = night ? PALETTES.night : PALETTES.day;
 
-  // ---- The scene, in scene units (a 1000 x 1000 square) ------------------
-  // Looking straight down the river: everything recedes to a vanishing
-  // point. A spot is given by its sideways distance from the river's
-  // center line (dx) and its height above the walkways (h), both measured
-  // at the bottom edge of the picture, and its depth p (1 at the bottom
-  // edge, shrinking toward 0 at the vanishing point).
-  const SIZE = 1000;
-  const VPX = 500;
-  const VPY = 455;
-  const DEPTH = SIZE - VPY;
-  const pt = (dx, h, p) => [VPX + dx * p, VPY + DEPTH * p - h * p];
+  // Soft round dabs of paint, one ready-made image per color (always a
+  // "#rrggbb" color), stamped at any size and strength.
+  const dabCache = new Map();
+  function dabImage(color) {
+    let img = dabCache.get(color);
+    if (!img) {
+      img = document.createElement("canvas");
+      img.width = img.height = 32;
+      const ctx = img.getContext("2d");
+      const g = ctx.createRadialGradient(16, 16, 0, 16, 16, 16);
+      g.addColorStop(0, color);
+      g.addColorStop(0.45, color);
+      g.addColorStop(1, color + "00");
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, 32, 32);
+      dabCache.set(color, img);
+    }
+    return img;
+  }
+  function dab(ctx, color, x, y, r, alpha, squash = 1) {
+    ctx.globalAlpha = alpha;
+    ctx.drawImage(dabImage(color), x - r, y - r * squash, r * 2, r * 2 * squash);
+  }
+  const pick = (r, list) => list[Math.floor(r() * list.length)];
 
-  const WATER = 165; // half the river's width
-  const DROP = 16; // water surface below the banks
-  const EDGE = 14; // the sloping earth edge of each bank
-  const PATH_IN = 420; // a footpath along each bank, behind the trees
-  const PATH_OUT = 480;
-  const NEAR = 1.6; // depth just past the bottom edge
+  // ---- Layout -----------------------------------------------------------
+  // Looking down the river: everything recedes to a vanishing point. A spot
+  // is given by its sideways distance from the river's center (dx) and its
+  // height (h), both in canvas pixels as they'd be at the bottom edge of
+  // the screen, and its depth p (1 at the bottom edge, shrinking toward 0
+  // at the vanishing point; nearer than the bottom edge is above 1).
+  let W = 0;
+  let H = 0;
+  let L = null;
 
-  // A strip of ground (or wall) running the length of the river, from
-  // (dxA, hA) to (dxB, hB) across it.
-  function strip(ctx, dxA, hA, dxB, hB, p0 = 0.002, p1 = NEAR) {
-    const a0 = pt(dxA, hA, p0);
-    const a1 = pt(dxA, hA, p1);
-    const b1 = pt(dxB, hB, p1);
-    const b0 = pt(dxB, hB, p0);
+  function layoutFor(w, h) {
+    const portrait = h > w * 1.1;
+    return portrait
+      ? // A phone: a narrow view straight down the river, trees close on
+        // either side.
+        { vpx: w * 0.5, vpy: h * 0.52, river: w * 0.2, treeDx: w * 0.36, treeH: h * 0.6, spread: w * 0.7, lanternDx: w * 0.18 }
+      : // A wide screen: the river runs behind the phone in the middle, the
+        // trees stand beside it.
+        { vpx: w * 0.5, vpy: h * 0.47, river: w * 0.1, treeDx: w * 0.2, treeH: h * 0.78, spread: w * 0.3, lanternDx: w * 0.25 };
+  }
+  const pt = (dx, h, p) => [L.vpx + dx * p, L.vpy + (H - L.vpy) * p - h * p];
+  // Depths spread evenly along the ground (so closer together far away).
+  const groundDepth = (r, near = 1.5) => 1 / (1 / near + r() * (1 / 0.03 - 1 / near));
+
+  function bandPath(ctx, dxA, dxB, p0 = 0.003, p1 = 3) {
+    const a0 = pt(dxA, 0, p0);
+    const a1 = pt(dxA, 0, p1);
+    const b1 = pt(dxB, 0, p1);
+    const b0 = pt(dxB, 0, p0);
     ctx.beginPath();
     ctx.moveTo(a0[0], a0[1]);
     ctx.lineTo(a1[0], a1[1]);
@@ -123,540 +155,345 @@
     ctx.lineTo(b0[0], b0[1]);
     ctx.closePath();
   }
-  const waterPath = (ctx) => strip(ctx, -WATER, -DROP, WATER, -DROP);
-  // Depths spread evenly along the ground (so closer together far away).
-  const groundDepth = (rand) => 1 / (1 / NEAR + rand() * (1 / 0.04 - 1 / NEAR));
-
-  // Depths spaced evenly along the ground (closer together far away).
-  function depthsAlong(spacing, from = 0.03, to = NEAR) {
-    const list = [];
-    for (let z = 1 / to; z < 1 / from; z += spacing) list.push(1 / z);
-    return list;
-  }
+  const waterPath = (ctx) => bandPath(ctx, -L.river, L.river);
 
   // ---- Trees ------------------------------------------------------------
-  // Each tree grows from a twisting trunk leaning out over the water,
-  // splitting into limbs that climb, spread and arch over; blossom
-  // gathers in clusters along the outer branches, leaving the trunk and
-  // main limbs bare.
 
-  function growTree(rand, side, p, row) {
-    const inward = -side; // left-bank trees lean right, over the water
-    const size = p * (0.85 + rand() * 0.25) * (row ? 1.1 : 1);
-    // The first row stands right by the water, the second farther back.
-    const rootDx = row ? 560 + rand() * 120 : WATER + EDGE + 25 + rand() * 50;
-    const [bx, by] = pt(side * rootDx, 0, p);
-    // Old, thick trunks.
-    const tree = { side, p, baseX: bx, baseY: by, baseW: 52 * size, segs: [], clusters: [] };
-    const maxDepth = p > 0.3 ? 7 : 5;
+  const TREE_DEPTHS = [2.1, 1.5, 1.08, 0.8, 0.62, 0.49, 0.4, 0.33, 0.275, 0.23, 0.195, 0.165, 0.14, 0.12, 0.1, 0.085, 0.072, 0.06, 0.05, 0.042];
 
-    function grow(x, y, angle, len, width, depth) {
-      // Trunks and main limbs bend a little as they go; finer branches
-      // are a single gentle curve.
-      const pieces = depth <= 1 ? 3 : 1;
-      let a = angle;
-      let cx = x;
-      let cy = y;
-      for (let i = 0; i < pieces; i++) {
-        const l = len / pieces;
-        if (pieces > 1) a = angle + (rand() - 0.5) * 0.3;
-        const x2 = x + Math.sin(a) * l;
-        const y2 = y - Math.cos(a) * l;
-        const bend = (rand() - 0.5) * (pieces > 1 ? 0.35 : 0.45) * l;
-        cx = (x + x2) / 2 + Math.cos(a) * bend;
-        cy = (y + y2) / 2 + Math.sin(a) * bend;
-        tree.segs.push({ x, y, cx, cy, x2, y2, w: width * (1 - i * 0.1) });
-        x = x2;
-        y = y2;
+  // A tree: a thick trunk leaning a little over the water, forking into a
+  // few limbs that climb and reach out over the river, each splitting
+  // into a couple of branches, and a loose crown of blossom made of
+  // overlapping lobes around the ends and along the upper parts of them
+  // all, so the limbs disappear up into it.
+  function makeTree(r, side, p) {
+    const inward = -side;
+    const height = L.treeH * p * (0.85 + r() * 0.3);
+    const [bx, by] = pt(side * L.treeDx * (0.88 + r() * 0.25), 0, p);
+    // One stout trunk, rising about halfway before it splits.
+    const forkX = bx + inward * height * (0.06 + r() * 0.08);
+    const forkY = by - height * (0.42 + r() * 0.1);
+    const trunkW = height * (0.08 + r() * 0.025);
+    const limbs = [];
+    const lobes = [];
+    const count = 2 + Math.floor(r() * 2);
+    for (let i = 0; i < count; i++) {
+      // From one reaching back over the bank to one reaching out over the
+      // water: thick, short, and soon lost in the blossom.
+      const t = count === 1 ? 1 : i / (count - 1);
+      // (The nearest trees reach no farther than those a little way off,
+      // so their crowns frame the view rather than covering it.)
+      const reach = (-0.15 + t * 0.95) * L.spread * Math.min(p, 1.1) * (0.7 + r() * 0.35);
+      const limb = {
+        x0: forkX,
+        y0: forkY,
+        cx: forkX + inward * reach * 0.2,
+        cy: forkY - height * (0.1 + r() * 0.08),
+        ex: forkX + inward * reach * 0.6,
+        ey: forkY - height * (0.22 + r() * 0.12),
+        w0: trunkW * (0.6 + r() * 0.15),
+      };
+      limb.w1 = limb.w0 * 0.55;
+      limbs.push(limb);
+      // Two branches from the end of each limb, up and out.
+      for (let b = 0; b < 2; b++) {
+        const spread = (b === 0 ? 0.55 : -0.25) * inward * reach + (r() - 0.5) * height * 0.1;
+        const branch = {
+          x0: limb.ex,
+          y0: limb.ey,
+          cx: limb.ex + spread * 0.4,
+          cy: limb.ey - height * (0.08 + r() * 0.06),
+          ex: limb.ex + spread,
+          ey: limb.ey - height * (0.1 + r() * 0.14) + Math.abs(spread) * 0.15,
+          w0: limb.w1,
+          w1: limb.w1 * 0.3,
+        };
+        limbs.push(branch);
+        const R = height * (0.13 + r() * 0.07);
+        lobes.push({ x: branch.ex, y: branch.ey, rx: R * 1.4, ry: R * 0.9 });
       }
-      if (depth >= 5) tree.clusters.push({ x: cx, y: cy, r: len * 0.42, seed: Math.floor(rand() * 1e9) });
-      if (depth >= maxDepth || len < 5) {
-        tree.clusters.push({ x, y: y + len * 0.1, r: len * 0.85, seed: Math.floor(rand() * 1e9) });
-        return;
-      }
-      const kids = depth < 2 || rand() < 0.3 ? 3 : 2;
-      for (let n = 0; n < kids; n++) {
-        let b =
-          a +
-          (n === 0 ? inward * (0.1 + rand() * 0.25) : n === 1 ? -inward * (0.15 + rand() * 0.35) : (rand() - 0.5) * 0.4);
-        // Limbs climb as they spread, arching over toward the horizontal
-        // only near their ends, so the canopy forms a high arch with the
-        // river open beneath it.
-        const target = Math.sign(b || inward) * (0.95 + depth * 0.09);
-        b += (target - b) * (0.05 + depth * 0.03);
-        grow(x, y, b, len * (0.7 + rand() * 0.12), width * (depth === 0 ? 0.5 : 0.62), depth + 1);
-      }
+      const R = height * (0.14 + r() * 0.06);
+      lobes.push({ x: limb.ex, y: limb.ey - R * 0.2, rx: R * 1.3, ry: R * 0.85 });
     }
-    // Short, stout trunks rise fairly upright before they branch, so they
-    // line the banks instead of crossing in front of the river.
-    const lean = row ? 0.08 + rand() * 0.12 : 0.12 + rand() * 0.14;
-    grow(bx, by, inward * lean, 170 * size, tree.baseW, 0);
-    return tree;
+    return { side, p, bx, by, forkX, forkY, trunkW, limbs, lobes, height, seed: Math.floor(r() * 1e9) };
   }
 
-  const TREE_DEPTHS = [1.3, 1.0, 0.76, 0.6, 0.49, 0.41, 0.35, 0.3, 0.26, 0.225, 0.195, 0.17, 0.148, 0.128, 0.11, 0.095, 0.082, 0.07, 0.06, 0.05];
-  const TREES = (() => {
-    const rand = seededRandom(1729);
-    const list = [];
-    [-1, 1].forEach((side) => {
-      TREE_DEPTHS.forEach((p, i) => {
-        // The front row starts a little way off, leaving the near water
-        // open.
-        if (p <= 1.05) list.push(growTree(rand, side, p * (1 + (rand() - 0.5) * 0.08), 0));
-        // A few nearer trees stand farther back, between the front row's.
-        const next = TREE_DEPTHS[i + 1];
-        if (next && p < 1.1 && next > 0.45) list.push(growTree(rand, side, Math.sqrt(p * next), 1));
-      });
-    });
-    return list.sort((a, b) => a.p - b.p);
-  })();
-  // Far trees are painted into the still background; nearer ones into
-  // layers that sway (the nearest the most).
-  const LAYERS = [
-    { name: "mid", min: 0.3, max: 0.7, sway: 0.004 },
-    { name: "near", min: 0.7, max: 99, sway: 0.006 },
-  ];
-
-  // Blossom clusters are stamped from a few ready-painted images rather
-  // than painted floret by floret: copying small images is far cheaper
-  // than drawing tens of thousands of tiny circles, which made switching
-  // dark mode (and loading the page) slow. Each stamp is a soft body of
-  // shaded blossom with florets over it, shadier underneath and brighter
-  // on top; they vary in tone, so the canopy looks mottled.
-  const STAMP_R = 56;
-  const STAMP_VARIANTS = 10;
-  const stampCache = {};
-  function blossomStamps() {
-    const key = night ? "night" : "day";
-    if (stampCache[key]) return stampCache[key];
-    const r = seededRandom(77);
-    const R = STAMP_R;
-    stampCache[key] = Array.from({ length: STAMP_VARIANTS }, (_, v) => {
-      const c = document.createElement("canvas");
-      c.width = Math.ceil(R * 2.4);
-      c.height = Math.ceil(R * 1.8);
-      const ctx = c.getContext("2d");
-      ctx.translate(c.width / 2, c.height / 2);
-      ctx.globalAlpha = 0.85;
-      ctx.fillStyle = pal.body;
-      for (let i = 0; i < 3; i++) {
-        ctx.beginPath();
-        ctx.arc((r() - 0.5) * R * 0.7, (r() - 0.5) * R * 0.45, R * (0.5 + r() * 0.3), 0, Math.PI * 2);
-        ctx.fill();
-      }
-      ctx.globalAlpha = 0.92;
-      const tone = (v / (STAMP_VARIANTS - 1) - 0.5) * 0.35;
-      const florets = [];
-      for (let i = 0; i < 230; i++) {
-        const a = r() * Math.PI * 2;
-        const d = Math.sqrt(r()) * R;
-        const dx = Math.cos(a) * d * 1.1;
-        const dy = Math.sin(a) * d * 0.75;
-        const light = Math.min(0.999, Math.max(0, 0.48 + tone - (dy / R) * 0.5 + (r() - 0.5) * 0.7));
-        const leaf = pal.leaf && dy > 0 && r() < 0.07;
-        florets.push({ dx, dy, light, leaf, size: 2.4 + r() * 1.8, pick: r() });
-      }
-      florets.sort((f1, f2) => f1.light - f2.light);
-      florets.forEach((f) => {
-        ctx.fillStyle = f.leaf
-          ? pal.leaf[Math.floor(f.pick * pal.leaf.length)]
-          : pal.blossom[Math.floor(f.light * pal.blossom.length)];
-        ctx.beginPath();
-        ctx.arc(f.dx, f.dy, f.size, 0, Math.PI * 2);
-        ctx.fill();
-      });
-      return c;
-    });
-    return stampCache[key];
+  // Dabs scattered through a lobe of blossom, thick in the middle and
+  // thinning out to a ragged edge; bias pulls them toward the top (-) or
+  // bottom (+) of the lobe.
+  function paintLobe(ctx, r, lobe, colors, density, alpha, bias) {
+    const size = Math.max(1, Math.min(lobe.rx, lobe.ry) * 0.3);
+    const n = 2 + Math.round((density * lobe.rx * lobe.ry) / (size * size));
+    for (let i = 0; i < n; i++) {
+      const gx = bell(r);
+      const gy = bell(r) * 0.85 + bias;
+      dab(ctx, pick(r, colors), lobe.x + gx * lobe.rx, lobe.y + gy * lobe.ry, size * (0.55 + r() * 0.8), alpha * (0.5 + r() * 0.5), 0.8);
+    }
   }
 
-  // Paints trees onto ctx (already scaled to scene units): their shadows
-  // and bark, then the blossom stamped over the branches (lower clusters
-  // first, so the brighter tops sit over them), and the bigger limbs
-  // faintly through it.
-  function paintTrees(ctx, trees, k) {
-    if (!trees.length) return;
-    // Each tree's shadow on the grass, and the flare of its roots.
-    trees.forEach((tree) => {
-      const w = tree.baseW;
-      ctx.fillStyle = "rgba(20, 30, 10, 0.18)";
-      ctx.beginPath();
-      ctx.ellipse(tree.baseX, tree.baseY, w * 1.5, w * 0.35, 0, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = pal.bark;
-      ctx.beginPath();
-      ctx.moveTo(tree.baseX - w * 1.1, tree.baseY + w * 0.12);
-      ctx.quadraticCurveTo(tree.baseX - w * 0.45, tree.baseY - w * 0.1, tree.baseX - w * 0.4, tree.baseY - w * 1.4);
-      ctx.lineTo(tree.baseX + w * 0.4, tree.baseY - w * 1.4);
-      ctx.quadraticCurveTo(tree.baseX + w * 0.45, tree.baseY - w * 0.1, tree.baseX + w * 1.1, tree.baseY + w * 0.12);
-      ctx.closePath();
-      ctx.fill();
+  // A limb (or trunk): soft dabs of bark laid along a curve, tapering and
+  // fading out toward its end (where it disappears into the blossom), so
+  // it has the loose edges of a brushstroke.
+  function paintLimb(ctx, color, l, scale, shift, fade, strength = 0.9) {
+    const len = Math.hypot(l.cx - l.x0, l.cy - l.y0) + Math.hypot(l.ex - l.cx, l.ey - l.cy);
+    const steps = Math.max(4, Math.ceil(len / Math.max(0.8, l.w1 * scale * 0.45)));
+    for (let i = 0; i <= steps; i++) {
+      const t = i / steps;
+      const x = (1 - t) * (1 - t) * l.x0 + 2 * (1 - t) * t * l.cx + t * t * l.ex;
+      const y = (1 - t) * (1 - t) * l.y0 + 2 * (1 - t) * t * l.cy + t * t * l.ey;
+      let dx = 2 * (1 - t) * (l.cx - l.x0) + 2 * t * (l.ex - l.cx);
+      let dy = 2 * (1 - t) * (l.cy - l.y0) + 2 * t * (l.ey - l.cy);
+      const d = Math.hypot(dx, dy) || 1;
+      dx /= d;
+      dy /= d;
+      const w = (l.w0 + (l.w1 - l.w0) * t) * scale;
+      dab(ctx, color, x - dy * l.w0 * shift, y + dx * l.w0 * shift, w * 0.75, strength * (1 - fade * t));
+    }
+  }
+
+  function paintTree(ctx, tree) {
+    const r = seededRandom(tree.seed);
+    // Its shadow on the grass.
+    dab(ctx, night ? "#000000" : "#4a5a30", tree.bx + tree.side * -tree.trunkW, tree.by, tree.trunkW * 2.4, 0.22, 0.25);
+
+    // Blossom in shadow, behind the limbs.
+    tree.lobes.forEach((lobe) => paintLobe(ctx, r, lobe, pal.shadow, 0.9, 0.5, 0.25));
+
+    // The trunk and limbs, each painted dark then a mid tone, and a lighter
+    // edge down the trunk on the side facing the light.
+    const w = tree.trunkW;
+    const trunk = { x0: tree.bx, y0: tree.by + w * 0.2, cx: tree.bx, cy: (tree.by + tree.forkY) / 2, ex: tree.forkX, ey: tree.forkY, w0: w * 1.2, w1: w * 0.85 };
+    [
+      [pal.bark[0], 1, 0, 0.9],
+      [pal.bark[1], 0.55, -0.12, 0.8],
+      [pal.bark[2], 0.25, -0.3, 0.3],
+    ].forEach(([color, scale, shift, strength], i) => {
+      paintLimb(ctx, color, trunk, scale, shift, 0, strength);
+      if (i < 2) tree.limbs.forEach((l) => paintLimb(ctx, color, l, scale, shift * 0.6, 0.8, strength));
     });
-    ctx.lineCap = "round";
-    ctx.strokeStyle = pal.bark;
-    trees.forEach((tree) =>
-      tree.segs.forEach((s) => {
-        ctx.lineWidth = Math.max(0.7 / k, s.w);
-        ctx.beginPath();
-        ctx.moveTo(s.x, s.y);
-        ctx.quadraticCurveTo(s.cx, s.cy, s.x2, s.y2);
-        ctx.stroke();
-      })
-    );
+    // Roots spreading into the bank, and grass growing up around them.
+    dab(ctx, pal.bark[0], tree.bx, tree.by, w * 1.1, 0.9, 0.35);
+    for (let i = 0; i < 6; i++) {
+      dab(ctx, pick(r, [pal.grassDabs[0], pal.grassDabs[2]]), tree.bx + bell(r) * w * 1.3, tree.by + w * (0.15 + r() * 0.2), w * (0.35 + r() * 0.3), 0.5, 0.45);
+    }
 
-    // A lighter edge down the thicker trunks and limbs, so they look round.
-    ctx.strokeStyle = pal.barkLight;
-    trees.forEach((tree) =>
-      tree.segs.forEach((s) => {
-        if (s.w * k < 4) return;
-        const off = -s.w * 0.22;
-        ctx.lineWidth = s.w * 0.3;
-        ctx.beginPath();
-        ctx.moveTo(s.x + off, s.y);
-        ctx.quadraticCurveTo(s.cx + off, s.cy, s.x2 + off, s.y2);
-        ctx.stroke();
-      })
-    );
-    ctx.strokeStyle = pal.bark;
-
-    const stamps = blossomStamps();
-    trees
-      .flatMap((tree) => tree.clusters)
-      .sort((a, b) => b.y - a.y)
-      .forEach((c) => {
-        ctx.drawImage(stamps[c.seed % stamps.length], c.x - c.r * 1.2, c.y - c.r * 0.9, c.r * 2.4, c.r * 1.8);
-      });
-    ctx.globalAlpha = 0.1;
-    trees.forEach((tree) =>
-      tree.segs.forEach((s) => {
-        if (s.w * k < 2.5) return;
-        ctx.lineWidth = s.w;
-        ctx.beginPath();
-        ctx.moveTo(s.x, s.y);
-        ctx.quadraticCurveTo(s.cx, s.cy, s.x2, s.y2);
-        ctx.stroke();
-      })
-    );
+    // Blossom in front, partly over the limbs, then a few bright tops and
+    // (by day) touches of fresh green leaves underneath.
+    tree.lobes.forEach((lobe) => paintLobe(ctx, r, lobe, pal.blossom, 1.1, 0.75, -0.08));
+    tree.lobes.forEach((lobe) => paintLobe(ctx, r, lobe, pal.light, night ? 0.12 : 0.3, night ? 0.45 : 0.7, -0.4));
+    if (pal.leaf) tree.lobes.forEach((lobe) => paintLobe(ctx, r, lobe, pal.leaf, 0.006, 0.3, 0.5));
     ctx.globalAlpha = 1;
   }
 
-  // ---- The still background ------------------------------------------
+  // ---- The still background ----------------------------------------------
 
-  function paintSky(ctx) {
-    const rand = seededRandom(11);
-    const sky = ctx.createLinearGradient(0, -400, 0, VPY);
+  function paintBackground(ctx) {
+    const r = seededRandom(11);
+    const vy = L.vpy;
+    const sky = ctx.createLinearGradient(0, 0, 0, vy);
     sky.addColorStop(0, pal.sky[0]);
-    sky.addColorStop(0.55, pal.sky[1]);
+    sky.addColorStop(0.6, pal.sky[1]);
     sky.addColorStop(1, pal.sky[2]);
     ctx.fillStyle = sky;
-    ctx.fillRect(-2000, -2000, 5000, VPY + 2010);
+    ctx.fillRect(0, 0, W, vy + 1);
 
     if (night) {
-      // Stars, and a soft moon.
-      ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
-      for (let i = 0; i < 140; i++) {
-        const x = -600 + rand() * 2200;
-        const y = -500 + rand() * (VPY + 400);
-        ctx.globalAlpha = 0.25 + rand() * 0.6;
-        ctx.beginPath();
-        ctx.arc(x, y, 0.6 + rand() * 1.1, 0, Math.PI * 2);
-        ctx.fill();
-      }
-      ctx.globalAlpha = 1;
-      const moon = ctx.createRadialGradient(735, 150, 0, 735, 150, 120);
-      moon.addColorStop(0, "rgba(255, 250, 230, 1)");
-      moon.addColorStop(0.2, "rgba(255, 248, 225, 1)");
-      moon.addColorStop(0.23, "rgba(220, 220, 255, 0.35)");
-      moon.addColorStop(1, "rgba(160, 170, 255, 0)");
-      ctx.fillStyle = moon;
-      ctx.fillRect(600, 20, 270, 270);
+      for (let i = 0; i < 70; i++) dab(ctx, "#ffffff", r() * W, r() * vy, 0.8 + r(), 0.3 + r() * 0.6);
+      dab(ctx, "#c8ccff", W * 0.78, H * 0.12, Math.min(W, H) * 0.12, 0.25);
+      dab(ctx, "#fff8e6", W * 0.78, H * 0.12, Math.min(W, H) * 0.035, 1);
+    }
+    for (let i = 0; i < 7; i++) {
+      const cx = r() * W;
+      const cy = r() * vy * 0.7;
+      const s = Math.min(W, H) * (0.06 + r() * 0.06);
+      for (let j = 0; j < 10; j++) dab(ctx, pal.cloud, cx + bell(r) * s * 2.2, cy + bell(r) * s * 0.4, s * (0.5 + r() * 0.5), night ? 0.25 : 0.55, 0.6);
     }
 
-    // Big soft clouds.
-    for (let i = 0; i < 9; i++) {
-      const cx = -300 + rand() * 1600;
-      const cy = -260 + rand() * (VPY + 120);
-      const w = 120 + rand() * 160;
-      for (let j = 0; j < 9; j++) {
-        const x = cx + (rand() - 0.5) * w * 1.6;
-        const y = cy + (rand() - 0.5) * w * 0.35;
-        const r = w * (0.25 + rand() * 0.25);
-        // Soft-edged puffs, a little grayer underneath.
-        [
-          [pal.cloudShade, r * 0.3],
-          [pal.cloud, 0],
-        ].forEach(([color, lift]) => {
-          const puff = ctx.createRadialGradient(x, y + lift, 0, x, y + lift, r);
-          puff.addColorStop(0, color);
-          puff.addColorStop(0.6, color);
-          puff.addColorStop(1, color.replace(/[\d.]+\)$/, "0)"));
-          ctx.fillStyle = puff;
-          ctx.save();
-          ctx.translate(0, (y + lift) * 0.4);
-          ctx.scale(1, 0.6);
-          ctx.beginPath();
-          ctx.arc(x, y + lift, r, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.restore();
-        });
-      }
-    }
-  }
-
-  function paintGround(ctx) {
-    const rand = seededRandom(23);
+    // The grassy banks, with dabs of lighter and darker green (and fallen
+    // petals near the trees).
+    ctx.globalAlpha = 1;
+    const grass = ctx.createLinearGradient(0, vy, 0, H);
+    grass.addColorStop(0, pal.grass[0]);
+    grass.addColorStop(1, pal.grass[1]);
+    ctx.fillStyle = grass;
+    ctx.fillRect(0, vy, W, H - vy);
     [-1, 1].forEach((side) => {
-      // Grassy banks, with tufts for texture.
-      strip(ctx, side * (WATER + EDGE), 0, side * 5000, 0);
-      const grass = ctx.createLinearGradient(0, VPY, 0, SIZE);
-      grass.addColorStop(0, pal.grass[0]);
-      grass.addColorStop(1, pal.grass[1]);
-      ctx.fillStyle = grass;
-      ctx.fill();
-      for (let i = 0; i < 1400; i++) {
-        const p = groundDepth(rand);
-        const [x, y] = pt(side * (WATER + EDGE + rand() * 900), 0, p);
-        ctx.fillStyle = pal.tuft[i % 2];
-        ctx.beginPath();
-        ctx.ellipse(x, y, (5 + rand() * 6) * p + 0.4, (1.5 + rand() * 1.5) * p + 0.3, 0, 0, Math.PI * 2);
-        ctx.fill();
+      for (let i = 0; i < 500; i++) {
+        const p = groundDepth(r);
+        const [x, y] = pt(side * (L.river + r() * W * 1.4), 0, p);
+        dab(ctx, pick(r, pal.grassDabs), x, y, (4 + r() * 8) * p * (W / 400) + 0.6, 0.45, 0.35);
       }
-
-      // A footpath behind the trees, and fallen petals on it and the
-      // grass near the water.
-      strip(ctx, side * PATH_IN, 0, side * PATH_OUT, 0);
+      // A pale footpath behind the trees.
+      bandPath(ctx, side * L.treeDx * 1.3, side * L.treeDx * 1.5);
+      ctx.globalAlpha = 0.7;
       ctx.fillStyle = pal.path;
       ctx.fill();
-      ctx.fillStyle = pal.groundPetal;
-      for (let i = 0; i < 900; i++) {
-        const p = groundDepth(rand);
-        const [x, y] = pt(side * (WATER + EDGE + Math.pow(rand(), 1.5) * (PATH_OUT - WATER)), 0, p);
-        ctx.beginPath();
-        ctx.ellipse(x, y, 2.2 * p + 0.4, 1.2 * p + 0.3, rand() * 3, 0, Math.PI * 2);
-        ctx.fill();
+      for (let i = 0; i < 300; i++) {
+        const p = groundDepth(r);
+        const [x, y] = pt(side * (L.river + Math.pow(r(), 1.4) * L.treeDx * 1.4), 0, p);
+        dab(ctx, pick(r, pal.petals), x, y, (1.5 + r() * 2.5) * p * (W / 400) + 0.4, 0.5, 0.4);
       }
-
-      // The bank's earthy edge sloping down to the water.
-      strip(ctx, side * WATER, -DROP, side * (WATER + EDGE), 0);
-      const earth = ctx.createLinearGradient(0, VPY, 0, SIZE);
-      earth.addColorStop(0, pal.earth[0]);
-      earth.addColorStop(1, pal.earth[1]);
-      ctx.fillStyle = earth;
+      // The earthy edge of the bank.
+      bandPath(ctx, side * L.river, side * L.river * 1.06);
+      ctx.globalAlpha = 0.8;
+      ctx.fillStyle = pal.earth;
       ctx.fill();
     });
 
-    // The water, covered in drifting petals.
+    // The water: pale, reflecting the blossom along its edges, and covered
+    // in petals.
+    ctx.globalAlpha = 1;
     waterPath(ctx);
-    const water = ctx.createLinearGradient(0, VPY, 0, SIZE);
+    const water = ctx.createLinearGradient(0, vy, 0, H);
     water.addColorStop(0, pal.water[0]);
     water.addColorStop(1, pal.water[1]);
     ctx.fillStyle = water;
     ctx.fill();
     ctx.save();
+    waterPath(ctx);
     ctx.clip();
-    for (let i = 0; i < 2600; i++) {
-      const p = 0.04 + Math.pow(rand(), 0.7) * 1.3;
-      // Thicker along the banks, where petals collect.
-      const u = Math.sign(rand() - 0.5) * Math.pow(rand(), 0.6);
-      const [x, y] = pt(u * WATER, -DROP, p);
-      ctx.fillStyle = pal.waterPetal[i % 2];
-      ctx.beginPath();
-      ctx.ellipse(x, y, 2.4 * p + 0.3, 1.1 * p + 0.25, 0, 0, Math.PI * 2);
-      ctx.fill();
+    for (let i = 0; i < 260; i++) {
+      const p = groundDepth(r, 1.3);
+      const u = Math.sign(r() - 0.5) * (0.6 + r() * 0.45);
+      const [x, y] = pt(u * L.river, 0, p);
+      dab(ctx, pick(r, pal.shadow), x, y, (6 + r() * 10) * p * (W / 400) + 0.5, 0.25, 0.4);
+    }
+    for (let i = 0; i < 900; i++) {
+      const p = groundDepth(r, 1.3);
+      const u = Math.sign(r() - 0.5) * Math.pow(r(), 0.6);
+      const [x, y] = pt(u * L.river, 0, p);
+      dab(ctx, pick(r, pal.waterDabs), x, y, (1.4 + r() * 2) * p * (W / 400) + 0.4, 0.55, 0.45);
     }
     ctx.restore();
-  }
 
-  // The far end of the tunnel of trees fades into a pale haze.
-  function paintHaze(ctx) {
-    const haze = ctx.createRadialGradient(VPX, VPY - 30, 0, VPX, VPY - 30, 260);
-    haze.addColorStop(0, pal.haze);
-    haze.addColorStop(1, pal.haze.replace(/[\d.]+\)$/, "0)"));
-    ctx.fillStyle = haze;
-    ctx.fillRect(VPX - 300, VPY - 330, 600, 600);
+    // The far end of the tunnel of trees, lost in a pale haze.
+    dab(ctx, pal.haze, L.vpx, L.vpy - H * 0.02, Math.min(W, H) * 0.22, night ? 0.5 : 0.8, 0.8);
+    ctx.globalAlpha = 1;
   }
 
   // ---- Lanterns (night) ---------------------------------------------------
-  // A string of paper lanterns hung along each side of the river.
-  const LANTERN_H = 205;
-  const LANTERN_DX = 135;
-  const LANTERNS = [];
-  [-1, 1].forEach((side) => {
-    [0.88, 0.64, 0.49, 0.39, 0.32].forEach((p, i) => {
-      LANTERNS.push({ side, p: p * (side > 0 ? 1.04 : 1), phase: i * 1.7 + side });
-    });
-  });
-
-  function paintLanternStrings(ctx) {
-    ctx.strokeStyle = "rgba(120, 82, 56, 0.8)";
-    ctx.lineWidth = 0.9;
+  // Paper lanterns hung along both banks under the trees (over the
+  // water's edge on a phone; beside the phone, along the outside of the
+  // trees, on a wide screen); blurred like
+  // the rest of the scene, they glow like soft orbs.
+  const LANTERN_DEPTHS = [1.25, 0.86, 0.63, 0.48, 0.38];
+  function lanternSpots() {
+    const spots = [];
     [-1, 1].forEach((side) => {
-      const own = LANTERNS.filter((l) => l.side === side).sort((a, b) => a.p - b.p);
-      ctx.beginPath();
-      own.forEach((l, i) => {
-        const [x, y] = pt(side * LANTERN_DX, LANTERN_H + 22, l.p);
-        if (i === 0) {
-          ctx.moveTo(x, y);
-        } else {
-          const prev = pt(side * LANTERN_DX, LANTERN_H + 22, own[i - 1].p);
-          ctx.quadraticCurveTo((x + prev[0]) / 2, Math.max(y, prev[1]) + 14 * l.p, x, y);
-        }
+      LANTERN_DEPTHS.forEach((p, i) => {
+        const pp = p * (side > 0 ? 1.06 : 1);
+        const [x, y] = pt(side * L.lanternDx, L.treeH * 0.4, pp);
+        spots.push({ x, y, p: pp, phase: i * 1.7 + side });
       });
-      ctx.stroke();
     });
+    return spots;
   }
-
   function paintLanterns(ctx, time) {
-    // Their glow lights up the blossoms and the walls around them...
+    const scale = W / 400;
     ctx.globalCompositeOperation = "lighter";
-    LANTERNS.forEach((l) => {
-      const [x, y] = pt(l.side * LANTERN_DX, LANTERN_H, l.p);
+    lanterns.forEach((l) => {
       const flicker = 0.9 + 0.06 * Math.sin(time * 7.3 + l.phase) + 0.04 * Math.sin(time * 13.1 + l.phase * 2);
-      const r = 260 * l.p;
-      const glow = ctx.createRadialGradient(x, y, 0, x, y, r);
-      glow.addColorStop(0, `rgba(${pal.lantern}, ${0.5 * flicker})`);
-      glow.addColorStop(0.3, `rgba(${pal.lantern}, ${0.16 * flicker})`);
-      glow.addColorStop(1, `rgba(${pal.lantern}, 0)`);
-      ctx.fillStyle = glow;
-      ctx.fillRect(x - r, y - r, r * 2, r * 2);
+      // Glow on the trees and the ground beneath.
+      dab(ctx, pal.lantern, l.x, l.y, 60 * l.p * scale, 0.32 * flicker);
+      dab(ctx, pal.lantern, l.x, l.y + L.treeH * 0.4 * l.p, 45 * l.p * scale, 0.18 * flicker, 0.3);
     });
     ctx.globalCompositeOperation = "source-over";
-    // ...and then the lanterns themselves: glowing paper, dark caps.
-    LANTERNS.forEach((l) => {
-      const [x, y] = pt(l.side * LANTERN_DX, LANTERN_H, l.p);
-      const w = 19 * l.p;
-      const h = 26 * l.p;
-      const body = ctx.createRadialGradient(x, y - h * 0.15, 0, x, y, w * 1.2);
-      body.addColorStop(0, "#fff6d6");
-      body.addColorStop(0.5, "#ffc46e");
-      body.addColorStop(1, "#e2602c");
-      ctx.fillStyle = body;
-      ctx.beginPath();
-      ctx.ellipse(x, y, w, h, 0, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.strokeStyle = "rgba(170, 70, 30, 0.45)";
-      ctx.lineWidth = Math.max(0.4, 0.8 * l.p);
-      for (let k = -2; k <= 2; k++) {
-        ctx.beginPath();
-        ctx.ellipse(x, y + k * h * 0.3, w * Math.sqrt(1 - Math.pow(k * 0.3, 2)), h * 0.06, 0, 0, Math.PI * 2);
-        ctx.stroke();
-      }
-      ctx.fillStyle = "#1a1210";
-      ctx.fillRect(x - w * 0.55, y - h - 2.5 * l.p, w * 1.1, 3.5 * l.p);
-      ctx.fillRect(x - w * 0.55, y + h - 1 * l.p, w * 1.1, 3.5 * l.p);
+    lanterns.forEach((l) => {
+      dab(ctx, "#ff8a3a", l.x, l.y, 9 * l.p * scale, 1, 1.3);
+      dab(ctx, "#ffd890", l.x, l.y, 6 * l.p * scale, 1, 1.3);
+      dab(ctx, "#fff6dc", l.x, l.y - 1 * l.p * scale, 3 * l.p * scale, 1, 1.2);
     });
+    ctx.globalAlpha = 1;
   }
 
-  // Lanterns and sunlight on the moving water.
-  function paintWaterLight(ctx, time) {
-    ctx.save();
-    waterPath(ctx);
-    ctx.clip();
-    if (night) {
-      ctx.globalCompositeOperation = "lighter";
-      LANTERNS.forEach((l) => {
-        // A lantern's reflection: a wavering streak under it.
-        for (let k = 0; k < 7; k++) {
-          const h = -2 * DROP - LANTERN_H + k * 14;
-          const [x, y] = pt(l.side * LANTERN_DX, h, l.p);
-          const wob = Math.sin(time * 2.2 + k * 1.3 + l.phase) * 3 * l.p;
-          ctx.fillStyle = `rgba(${pal.lantern}, ${0.45 - k * 0.055})`;
-          ctx.beginPath();
-          ctx.ellipse(x + wob, y, (9 - k * 0.6) * l.p, 2.2 * l.p, 0, 0, Math.PI * 2);
-          ctx.fill();
-        }
-      });
-      ctx.globalCompositeOperation = "source-over";
-    }
-    glints.forEach((g) => {
-      const drift = ((time * g.speed + g.phase) % 1) * 2 - 1;
-      const [x, y] = pt((g.u + drift * 0.08) * WATER, -DROP, g.p);
-      const alpha = Math.max(0, (night ? 0.18 : 0.35) * Math.sin(time * 1.4 + g.phase));
-      ctx.strokeStyle = `rgba(${pal.glint}, ${alpha})`;
-      ctx.lineWidth = Math.max(0.5, 1.6 * g.p);
-      ctx.beginPath();
-      ctx.moveTo(x - g.len * g.p, y);
-      ctx.lineTo(x + g.len * g.p, y);
-      ctx.stroke();
-    });
-    // Petals floating down the river toward us.
-    floaters.forEach((f) => {
-      const [x, y] = pt(f.u * WATER, -DROP, f.p);
-      ctx.fillStyle = pal.waterPetal[f.shade];
-      ctx.beginPath();
-      ctx.ellipse(x, y, 2.6 * f.p + 0.3, 1.2 * f.p + 0.25, f.rot, 0, Math.PI * 2);
-      ctx.fill();
-    });
-    ctx.restore();
-  }
+  // ---- Moving water -------------------------------------------------------
 
-  const glints = (() => {
-    const rand = seededRandom(99);
-    return Array.from({ length: 50 }, () => ({
-      u: rand() * 1.8 - 0.9,
-      p: 0.06 + Math.pow(rand(), 0.6) * 1.2,
-      len: 6 + rand() * 14,
-      speed: 0.02 + rand() * 0.03,
-      phase: rand() * Math.PI * 2,
-    }));
-  })();
   const floaters = (() => {
-    const rand = seededRandom(5);
-    return Array.from({ length: 140 }, () => ({
-      u: rand() * 1.9 - 0.95,
-      p: 0.05 + rand() * 1.3,
-      rot: rand() * 3,
-      shade: rand() < 0.5 ? 0 : 1,
-    }));
+    const r = seededRandom(5);
+    return Array.from({ length: 90 }, () => ({ u: r() * 1.9 - 0.95, p: 0.05 + r() * 1.3, size: 0.8 + r() * 0.8 }));
+  })();
+  const glints = (() => {
+    const r = seededRandom(99);
+    return Array.from({ length: 40 }, () => ({ u: r() * 1.6 - 0.8, p: 0.06 + Math.pow(r(), 0.6) * 1.2, len: 0.08 + r() * 0.15, phase: r() * Math.PI * 2 }));
   })();
   function stepFloaters(dt) {
     floaters.forEach((f) => {
       // Slow, and slower still in the distance.
       f.p += dt * 0.012 * (0.2 + f.p);
-      if (f.p > NEAR) f.p = 0.05 + Math.random() * 0.1;
+      if (f.p > 1.4) f.p = 0.05 + Math.random() * 0.1;
     });
+  }
+  function paintWater(ctx, time) {
+    const scale = W / 400;
+    ctx.save();
+    waterPath(ctx);
+    ctx.clip();
+    glints.forEach((g) => {
+      const alpha = Math.max(0, (night ? 0.2 : 0.4) * Math.sin(time * 1.3 + g.phase));
+      const [x, y] = pt(g.u * L.river, 0, g.p);
+      ctx.strokeStyle = `rgba(${pal.glint}, ${alpha})`;
+      ctx.lineWidth = Math.max(0.6, 1.2 * g.p * scale);
+      ctx.beginPath();
+      ctx.moveTo(x - g.len * L.river * g.p, y);
+      ctx.lineTo(x + g.len * L.river * g.p, y);
+      ctx.stroke();
+    });
+    floaters.forEach((f) => {
+      const [x, y] = pt(f.u * L.river, 0, f.p);
+      dab(ctx, pal.waterDabs[0], x, y, f.size * 2 * f.p * scale + 0.4, 0.8, 0.45);
+    });
+    ctx.restore();
+    ctx.globalAlpha = 1;
   }
 
   // ---- Putting it together ----------------------------------------------
 
-  let k = 1; // canvas pixels per scene unit
-  let ox = 0;
-  let oy = 0;
   let base = null;
   let layers = [];
+  let lanterns = [];
+  const LAYERS = [
+    { name: "mid", min: 0.3, max: 0.9, sway: 0.005 },
+    { name: "near", min: 0.9, max: 99, sway: 0.008 },
+  ];
 
   function newCanvas() {
     const c = document.createElement("canvas");
-    c.width = sceneCanvas.width;
-    c.height = sceneCanvas.height;
+    c.width = W;
+    c.height = H;
     return c;
   }
 
   function buildScene() {
+    L = layoutFor(W, H);
+    const r = seededRandom(1729);
+    const trees = [];
+    // On a tall, narrow screen the nearest trees would fill it, so they're
+    // left out there.
+    const nearest = H > W * 1.1 ? 1.6 : 99;
+    [-1, 1].forEach((side) => {
+      TREE_DEPTHS.forEach((p) => {
+        const tree = makeTree(r, side, p * (1 + (r() - 0.5) * 0.1));
+        if (p <= nearest) trees.push(tree);
+      });
+    });
+    trees.sort((a, b) => a.p - b.p);
+    lanterns = lanternSpots();
+
     base = newCanvas();
     const bctx = base.getContext("2d");
-    bctx.setTransform(k, 0, 0, k, ox, oy);
-    paintSky(bctx);
-    paintGround(bctx);
-    paintTrees(bctx, TREES.filter((t) => t.p < LAYERS[0].min), k);
-    paintHaze(bctx);
+    paintBackground(bctx);
+    trees.filter((t) => t.p < LAYERS[0].min).forEach((t) => paintTree(bctx, t));
 
     layers = [];
     LAYERS.forEach((spec) => {
       [-1, 1].forEach((side) => {
-        const trees = TREES.filter((t) => t.side === side && t.p >= spec.min && t.p < spec.max);
-        if (!trees.length) return;
+        const group = trees.filter((t) => t.side === side && t.p >= spec.min && t.p < spec.max);
+        if (!group.length) return;
         const canvas = newCanvas();
         const ctx = canvas.getContext("2d");
-        ctx.setTransform(k, 0, 0, k, ox, oy);
-        paintTrees(ctx, trees, k);
-        layers.push({
-          canvas,
-          spec,
-          // The layer sways about the line where its trees stand.
-          anchor: oy + Math.max(...trees.map((t) => t.baseY)) * k,
-          phase: side * 1.3 + spec.min * 4,
-        });
+        group.forEach((t) => paintTree(ctx, t));
+        // The layer sways about the line where its trees stand.
+        layers.push({ canvas, spec, anchor: Math.max(...group.map((t) => t.by)), phase: side * 1.3 + spec.min * 4 });
       });
     });
   }
@@ -667,24 +504,26 @@
   }
 
   function drawScene() {
-    sctx.setTransform(1, 0, 0, 1, 0, 0);
-    sctx.drawImage(base, 0, 0);
-    sctx.setTransform(k, 0, 0, k, ox, oy);
-    paintWaterLight(sctx, time);
+    wctx.setTransform(1, 0, 0, 1, 0, 0);
+    wctx.drawImage(base, 0, 0);
+    paintWater(wctx, time);
     let lanternsDone = !night;
     layers.forEach((layer) => {
       if (!lanternsDone && layer.spec.name === "near") {
         // Lanterns hang in front of the middle trees, behind the nearest.
-        sctx.setTransform(k, 0, 0, k, ox, oy);
-        paintLanternStrings(sctx);
-        paintLanterns(sctx, time);
+        wctx.setTransform(1, 0, 0, 1, 0, 0);
+        paintLanterns(wctx, time);
         lanternsDone = true;
       }
       const wind = windAt(time - layer.spec.min * 2);
       const skew = layer.spec.sway * (wind * 0.8 + 0.35 * Math.sin(time * 0.9 + layer.phase));
-      sctx.setTransform(1, 0, skew, 1, -skew * layer.anchor, 0);
-      sctx.drawImage(layer.canvas, 0, 0);
+      wctx.setTransform(1, 0, skew, 1, -skew * layer.anchor, 0);
+      wctx.drawImage(layer.canvas, 0, 0);
     });
+    wctx.setTransform(1, 0, 0, 1, 0, 0);
+    if (!lanternsDone) paintLanterns(wctx, time);
+    sctx.imageSmoothingQuality = "high";
+    sctx.drawImage(work, 0, 0, sceneCanvas.width, sceneCanvas.height);
   }
 
   // ---- Petals in the air ---------------------------------------------------
@@ -754,16 +593,16 @@
     if (!force && `${cw}x${ch}` === sizeKey) return;
     sizeKey = `${cw}x${ch}`;
 
-    // Enough canvas pixels to look crisp, scaled down on big screens so
-    // every screen costs about the same to animate.
-    const res = Math.min(1, 800 / Math.max(cw, ch));
-    sceneCanvas.width = Math.round(cw * res);
-    sceneCanvas.height = Math.round(ch * res);
-    // Cover the screen with the square scene, keeping the vanishing point
-    // a little above the middle of the screen.
-    k = Math.max(sceneCanvas.width, sceneCanvas.height) / SIZE;
-    ox = (sceneCanvas.width - SIZE * k) / 2;
-    oy = Math.min(0, Math.max(sceneCanvas.height - SIZE * k, sceneCanvas.height * 0.44 - VPY * k));
+    // A small canvas, so the scene comes out soft once it's enlarged to
+    // fill the screen; about the same size on every screen, so every
+    // screen costs about the same to animate.
+    const res = 640 / Math.max(cw, ch);
+    W = Math.max(40, Math.round(cw * res));
+    H = Math.max(40, Math.round(ch * res));
+    work.width = W;
+    work.height = H;
+    sceneCanvas.width = Math.ceil(W / 2);
+    sceneCanvas.height = Math.ceil(H / 2);
     buildScene();
 
     petalRatio = Math.min(2, window.devicePixelRatio || 1);
