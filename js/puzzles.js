@@ -18,7 +18,7 @@
   // Word -> frequency rank (1 = most common, higher = rarer).
   const WORD_RANK = new Map(WORDS_GOOD.map((w, i) => [w, WORDS_GOOD_RANK[i]]));
 
-  // Difficulty adds up five factors into a 4-14 point score:
+  // Difficulty adds up five factors into a 4-16 point score:
   //
   // 1. Rarity of the rarest valid answer — WORDS_GOOD split into rarity
   //    quartiles by rank (cutoffs are the actual 25th/50th/75th percentile
@@ -26,7 +26,9 @@
   //    than hardcoded so they stay correct whenever the word list
   //    changes); the bottom (most-common) quartile is worth 1 point, the
   //    2nd 2, the 3rd and 4th (rarest half) 3.
-  // 2. Number of blanks (2-6): 2 is worth 1 point, 3 worth 2, 4-6 worth 3.
+  // 2. Number of blanks (2-6): one point less than the number of blanks
+  //    (2 is worth 1 point ... 6 worth 5), since each extra blank makes a
+  //    puzzle markedly harder.
   // 3. Number of valid answers (2-8): 2-4 is worth 1 point, 5-6 worth 2,
   //    7-8 worth 3.
   // 4. Word length (4-8): 4-5 is worth 1 point, 6 worth 2, 7-8 worth 3.
@@ -51,9 +53,7 @@
     return 3;
   }
   function blankPoints(blankCount) {
-    if (blankCount <= 2) return 1;
-    if (blankCount <= 3) return 2;
-    return 3;
+    return blankCount - 1;
   }
   function answerPoints(answerCount) {
     if (answerCount <= 4) return 1;

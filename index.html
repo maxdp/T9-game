@@ -149,6 +149,7 @@
   #hang-difficulty.difficulty-easy { background: #1f3a2c; color: #6ee0a0; }
   #hang-difficulty.difficulty-medium { background: #3a3620; color: #ffcf6e; }
   #hang-difficulty.difficulty-hard { background: #3a2024; color: #ff8a8a; }
+  #hang-difficulty.difficulty-evil { background: #33204f; color: #c792ea; }
 
   .hang-tiles {
     display: flex;
@@ -397,8 +398,24 @@
   #daily-rows .difficulty-easy { color: #6ee0a0; }
   #daily-rows .difficulty-medium { color: #ffcf6e; }
   #daily-rows .difficulty-hard { color: #ff8a8a; }
+  #daily-rows .difficulty-evil { color: #c792ea; }
   .daily-done { margin-top: 8px; font-size: 0.75rem; font-weight: 700; color: #dbe8ff; }
   .phone-screen #hang-difficulty { margin-top: 0; font-size: 0.68rem; padding: 3px 10px; }
+  /* "Sunday special" sits just above the Evil badge, positioned out of the
+     layout so it never moves anything else on the screen. */
+  .difficulty-wrap { position: relative; }
+  #difficulty-tagline {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    font-size: 0.75rem;
+    font-style: italic;
+    font-weight: 600;
+    color: #c792ea;
+  }
+  #difficulty-tagline[hidden] { display: none; }
   .phone-screen .hang-tiles { gap: 4px; margin: 4px 0 0; flex-wrap: nowrap; }
   .phone-screen .hang-tile {
     width: clamp(24px, 7.4vw, 30px);
@@ -604,7 +621,7 @@
         <div class="key"><span class="key-letter"><span>A</span><span class="key-letter-num">1</span></span><span class="key-letter highlight"><span>B</span><span class="key-letter-num">2</span></span><span class="key-letter"><span>C</span><span class="key-letter-num">3</span></span></div>
         <div class="key"><span class="key-letter"><span>A</span><span class="key-letter-num">1</span></span><span class="key-letter"><span>B</span><span class="key-letter-num">2</span></span><span class="key-letter highlight"><span>C</span><span class="key-letter-num">3</span></span></div>
       </div>
-      <p class="example-text">Each letter has a value based on the number of presses to type it on the T9 keyboard used on flip phones.</p>
+      <p class="example-text">Each letter has a value based on the number of presses to type it on the T9 keyboard used on flip phones</p>
     </div>
     <div class="example-row">
       <div class="example-word" id="ex-this"></div>
@@ -647,7 +664,10 @@
               <span class="phone-battery"><i></i></span>
             </div>
             <div class="phone-screen-body">
-              <div id="hang-difficulty"></div>
+              <div class="difficulty-wrap">
+                <div id="difficulty-tagline" hidden>Sunday special</div>
+                <div id="hang-difficulty"></div>
+              </div>
               <div id="hang-tiles" class="hang-tiles"></div>
               <div id="hang-counter">0 / 0 found</div>
               <div class="screen-lists">
@@ -685,16 +705,17 @@
         <div class="phone-mic" aria-hidden="true"></div>
       </div>
     </div>
+
   </div>
 
-  <div id="version-label">v0.54</div>
+  <div id="version-label">v0.55</div>
 
   <script src="js/t9-logic.js?v=58"></script>
   <script src="js/words.js?v=64"></script>
   <script src="js/inappropriate-words.js?v=4"></script>
-  <script src="js/puzzles.js?v=6"></script>
-  <script src="js/daily.js?v=7"></script>
-  <script src="js/celebrate.js?v=10"></script>
-  <script src="js/app.js?v=63"></script>
+  <script src="js/puzzles.js?v=7"></script>
+  <script src="js/daily.js?v=8"></script>
+  <script src="js/celebrate.js?v=11"></script>
+  <script src="js/app.js?v=64"></script>
 </body>
 </html>
