@@ -96,16 +96,16 @@
     transform-origin: 50% 85%;
     animation: sakura-drift 45s ease-in-out infinite alternate;
   }
-  .sakura-day { background-image: url("img/sakura-day-wide.jpg?v=2"); }
+  .sakura-day { background-image: url("img/sakura-day-wide.jpg?v=3"); }
   .sakura-night {
-    background-image: url("img/sakura-night-wide.jpg?v=2");
+    background-image: url("img/sakura-night-wide.jpg?v=3");
     opacity: 0;
     transition: opacity 0.8s ease;
   }
   :root[data-theme="dark"] .sakura-night { opacity: 1; }
   @media (max-aspect-ratio: 4/5) {
-    .sakura-day { background-image: url("img/sakura-day-tall.jpg"); }
-    .sakura-night { background-image: url("img/sakura-night-tall.jpg"); }
+    .sakura-day { background-image: url("img/sakura-day-tall.jpg?v=3"); }
+    .sakura-night { background-image: url("img/sakura-night-tall.jpg?v=3"); }
   }
   @keyframes sakura-drift {
     from { transform: scale(1.02) translate(0, 0); }
@@ -960,7 +960,7 @@
     </section>
   </div>
 
-  <div id="version-label">v0.69 · testing</div>
+  <div id="version-label">v0.70 · testing</div>
 
   <!-- Testing build: rules and word list are shared with the live site one
        folder up; this page and its app.js are the testing copies. -->
