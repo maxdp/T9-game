@@ -4,8 +4,55 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>T9 Tangle</title>
+<script>
+  // Dark mode, if chosen on an earlier visit, applies before anything
+  // draws (js/background.js runs the switch).
+  try {
+    if (localStorage.getItem("t9tangle-theme") === "dark") document.documentElement.dataset.theme = "dark";
+  } catch (e) {}
+</script>
 <style>
-  :root { color-scheme: light dark; }
+  /* Page colors for text straight on the sakura scene: dark with a light
+     halo by day, light with a dark halo at night. The --group colors are
+     the rule examples' and title's letter colors. */
+  :root {
+    color-scheme: light;
+    --page-bg: #f3e6ee;
+    --page-text: #33223b;
+    --page-strong: #2b1d36;
+    --page-muted: #4a3652;
+    --rule-num: #4a2f52;
+    --word-num: #5d5470;
+    --version: #45455f;
+    --halo: 0 0 2px rgba(255, 255, 255, 0.95), 0 0 6px rgba(255, 255, 255, 0.9), 0 0 12px rgba(255, 255, 255, 0.7);
+    --group-0: #3159d4;
+    --group-1: #13874f;
+    --group-2: #b86f00;
+    --group-3: #cf3434;
+    --group-4: #8338c2;
+    --group-5: #0b8282;
+    --group-6: #c9561a;
+    --group-7: #bb2a79;
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --page-bg: #0d1128;
+    --page-text: #ece6f2;
+    --page-strong: #ffffff;
+    --page-muted: #d8cfe4;
+    --rule-num: #bcaccb;
+    --word-num: #b2a8c6;
+    --version: #9a9abb;
+    --halo: 0 0 2px rgba(8, 6, 24, 0.95), 0 0 8px rgba(8, 6, 24, 0.85);
+    --group-0: #8eaaff;
+    --group-1: #74e3a6;
+    --group-2: #ffd27a;
+    --group-3: #ff9494;
+    --group-4: #d0a0f0;
+    --group-5: #78e4e4;
+    --group-6: #ffa878;
+    --group-7: #ec86cc;
+  }
   * { box-sizing: border-box; }
   body {
     font-family: system-ui, sans-serif;
@@ -14,30 +61,99 @@
     align-items: center;
     min-height: 100vh;
     margin: 0;
-    background: #1b1b2f;
-    color: #f2f2f2;
+    /* The sakura scene (js/background.js) covers this; it's the color the
+       page shows until the scene draws. */
+    background: var(--page-bg);
+    color: var(--page-text);
     text-align: center;
     padding: 24px 16px 12px;
   }
+  /* The sakura paintings sit behind everything, with a canvas of petals
+     (js/background.js) drifting in front of them. It's as tall as the
+     screen with the browser's toolbars hidden, so nothing jumps as they
+     come and go while scrolling on a phone. */
+  .sakura-bg {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    height: 100lvh;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .sakura-bg canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+  /* A wide painting for wider screens and a tall one for phones (and
+     tablets held upright). The night painting fades in over the day one
+     in dark mode. Both drift very slowly, so the scene feels alive. */
+  .sakura-photo {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    /* Kept toward the bottom, so the river in the foreground shows. */
+    background-position: 50% 85%;
+    transform-origin: 50% 85%;
+    animation: sakura-drift 45s ease-in-out infinite alternate;
+  }
+  .sakura-day { background-image: url("img/sakura-day-wide.jpg?v=3"); }
+  .sakura-night {
+    background-image: url("img/sakura-night-wide.jpg?v=3");
+    opacity: 0;
+    transition: opacity 0.8s ease;
+  }
+  :root[data-theme="dark"] .sakura-night { opacity: 1; }
+  @media (max-aspect-ratio: 4/5) {
+    .sakura-day { background-image: url("img/sakura-day-tall.jpg?v=3"); }
+    .sakura-night { background-image: url("img/sakura-night-tall.jpg?v=3"); }
+  }
+  @keyframes sakura-drift {
+    from { transform: scale(1.02) translate(0, 0); }
+    to { transform: scale(1.06) translate(-1%, 0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sakura-photo { animation: none; }
+  }
+  /* Text straight on the scene is dark with a soft light halo, so it
+     stays readable over sky, blossoms and water alike. */
+  h1,
+  p.subtitle,
+  #rules,
+  .mode-label-static {
+    text-shadow: var(--halo);
+  }
   h1 { margin-bottom: 4px; }
-  .title-t9 { color: #ffffff; font-style: italic; }
-  p.subtitle { margin-top: 0; color: #a0a0c0; max-width: 480px; }
+  .title-t9 { color: var(--page-strong); font-style: italic; }
+  p.subtitle { margin-top: 0; color: var(--page-muted); font-weight: 600; max-width: 480px; }
 
-  #examples {
-    max-width: 480px;
-    margin: 16px auto 28px;
+  /* The rules, for reference, below the phone: same width as the phone,
+     each one numbered at the left beside its example. */
+  #rules {
+    width: min(340px, 94vw);
+    margin: 22px auto 0;
     display: flex;
     flex-direction: column;
-    align-items: center;
     gap: 22px;
     text-align: center;
   }
-  .example-row {
-    display: flex;
-    flex-direction: column;
+  #rules-title { margin: 0; font-size: 1.3rem; font-weight: 700; }
+  .rule-row {
+    display: grid;
+    grid-template-columns: 24px 1fr 24px;
+    grid-template-areas: "num visual ." ". text .";
+    row-gap: 8px;
     align-items: center;
-    gap: 8px;
   }
+  .rule-num {
+    grid-area: num;
+    justify-self: start;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--rule-num);
+  }
+  .rule-row > .key-demo-row,
+  .rule-row > .example-word { grid-area: visual; }
+  .rule-row > .example-text { grid-area: text; justify-self: center; }
   .example-word {
     display: flex;
     justify-content: center;
@@ -51,23 +167,26 @@
   .example-text {
     margin: 0;
     max-width: 320px;
-    color: #c8c8e0;
+    color: var(--page-text);
+    font-weight: 500;
     font-size: 0.9rem;
     line-height: 1.4;
   }
 
+  /* The rule 1 example keys look like the phone's own keys. */
   .key {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 4px;
-    background: linear-gradient(180deg, #34345198, #262640);
-    border-radius: 12px;
+    background: linear-gradient(180deg, #ffffff 0%, #e4e7eb 55%, #c8cdd3 100%);
+    border-radius: 16px;
+    text-shadow: none;
     font-size: 0.95rem;
-    font-weight: 600;
+    font-weight: 700;
     letter-spacing: 0.04em;
-    color: #e4e4f5;
-    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    color: #2a2e34;
+    box-shadow: 0 2px 0 #8a9198, 0 3px 4px rgba(0, 0, 0, 0.25), inset 0 1px 0 #ffffff;
   }
   .key-letter {
     display: flex;
@@ -78,7 +197,7 @@
   .key-letter-num {
     font-size: 0.5rem;
     font-weight: 600;
-    color: #8a8aa8;
+    color: #6b727b;
     margin-top: 2px;
   }
   .tap-key {
@@ -116,7 +235,7 @@
   .word-letter-num {
     font-size: 0.8rem;
     font-weight: 600;
-    color: #8a8aa8;
+    color: var(--word-num);
     margin-top: 4px;
   }
 
@@ -211,12 +330,52 @@
     bottom: 6px;
     right: 8px;
     font-size: 0.7rem;
-    color: #45455f;
+    color: var(--version);
     pointer-events: none;
     user-select: none;
   }
 
-  /* Practice / Daily switch above the phone. */
+  /* Tutorial / Daily / Practice selector above the phone: a pill whose
+     purple thumb slides under the active option. */
+  .mode-select-wrap { display: flex; justify-content: center; margin: 0 0 10px; }
+  .mode-select {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    width: 276px;
+    padding: 3px;
+    border-radius: 999px;
+    background: #2a2a44;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.45);
+  }
+  .mode-thumb {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: calc((100% - 6px) / 3);
+    height: calc(100% - 6px);
+    border-radius: 999px;
+    background: #6c45c9;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
+    transition: transform 0.2s ease;
+  }
+  .mode-select.instant .mode-thumb { transition: none; }
+  .mode-select[data-active="1"] .mode-thumb { transform: translateX(100%); }
+  .mode-select[data-active="2"] .mode-thumb { transform: translateX(200%); }
+  .mode-option {
+    position: relative;
+    z-index: 1;
+    padding: 6px 0;
+    border-radius: 999px;
+    background: transparent;
+    color: #9a9ab8;
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+  button.mode-option:hover:not(:disabled) { background: transparent; color: #d6d6ee; }
+  .mode-option[aria-checked="true"],
+  button.mode-option[aria-checked="true"]:hover { color: #ffffff; font-weight: 700; }
+  /* The dark mode switch uses this on/off slider. */
   .mode-switch {
     display: flex;
     align-items: center;
@@ -224,25 +383,6 @@
     gap: 10px;
     margin: 0 0 10px;
   }
-  .mode-label {
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: #7c7c9c;
-    cursor: pointer;
-    user-select: none;
-    transition: color 0.2s ease;
-  }
-  .mode-label.active { color: #ffffff; font-weight: 700; }
-  #mode-toggle {
-    position: relative;
-    width: 52px;
-    height: 30px;
-    padding: 0;
-    border-radius: 999px;
-    background: #6c45c9;
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.45);
-  }
-  #mode-toggle:hover { background: #7b54d8; }
   .mode-knob {
     position: absolute;
     top: 3px;
@@ -254,7 +394,23 @@
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
     transition: transform 0.2s ease;
   }
-  #mode-toggle[aria-checked="true"] .mode-knob { transform: translateX(22px); }
+  /* The dark mode switch below the phone (grey when off, purple when
+     on). */
+  .theme-switch { margin: 10px 0 0; }
+  #dark-toggle {
+    position: relative;
+    width: 52px;
+    height: 30px;
+    padding: 0;
+    border-radius: 999px;
+    background: #4a4a66;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.45);
+  }
+  #dark-toggle:hover { background: #55557a; }
+  #dark-toggle[aria-checked="true"] { background: #6c45c9; }
+  #dark-toggle[aria-checked="true"]:hover { background: #7b54d8; }
+  #dark-toggle[aria-checked="true"] .mode-knob { transform: translateX(22px); }
+  .mode-label-static { font-size: 0.95rem; font-weight: 600; color: var(--page-text); }
 
   /* ---- Silver flip phone (open, facing the player) ---------------------
      Built in CSS rather than from a photo; the keypad sits in the real
@@ -266,7 +422,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    filter: drop-shadow(0 18px 26px rgba(0, 0, 0, 0.55));
+    filter: drop-shadow(0 18px 26px rgba(40, 20, 50, 0.4));
   }
   .phone-lid,
   .phone-base {
@@ -331,6 +487,31 @@
     letter-spacing: 0.06em;
     opacity: 0.9;
   }
+  /* In the Tutorial, arrows either side of the header step back and
+     forward through the lessons. They're taller than the header text, so
+     negative margins keep them from making the status bar any taller. */
+  .screen-title { display: inline-flex; align-items: center; gap: 4px; }
+  .tutorial-arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 24px;
+    margin: -6px 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+  }
+  .tutorial-arrow[hidden] { display: none; }
+  .tutorial-arrow::before {
+    content: "";
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+  }
+  .tutorial-arrow.prev::before { border-right: 7px solid #f4f8ff; }
+  .tutorial-arrow.next::before { border-left: 7px solid #f4f8ff; }
+  .tutorial-arrow:disabled { opacity: 0.3; cursor: default; }
   .phone-signal { justify-self: start; display: inline-flex; align-items: flex-end; gap: 2px; height: 12px; }
   .phone-signal i { width: 3px; background: #f4f8ff; }
   .phone-signal i:nth-child(1) { height: 4px; }
@@ -401,6 +582,44 @@
   #daily-rows .difficulty-evil { color: #c792ea; }
   .daily-done { margin-top: 8px; font-size: 0.75rem; font-weight: 700; color: #dbe8ff; }
   .phone-screen #hang-difficulty { margin-top: 0; font-size: 0.68rem; padding: 3px 10px; }
+  /* Tutorial: the rule takes the difficulty badge's place, there's no
+     answer counter and no found-words list (a solved lesson's answer stays
+     in the tiles), so the message box needs just two lines: "Got it!" and
+     the answer's sequence. The
+     rule and puzzle sit together at the middle of the screen: an invisible
+     spacer above them, as tall as the message box below, balances it out.
+     The send-off after the last lesson is its text alone, centered. */
+  #tutorial-rule {
+    width: 100%;
+    font-size: 0.8rem;
+    font-weight: 600;
+    line-height: 1.35;
+    color: #dbe8ff;
+  }
+  #tutorial-rule > div + div { margin-top: 8px; }
+  #tutorial-rule[hidden] { display: none; }
+  .phone-screen-body.tutorial-mode .difficulty-wrap,
+  .phone-screen-body.tutorial-mode #hang-counter,
+  .phone-screen-body.tutorial-mode #hang-found-list { display: none; }
+  .phone-screen-body.tutorial-mode .screen-lists { height: calc(2 * 1.35em); }
+  /* Slightly tighter spacing than the other modes so lesson 1's
+     four-line rule still fits without growing the screen. */
+  .phone-screen-body.tutorial-mode { justify-content: center; gap: 4px; min-height: 0; }
+  .phone-screen.tutorial-mode { height: 236px; }
+  .phone-screen-body.tutorial-mode::before {
+    content: "";
+    flex: 0 1 auto;
+    font-size: 0.75rem;
+    height: calc(2 * 1.35em);
+    /* The Tutorial's screen is fixed at its usual height. Lesson 1's long
+       rule may not leave room for the full spacer, which gives way (only
+       it can shrink), so that lesson sits a little above center. */
+    min-height: 0;
+  }
+  .phone-screen-body.tutorial-done::before,
+  .phone-screen-body.tutorial-done #hang-tiles,
+  .phone-screen-body.tutorial-done .screen-lists { display: none; }
+  .phone-screen-body.tutorial-done #tutorial-rule { font-size: 1rem; font-weight: 700; }
   /* "Sunday special" sits just above the Evil badge, positioned out of the
      layout so it never moves anything else on the screen. */
   .difficulty-wrap { position: relative; }
@@ -614,42 +833,14 @@
 <body>
   <h1><span class="title-t9">T9</span> <span id="title-tangle">TANGLE</span></h1>
 
-  <div id="examples">
-    <div class="example-row">
-      <div class="key-demo-row">
-        <div class="key"><span class="key-letter highlight"><span>A</span><span class="key-letter-num">1</span></span><span class="key-letter"><span>B</span><span class="key-letter-num">2</span></span><span class="key-letter"><span>C</span><span class="key-letter-num">3</span></span></div>
-        <div class="key"><span class="key-letter"><span>A</span><span class="key-letter-num">1</span></span><span class="key-letter highlight"><span>B</span><span class="key-letter-num">2</span></span><span class="key-letter"><span>C</span><span class="key-letter-num">3</span></span></div>
-        <div class="key"><span class="key-letter"><span>A</span><span class="key-letter-num">1</span></span><span class="key-letter"><span>B</span><span class="key-letter-num">2</span></span><span class="key-letter highlight"><span>C</span><span class="key-letter-num">3</span></span></div>
-      </div>
-      <p class="example-text">Each letter has a value based on the number of presses to type it on the T9 keyboard used on flip phones</p>
-    </div>
-    <div class="example-row">
-      <div class="example-word" id="ex-this"></div>
-      <p class="example-text">The goal is to find words that make a number sequence like 1 2 3 4</p>
-    </div>
-    <div class="example-row">
-      <div class="example-word" id="ex-spur"></div>
-      <p class="example-text">The sequence can wrap around</p>
-    </div>
-    <div class="example-row">
-      <div class="example-word" id="ex-punts"></div>
-      <p class="example-text">Numbers can add together such as 2+1=3</p>
-    </div>
-    <div class="example-row">
-      <div class="example-word" id="ex-song"></div>
-      <p class="example-text">Backwards sequences are allowed</p>
-    </div>
-    <div class="example-row">
-      <div class="example-word" id="ex-whiskies"></div>
-      <p class="example-text">The sequence length can be 4 or longer (here 2+3=5, 2+4=6). Combine these rules and find all valid words!</p>
-    </div>
-  </div>
-
   <div id="hangman-mode">
-    <div class="mode-switch">
-      <span class="mode-label active" data-mode="practice">Practice</span>
-      <button type="button" id="mode-toggle" role="switch" aria-checked="false" aria-label="Daily mode"><span class="mode-knob"></span></button>
-      <span class="mode-label" data-mode="daily">Daily</span>
+    <div class="mode-select-wrap">
+      <div id="mode-select" class="mode-select" role="radiogroup" aria-label="Mode" data-active="2">
+        <span class="mode-thumb" aria-hidden="true"></span>
+        <button type="button" class="mode-option" role="radio" aria-checked="false" data-mode="tutorial">Tutorial</button>
+        <button type="button" class="mode-option" role="radio" aria-checked="false" data-mode="daily">Daily</button>
+        <button type="button" class="mode-option" role="radio" aria-checked="true" data-mode="practice">Practice</button>
+      </div>
     </div>
     <p class="subtitle">Tap keys repeatedly to cycle through letters</p>
 
@@ -658,12 +849,17 @@
         <div class="phone-earpiece" aria-hidden="true"></div>
         <div class="phone-bezel">
           <div class="phone-screen">
-            <div class="phone-status" aria-hidden="true">
-              <span class="phone-signal"><i></i><i></i><i></i><i></i></span>
-              <span id="screen-mode-label"></span>
-              <span class="phone-battery"><i></i></span>
+            <div class="phone-status">
+              <span class="phone-signal" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+              <span class="screen-title">
+                <button type="button" id="tutorial-prev" class="tutorial-arrow prev" aria-label="Previous lesson" hidden></button>
+                <span id="screen-mode-label"></span>
+                <button type="button" id="tutorial-next" class="tutorial-arrow next" aria-label="Next lesson" hidden></button>
+              </span>
+              <span class="phone-battery" aria-hidden="true"><i></i></span>
             </div>
             <div class="phone-screen-body">
+              <div id="tutorial-rule" hidden></div>
               <div class="difficulty-wrap">
                 <div id="difficulty-tagline" hidden>Sunday special</div>
                 <div id="hang-difficulty"></div>
@@ -706,16 +902,59 @@
       </div>
     </div>
 
+    <div class="mode-switch theme-switch">
+      <button type="button" id="dark-toggle" role="switch" aria-checked="false" aria-label="Dark mode"><span class="mode-knob"></span></button>
+      <span class="mode-label-static">Dark mode</span>
+    </div>
+
+    <section id="rules" aria-labelledby="rules-title">
+      <h2 id="rules-title">Rules</h2>
+      <div class="rule-row">
+        <span class="rule-num">1.</span>
+        <div class="key-demo-row">
+          <div class="key"><span class="key-letter highlight"><span>A</span><span class="key-letter-num">1</span></span><span class="key-letter"><span>B</span><span class="key-letter-num">2</span></span><span class="key-letter"><span>C</span><span class="key-letter-num">3</span></span></div>
+          <div class="key"><span class="key-letter"><span>A</span><span class="key-letter-num">1</span></span><span class="key-letter highlight"><span>B</span><span class="key-letter-num">2</span></span><span class="key-letter"><span>C</span><span class="key-letter-num">3</span></span></div>
+          <div class="key"><span class="key-letter"><span>A</span><span class="key-letter-num">1</span></span><span class="key-letter"><span>B</span><span class="key-letter-num">2</span></span><span class="key-letter highlight"><span>C</span><span class="key-letter-num">3</span></span></div>
+        </div>
+        <p class="example-text">Each letter has a value based on the number of presses to type it on the T9 keypad used on flip phones</p>
+      </div>
+      <div class="rule-row">
+        <span class="rule-num">2.</span>
+        <div class="example-word" id="ex-this"></div>
+        <p class="example-text">The goal is to find words that make a number sequence like 1 2 3 4</p>
+      </div>
+      <div class="rule-row">
+        <span class="rule-num">3.</span>
+        <div class="example-word" id="ex-host"></div>
+        <p class="example-text">The sequence can wrap around</p>
+      </div>
+      <div class="rule-row">
+        <span class="rule-num">4.</span>
+        <div class="example-word" id="ex-means"></div>
+        <p class="example-text">Numbers can add together such as 1+2=3</p>
+      </div>
+      <div class="rule-row">
+        <span class="rule-num">5.</span>
+        <div class="example-word" id="ex-song"></div>
+        <p class="example-text">Backwards sequences are allowed</p>
+      </div>
+      <div class="rule-row">
+        <span class="rule-num">6.</span>
+        <div class="example-word" id="ex-jersey"></div>
+        <p class="example-text">The sequence length can be 4 or longer (here 2+3=5). Combine these rules and find all valid words!</p>
+      </div>
+    </section>
   </div>
 
-  <div id="version-label">v0.55</div>
+  <div id="version-label">v0.71</div>
 
   <script src="js/t9-logic.js?v=58"></script>
   <script src="js/words.js?v=64"></script>
   <script src="js/inappropriate-words.js?v=4"></script>
-  <script src="js/puzzles.js?v=7"></script>
+  <script src="js/puzzles.js?v=8"></script>
   <script src="js/daily.js?v=8"></script>
-  <script src="js/celebrate.js?v=11"></script>
-  <script src="js/app.js?v=64"></script>
+  <script src="js/celebrate.js?v=17"></script>
+  <script src="js/app.js?v=84"></script>
+  <script src="js/background.js?v=4"></script>
 </body>
 </html>

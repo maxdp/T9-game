@@ -11,6 +11,8 @@
     dateKeyForNumber,
     dailyLabels,
     isSunday,
+    fitsPattern,
+    rarityPercent,
   } = window.T9_PUZZLES;
 
   // DICTIONARY lets the game check whether a typed guess is a real word at
@@ -21,33 +23,19 @@
 
   // One color per merged group in a solution, so a letter/digit's color
   // shows at a glance which final counting number it contributes to.
-  const GROUP_COLORS = [
-    "#7ea0ff",
-    "#6ee0a0",
-    "#ffcf6e",
-    "#ff8a8a",
-    "#c792ea",
-    "#6edede",
-    "#ff9f6e",
-    "#e06ec0",
-  ];
+  // Letter colors for merged groups (CSS variables, so they suit both the
+  // light and the dark page).
+  const GROUP_COLORS = Array.from({ length: 8 }, (_, i) => `var(--group-${i})`);
 
   function groupIndexForLetter(grouping, letterIndex) {
     return grouping.groups.findIndex((g) => g.indices.includes(letterIndex));
   }
 
-  // ---------------------------------------------------------------------
-  // Top-of-page rule examples
-  // ---------------------------------------------------------------------
-
-  // Renders a word as one column per letter (its letter colored by merged
-  // group, with its press-count digit small and gray underneath). A
-  // multi-letter group's digits get split parentheses around the first/last
-  // letter of each contiguous run it occupies — e.g. PUNTS's merged N+T
-  // shows "(2" / "1)" — so a wraparound merge shows as two separate "(x)"
-  // pieces in their actual positions.
-  function renderExampleWord(container, word, grouping) {
-    container.innerHTML = "";
+  // Where a word's merged groups get parentheses: around the first/last
+  // letter of each contiguous run of a multi-letter group, e.g. MEANS's
+  // merged A+N gives "(1" / "2)". A wraparound merge shows as two separate
+  // "(x)" pieces in their actual positions.
+  function groupMarks(word, grouping) {
     const n = word.length;
     const marks = Array.from({ length: n }, () => ({ open: false, close: false }));
     let i = 0;
@@ -61,6 +49,28 @@
       }
       i = j;
     }
+    return marks;
+  }
+
+  // A word's press counts with its merges marked, e.g. "1 2 (1 2) 4".
+  function sequenceText(word) {
+    const marks = groupMarks(word, findSequentialGrouping(wordToDigits(word)));
+    return word
+      .split("")
+      .map((letter, i) => (marks[i].open ? "(" : "") + PRESS_COUNTS[letter] + (marks[i].close ? ")" : ""))
+      .join(" ");
+  }
+
+  // ---------------------------------------------------------------------
+  // Rule examples
+  // ---------------------------------------------------------------------
+
+  // Renders a word as one column per letter (its letter colored by merged
+  // group, with its press-count digit small and gray underneath), merged
+  // groups' digits in parentheses (see groupMarks).
+  function renderExampleWord(container, word, grouping) {
+    container.innerHTML = "";
+    const marks = groupMarks(word, grouping);
 
     word.split("").forEach((letter, idx) => {
       const wrap = document.createElement("span");
@@ -85,31 +95,16 @@
     });
   }
 
-  // PUNTS's own findSequentialGrouping result merges P+U (1+2=3) instead
-  // of N+T — just as valid, but it wouldn't match the "2+1=3" explanation
-  // text, so that grouping is specified directly rather than computed.
-  const PUNTS_GROUPING = {
-    groups: [
-      { indices: [0], sum: 1 },
-      { indices: [1], sum: 2 },
-      { indices: [2, 3], sum: 3 },
-      { indices: [4], sum: 4 },
-    ],
-    sums: [1, 2, 3, 4],
-    direction: "increasing",
-    wrapped: false,
-  };
-
   [
     { id: "ex-this", word: "this" },
-    { id: "ex-spur", word: "spur" },
-    { id: "ex-punts", word: "punts", grouping: PUNTS_GROUPING },
+    { id: "ex-host", word: "host" },
+    { id: "ex-means", word: "means" },
     { id: "ex-song", word: "song" },
-    { id: "ex-whiskies", word: "whiskies" },
-  ].forEach(({ id, word, grouping }) => {
+    { id: "ex-jersey", word: "jersey" },
+  ].forEach(({ id, word }) => {
     const container = document.getElementById(id);
     if (!container) return;
-    renderExampleWord(container, word, grouping || findSequentialGrouping(wordToDigits(word)));
+    renderExampleWord(container, word, findSequentialGrouping(wordToDigits(word)));
   });
 
   // Colors the title's "TANGLE" letter-for-letter by its own merge
@@ -147,11 +142,16 @@
     const difficultyTaglineEl = document.getElementById("difficulty-tagline");
     const dailyResultsEl = document.getElementById("daily-results");
     const dailyRowsEl = document.getElementById("daily-rows");
-    const modeToggleBtn = document.getElementById("mode-toggle");
+    const modeSelectEl = document.getElementById("mode-select");
+    const tutorialRuleEl = document.getElementById("tutorial-rule");
+    const tutorialPrevBtn = document.getElementById("tutorial-prev");
+    const tutorialNextBtn = document.getElementById("tutorial-next");
 
     const DAILY_STORAGE_KEY = "t9tangle-daily";
     const PRACTICE_STORAGE_KEY = "t9tangle-practice-solved";
     const DAILY_CHOSEN_KEY = "t9tangle-daily-chosen";
+    const TUTORIAL_SEEN_KEY = "t9tangle-tutorial-seen";
+    const MODES = ["tutorial", "daily", "practice"];
 
     let mode = "practice";
 
@@ -163,6 +163,34 @@
     //     complete, attempts, message: { text, kind } | null }
     const practice = { puzzle: null, seen: new Set(), isFirst: true };
     let daily = null; // { dateKey, number, puzzles: [3], index } (index 3 = all done)
+
+    // Tutorial: one-blank puzzles that each teach a rule (shown on the
+    // screen in place of the difficulty badge), each with exactly one
+    // answer and, mostly, tempting wrong ones (THUS, HOSE, MEALS, LONG...).
+    // After the last lesson comes one more screen, the send-off, with the
+    // Start key that moves on to Daily.
+    const TUTORIAL_LESSONS = [
+      {
+        pattern: "th_s",
+        rule: "Each letter's value is its number of presses on a T9 keypad (below)\nThe goal is to find words that make a number sequence like 1 2 3 4",
+      },
+      { pattern: "hos_", rule: "The sequence can wrap around" },
+      { pattern: "mea_s", rule: "Numbers can add together such as 1+2=3" },
+      { pattern: "_ong", rule: "Backwards sequences are allowed" },
+      { pattern: "jerse_", rule: "The sequence length can be 4 or longer (here 2+3=5)" },
+    ];
+    const TUTORIAL_DONE_TEXT = "Combine these rules and find all valid words!\nGood luck 🍀";
+    let tutorial = null; // { puzzles, index } (index past the last lesson = the send-off)
+    function tutorialPuzzle(lesson) {
+      const answers = WORDS_GOOD.filter((w) => fitsPattern(lesson.pattern, w));
+      return Object.assign(puzzleFromPattern(lesson.pattern, answers, "Tutorial"), { rule: lesson.rule });
+    }
+    function newTutorial() {
+      tutorial = { index: 0, puzzles: TUTORIAL_LESSONS.map(tutorialPuzzle) };
+    }
+    function tutorialFinished() {
+      return tutorial.index >= TUTORIAL_LESSONS.length;
+    }
 
     // Tap-input state: every blank position in the puzzle, which one (if
     // any) is active, what's been filled so far, and the in-progress
@@ -180,6 +208,7 @@
 
     function currentPuzzle() {
       if (mode === "practice") return practice.puzzle;
+      if (mode === "tutorial") return tutorialFinished() ? null : tutorial.puzzles[tutorial.index];
       return daily.index < daily.puzzles.length ? daily.puzzles[daily.index] : null;
     }
 
@@ -394,11 +423,17 @@
       });
     }
 
-    // The screen message a finished puzzle shows.
+    // The screen message a finished puzzle shows. A Tutorial lesson adds
+    // a line showing why its answer works, e.g. "2 3 4 1 is a sequence"
+    // (green when solved, red after giving up).
     function endMessage(p) {
       const missed = p.answers.filter((w) => !p.found.has(w));
-      if (missed.length === 0) return { text: "Got 'em all!", kind: "success" };
-      return { text: "Missed: " + missed.map((w) => w.toUpperCase()).join(", "), kind: "missed" };
+      const message =
+        missed.length === 0
+          ? { text: p.difficulty === "Tutorial" ? "Got it!" : "Got 'em all!", kind: "success" }
+          : { text: "Missed: " + missed.map((w) => w.toUpperCase()).join(", "), kind: "missed" };
+      if (p.difficulty === "Tutorial") message.detail = `${sequenceText(p.answers[0])} is a sequence`;
+      return message;
     }
 
     // ---- Rendering ------------------------------------------------------
@@ -418,6 +453,10 @@
           shown = letter;
         } else if (filledMap.has(i)) {
           shown = filledMap.get(i);
+        } else if (mode === "tutorial" && p.found.has(p.word)) {
+          // A solved lesson keeps its answer spelled out in the tiles (the
+          // Tutorial has no found-words list).
+          shown = letter;
         } else if (i === activeTarget && pendingKey) {
           shown = groupLetterAt(pendingKey, pendingCount);
           isPreview = true;
@@ -478,6 +517,11 @@
     function renderScreenMessage(message) {
       missedEl.textContent = message ? message.text : "";
       missedEl.className = message ? message.kind : "";
+      if (message && message.detail) {
+        const detail = document.createElement("div");
+        detail.textContent = message.detail;
+        missedEl.appendChild(detail);
+      }
     }
 
     // How a difficulty label reads on screen; the Sunday-only Evil gets
@@ -508,8 +552,12 @@
       // In Daily, "(n/3)" counts up through the Easy, Medium and Hard puzzles
       // so a newcomer can see there's more than one; the results screen
       // after all three shows just "Daily #X".
+      // In Tutorial it counts through the lessons and the send-off after
+      // them (its last screen).
       if (mode === "practice") {
         modeLabelEl.textContent = `Practice (${practiceSolvedToday()} solved)`;
+      } else if (mode === "tutorial") {
+        modeLabelEl.textContent = `Tutorial (${tutorial.index + 1}/${TUTORIAL_LESSONS.length + 1})`;
       } else {
         const total = daily.puzzles.length;
         modeLabelEl.textContent =
@@ -517,12 +565,46 @@
       }
 
       const p = currentPuzzle();
-      const showResults = !p;
+      const inTutorial = mode === "tutorial";
+      const tutorialDone = inTutorial && tutorialFinished();
+      const showResults = !p && !inTutorial;
+      screenBodyEl.classList.toggle("tutorial-mode", inTutorial);
+      screenBodyEl.parentElement.classList.toggle("tutorial-mode", inTutorial);
+      screenBodyEl.classList.toggle("tutorial-done", tutorialDone);
+      tutorialRuleEl.hidden = !inTutorial;
+      if (inTutorial) {
+        // Each line of the text is its own block, so they can be spaced
+        // apart.
+        tutorialRuleEl.replaceChildren(
+          ...(tutorialDone ? TUTORIAL_DONE_TEXT : p.rule).split("\n").map((line) => {
+            const el = document.createElement("div");
+            el.textContent = line;
+            return el;
+          })
+        );
+      }
+      // The header's arrows step through the lessons (and the send-off).
+      tutorialPrevBtn.hidden = tutorialNextBtn.hidden = !inTutorial;
+      if (inTutorial) {
+        tutorialPrevBtn.disabled = tutorial.index === 0;
+        tutorialNextBtn.disabled = tutorialDone;
+      }
       screenBodyEl.classList.toggle("show-results", showResults);
       dailyResultsEl.hidden = !showResults;
 
       giveUpBtn.textContent = "Give up";
       giveUpBtn.classList.remove("next-key");
+
+      if (tutorialDone) {
+        // The send-off: just its text and the Start key.
+        renderTiles();
+        setKeypadDisabled(true);
+        giveUpBtn.disabled = false;
+        giveUpBtn.textContent = "Start";
+        giveUpBtn.classList.add("next-key");
+        renderKeypadHighlight();
+        return;
+      }
 
       if (showResults) {
         renderDailyResults();
@@ -544,8 +626,9 @@
         // The whole keypad switches off except the Give up key, which turns
         // into the way on to the next puzzle.
         giveUpBtn.disabled = false;
-        giveUpBtn.textContent =
-          mode === "practice" ? "New puzzle" : daily.index < daily.puzzles.length - 1 ? "Next puzzle" : "See results";
+        if (mode === "practice") giveUpBtn.textContent = "New puzzle";
+        else if (mode === "tutorial") giveUpBtn.textContent = "Next puzzle";
+        else giveUpBtn.textContent = daily.index < daily.puzzles.length - 1 ? "Next puzzle" : "See results";
         giveUpBtn.classList.add("next-key");
       }
       render();
@@ -571,7 +654,9 @@
 
     // The blank to land on after filling `pos`: the next still-empty blank
     // to its right, or — if there is none — the leftmost still-empty
-    // blank (wrapping around), or null if every blank is now filled.
+    // blank (wrapping around). Once every blank is filled, the next blank
+    // to the right of `pos` (already filled) becomes active, so a run of
+    // letters can be retyped in a row; after the last blank, none is.
     function nextTargetAfter(pos) {
       const idx = activeBlankPositions.indexOf(pos);
       for (let i = idx + 1; i < activeBlankPositions.length; i++) {
@@ -580,7 +665,7 @@
       for (let i = 0; i < activeBlankPositions.length; i++) {
         if (!filledMap.has(activeBlankPositions[i])) return activeBlankPositions[i];
       }
-      return null;
+      return idx + 1 < activeBlankPositions.length ? activeBlankPositions[idx + 1] : null;
     }
 
     // Commits whichever letter the pending key's cycle is currently on
@@ -699,9 +784,10 @@
 
     // ---- Guessing and finishing puzzles -------------------------------
 
+    // Also shows how rare the puzzle's rarest answer is.
     function updateCounter() {
       const p = currentPuzzle();
-      counterEl.textContent = `${p.found.size} / ${p.answers.length} found`;
+      counterEl.textContent = `${p.found.size} / ${p.answers.length} found, ${rarityPercent(p.answers)}% rarity`;
     }
 
     function renderFoundList() {
@@ -739,7 +825,15 @@
         ? findSequentialGrouping(wordToDigits(guess))
         : null;
       if (!grouping) {
-        showScreenMessage("Incorrect", "incorrect");
+        // In the tutorial, a wrong guess says why: it isn't a word at all,
+        // or (a real word) its numbers, e.g. "LONG = 3 3 2 1".
+        let text = "Incorrect";
+        if (mode === "tutorial") {
+          text += DICTIONARY_SET.has(guess)
+            ? `: ${guess.toUpperCase()} = ${wordToDigits(guess).join(" ")}`
+            : `: ${guess.toUpperCase()} is not a word`;
+        }
+        showScreenMessage(text, "incorrect");
         window.T9Celebrate.buzzer();
         return;
       }
@@ -797,10 +891,13 @@
       }
     }
 
+    // Tutorial puzzles only get the correct-answer chime, never the full
+    // celebration.
     function winPuzzle() {
       if (mode === "practice") countPracticeSolve();
       finishPuzzle();
-      window.T9Celebrate.celebrate(document.querySelector(".phone"));
+      if (mode === "tutorial") window.T9Celebrate.chime();
+      else window.T9Celebrate.celebrate(document.querySelector(".phone"));
     }
 
     // Lists on the phone's screen only the answers the player didn't find.
@@ -819,8 +916,20 @@
     }
 
     // Once a puzzle is over, the Give up key moves on: a fresh puzzle in
-    // Practice, the next of the three in Daily, then the Daily results.
+    // Practice, the next of the three in Daily, then the Daily results;
+    // the next lesson in Tutorial, then the send-off, whose Start key
+    // moves on to Daily.
     function nextPuzzle() {
+      if (mode === "tutorial") {
+        if (tutorialFinished()) {
+          // Start gets the correct-answer chime on its way to Daily.
+          window.T9Celebrate.chime();
+          setMode("daily");
+        } else {
+          goToLesson(tutorial.index + 1);
+        }
+        return;
+      }
       window.T9Celebrate.clear();
       if (mode === "practice") {
         newPracticePuzzle();
@@ -832,37 +941,58 @@
       renderAll();
     }
 
+    // Jumps to a Tutorial lesson (or, one past the last, the send-off).
+    // A lesson always starts fresh, so going back to one replays it.
+    function goToLesson(index) {
+      if (index < 0 || index > TUTORIAL_LESSONS.length) return;
+      window.T9Celebrate.clear();
+      tutorial.index = index;
+      if (index < TUTORIAL_LESSONS.length) tutorial.puzzles[index] = tutorialPuzzle(TUTORIAL_LESSONS[index]);
+      resetGuessInProgress();
+      renderAll();
+    }
+
     // ---- Mode toggle ----------------------------------------------------
 
-    // Once a player has switched to Daily, every later visit opens in Daily;
-    // until then (new players) the page opens in Practice.
-    function rememberDailyChosen() {
+    // New players open in the Tutorial. Once a player has left it (or has
+    // ever switched to Daily), every later visit opens in Daily.
+    function remember(key) {
       try {
-        localStorage.setItem(DAILY_CHOSEN_KEY, "1");
+        localStorage.setItem(key, "1");
       } catch (e) {
-        // Not remembered; the next visit just opens in Practice.
+        // Not remembered; the next visit just opens in the Tutorial again.
       }
     }
-    function hasChosenDaily() {
+    function recalls(key) {
       try {
-        return localStorage.getItem(DAILY_CHOSEN_KEY) === "1";
+        return localStorage.getItem(key) === "1";
       } catch (e) {
         return false;
       }
     }
+    function startingMode() {
+      return recalls(DAILY_CHOSEN_KEY) || recalls(TUTORIAL_SEEN_KEY) ? "daily" : "tutorial";
+    }
+
+    function renderModeSelect() {
+      modeSelectEl.dataset.active = String(MODES.indexOf(mode));
+      modeSelectEl.querySelectorAll(".mode-option").forEach((el) => {
+        el.setAttribute("aria-checked", String(el.dataset.mode === mode));
+      });
+    }
 
     function setMode(newMode) {
       if (newMode === mode) return;
+      if (mode === "tutorial") remember(TUTORIAL_SEEN_KEY);
       mode = newMode;
       window.T9Celebrate.clear();
       if (mode === "daily") {
         loadDaily();
-        rememberDailyChosen();
+        remember(DAILY_CHOSEN_KEY);
       }
-      modeToggleBtn.setAttribute("aria-checked", String(mode === "daily"));
-      document.querySelectorAll(".mode-label").forEach((el) => {
-        el.classList.toggle("active", el.dataset.mode === mode);
-      });
+      // Coming back to a finished Tutorial starts it over.
+      if (mode === "tutorial" && (!tutorial || tutorialFinished())) newTutorial();
+      renderModeSelect();
       resetGuessInProgress();
       renderAll();
     }
@@ -874,14 +1004,22 @@
     enterBtn.addEventListener("click", handleEnter);
     giveUpBtn.addEventListener("click", () => {
       const p = currentPuzzle();
-      if (!p) return;
-      if (p.complete) nextPuzzle();
-      else giveUp();
+      if (!p || p.complete) {
+        // Daily's results screen has nothing next; the Tutorial's send-off
+        // has Start.
+        if (p || mode === "tutorial") nextPuzzle();
+      } else {
+        giveUp();
+      }
     });
+    tutorialPrevBtn.addEventListener("click", () => goToLesson(tutorial.index - 1));
+    tutorialNextBtn.addEventListener("click", () => goToLesson(tutorial.index + 1));
     // Only the testing page has the debug 0 key; on live 0 is inert.
     const debugWinBtn = document.getElementById("debug-win");
     if (debugWinBtn) debugWinBtn.addEventListener("click", debugWin);
-    modeToggleBtn.addEventListener("click", () => setMode(mode === "practice" ? "daily" : "practice"));
+    modeSelectEl.querySelectorAll(".mode-option").forEach((el) => {
+      el.addEventListener("click", () => setMode(el.dataset.mode));
+    });
     // TESTING ONLY: the Sunday preview switch exists only on the testing page.
     const sundayToggleBtn = document.getElementById("sunday-toggle");
     if (sundayToggleBtn) {
@@ -907,13 +1045,15 @@
         }
       });
     }
-    document.querySelectorAll(".mode-label").forEach((el) => {
-      el.addEventListener("click", () => setMode(el.dataset.mode));
-    });
 
     newPracticePuzzle();
     resetGuessInProgress();
     renderAll();
-    if (hasChosenDaily()) setMode("daily");
+    // Place the selector's thumb on the starting mode without sliding it
+    // there; only later switches animate.
+    modeSelectEl.classList.add("instant");
+    setMode(startingMode());
+    renderModeSelect();
+    requestAnimationFrame(() => requestAnimationFrame(() => modeSelectEl.classList.remove("instant")));
   })();
 })();
