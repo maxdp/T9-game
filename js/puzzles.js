@@ -105,8 +105,8 @@
   }
 
   // How rare a puzzle's rarest answer is, shown on screen as "X% rarity":
-  // the percentage of WORDS_GOOD that's more common than it, rounded down
-  // to a multiple of 10 (0-90).
+  // the percentage of WORDS_GOOD that's more common than it, rounded up
+  // to a multiple of 10 (0-100).
   function rarityPercent(answers) {
     const rank = rarestRankOf(answers);
     let lo = 0;
@@ -116,7 +116,7 @@
       if (SORTED_RANKS[mid] < rank) lo = mid + 1;
       else hi = mid;
     }
-    return Math.floor((lo * 10) / SORTED_RANKS.length) * 10;
+    return Math.ceil((lo * 10) / SORTED_RANKS.length) * 10;
   }
 
   function fitsPattern(pattern, word) {
