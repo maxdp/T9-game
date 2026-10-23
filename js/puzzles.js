@@ -18,14 +18,14 @@
   // Word -> frequency rank (1 = most common, higher = rarer).
   const WORD_RANK = new Map(WORDS_GOOD.map((w, i) => [w, WORDS_GOOD_RANK[i]]));
 
-  // Difficulty adds up five factors into a 4-16 point score:
+  // Difficulty adds up five factors into a 4-18 point score:
   //
-  // 1. Rarity of the rarest valid answer — WORDS_GOOD split into rarity
-  //    quartiles by rank (cutoffs are the actual 25th/50th/75th percentile
-  //    rank values of the current WORDS_GOOD pool, recomputed here rather
-  //    than hardcoded so they stay correct whenever the word list
-  //    changes); the bottom (most-common) quartile is worth 1 point, the
-  //    2nd 2, the 3rd and 4th (rarest half) 3.
+  // 1. Rarity of the rarest valid answer, in five even bands by the share
+  //    of WORDS_GOOD that's more common than it (worked out from the
+  //    current pool's ranks rather than hardcoded, so the bands stay right
+  //    whenever the word list changes): up to 20% is worth 1 point, up to
+  //    40% 2 ... over 80% (the rarest fifth) 5. These match the on-screen
+  //    "X% rarity": 10-20% is 1 point, 30-40% 2, and so on.
   // 2. Number of blanks (2-6): one point less than the number of blanks
   //    (2 is worth 1 point ... 6 worth 5), since each extra blank makes a
   //    puzzle markedly harder.
@@ -37,20 +37,25 @@
   //    only works as [LM][O][N][D][SA]); 0 otherwise. An answer that merely
   //    reads around the end, like spur (4,1,2,3), doesn't count.
   //
-  // Totals are labeled 4-6 Easy / 7-9 Medium / 10-11 Hard / 12+ Evil.
+  // Totals are labeled 4-7 Easy / 8-10 Medium / 11-12 Hard / 13+ Evil.
   // Evil puzzles never appear in Practice; they're the Sunday Daily's last
   // puzzle in place of Hard.
   const SORTED_RANKS = [...WORDS_GOOD_RANK].sort((a, b) => a - b);
-  const RARITY_QUARTILES = (() => {
-    const n = SORTED_RANKS.length;
-    const pct = (p) => SORTED_RANKS[Math.min(n - 1, Math.floor(p * n))];
-    return { q1: pct(0.25), q2: pct(0.5), q3: pct(0.75) };
-  })();
+
+  // How many WORDS_GOOD words are more common than the given rank.
+  function moreCommonThan(rank) {
+    let lo = 0;
+    let hi = SORTED_RANKS.length;
+    while (lo < hi) {
+      const mid = (lo + hi) >> 1;
+      if (SORTED_RANKS[mid] < rank) lo = mid + 1;
+      else hi = mid;
+    }
+    return lo;
+  }
 
   function rarityPoints(rarestRank) {
-    if (rarestRank <= RARITY_QUARTILES.q1) return 1;
-    if (rarestRank <= RARITY_QUARTILES.q2) return 2;
-    return 3;
+    return Math.max(1, Math.ceil((moreCommonThan(rarestRank) * 5) / SORTED_RANKS.length));
   }
   function blankPoints(blankCount) {
     return blankCount - 1;
@@ -94,9 +99,9 @@
 
   function difficultyForPuzzle(answers, blankCount) {
     const points = difficultyPoints(answers, blankCount).total;
-    if (points <= 6) return "Easy";
-    if (points <= 9) return "Medium";
-    if (points <= 11) return "Hard";
+    if (points <= 7) return "Easy";
+    if (points <= 10) return "Medium";
+    if (points <= 12) return "Hard";
     return "Evil";
   }
 
@@ -108,15 +113,7 @@
   // the percentage of WORDS_GOOD that's more common than it, rounded up
   // to a multiple of 10 (0-100).
   function rarityPercent(answers) {
-    const rank = rarestRankOf(answers);
-    let lo = 0;
-    let hi = SORTED_RANKS.length;
-    while (lo < hi) {
-      const mid = (lo + hi) >> 1;
-      if (SORTED_RANKS[mid] < rank) lo = mid + 1;
-      else hi = mid;
-    }
-    return Math.ceil((lo * 10) / SORTED_RANKS.length) * 10;
+    return Math.ceil((moreCommonThan(rarestRankOf(answers)) * 10) / SORTED_RANKS.length) * 10;
   }
 
   function fitsPattern(pattern, word) {

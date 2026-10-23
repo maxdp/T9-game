@@ -13,7 +13,12 @@
     isSunday,
     fitsPattern,
     rarityPercent,
+    WORD_RANK,
   } = window.T9_PUZZLES;
+
+  // Answers as they're listed on screen (found or missed): most common
+  // first, rarest last.
+  const byRarity = (words) => [...words].sort((a, b) => WORD_RANK.get(a) - WORD_RANK.get(b));
 
   // DICTIONARY lets the game check whether a typed guess is a real word at
   // all. WORDS_GOOD is precomputed (see words.js) rather than classified
@@ -427,7 +432,7 @@
     // a line showing why its answer works, e.g. "2 3 4 1 is a sequence"
     // (green when solved, red after giving up).
     function endMessage(p) {
-      const missed = p.answers.filter((w) => !p.found.has(w));
+      const missed = byRarity(p.answers.filter((w) => !p.found.has(w)));
       const message =
         missed.length === 0
           ? { text: p.difficulty === "Tutorial" ? "Got it!" : "Got 'em all!", kind: "success" }
@@ -792,7 +797,9 @@
 
     function renderFoundList() {
       const p = currentPuzzle();
-      foundListEl.textContent = [...p.found].map((w) => w.toUpperCase()).join(", ");
+      foundListEl.textContent = byRarity(p.found)
+        .map((w) => w.toUpperCase())
+        .join(", ");
     }
 
     // The screen line under the found words is the game's only message
