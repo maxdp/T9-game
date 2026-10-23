@@ -149,6 +149,10 @@
     const dailyRowsEl = document.getElementById("daily-rows");
     const modeSelectEl = document.getElementById("mode-select");
     const tutorialRuleEl = document.getElementById("tutorial-rule");
+    const statsViewEl = document.getElementById("stats-view");
+    const statsListEl = document.getElementById("stats-list");
+    const statsBarEl = document.getElementById("stats-scrollbar");
+    const statsThumbEl = document.getElementById("stats-thumb");
     const tutorialPrevBtn = document.getElementById("tutorial-prev");
     const tutorialNextBtn = document.getElementById("tutorial-next");
 
@@ -156,7 +160,8 @@
     const PRACTICE_STORAGE_KEY = "t9tangle-practice-solved";
     const DAILY_CHOSEN_KEY = "t9tangle-daily-chosen";
     const TUTORIAL_SEEN_KEY = "t9tangle-tutorial-seen";
-    const MODES = ["tutorial", "daily", "practice"];
+    const HISTORY_KEY = "t9tangle-history";
+    const MODES = ["tutorial", "daily", "practice", "stats"];
 
     let mode = "practice";
 
@@ -214,6 +219,7 @@
     function currentPuzzle() {
       if (mode === "practice") return practice.puzzle;
       if (mode === "tutorial") return tutorialFinished() ? null : tutorial.puzzles[tutorial.index];
+      if (mode === "stats") return null;
       return daily.index < daily.puzzles.length ? daily.puzzles[daily.index] : null;
     }
 
@@ -369,7 +375,12 @@
         puzzles: scheduledDay(number) || fallbackDay(number),
         index: 0,
       };
-      if (!preview) restoreDaily();
+      if (!preview) {
+        restoreDaily();
+        // Fills in today's history from progress saved before the history
+        // existed.
+        recordDailyHistory();
+      }
     }
 
     // Progress on today's Daily is kept in this browser, so after a reload
@@ -380,6 +391,7 @@
     // without remembering.
     function saveDaily() {
       if (daily.preview) return;
+      recordDailyHistory();
       try {
         localStorage.setItem(
           DAILY_STORAGE_KEY,
@@ -397,6 +409,32 @@
         );
       } catch (e) {
         // Not remembered; nothing else to do.
+      }
+    }
+
+    // Every day's Daily results, kept in this browser for the Stats screen:
+    //   { version: 1, days: { "2026-10-22": [result, result, result] } }
+    // where each result is { label, found, total } once that puzzle is
+    // finished (solved or given up), or null. Without storage it's kept for
+    // this page load only.
+    let dailyHistory = { version: 1, days: {} };
+    try {
+      const saved = JSON.parse(localStorage.getItem(HISTORY_KEY));
+      if (saved && saved.version === 1 && saved.days && typeof saved.days === "object") dailyHistory = saved;
+    } catch (e) {
+      // Start with an empty history.
+    }
+    function recordDailyHistory() {
+      if (!daily || daily.preview) return;
+      const results = daily.puzzles.map((p) =>
+        p.complete ? { label: p.difficulty, found: p.found.size, total: p.answers.length } : null
+      );
+      if (!results.some(Boolean)) return;
+      dailyHistory.days[daily.dateKey] = results;
+      try {
+        localStorage.setItem(HISTORY_KEY, JSON.stringify(dailyHistory));
+      } catch (e) {
+        // Kept for this page load only.
       }
     }
 
@@ -535,6 +573,91 @@
       return label === "Evil" ? "😈 Evil 😈" : label;
     }
 
+    // ---- Stats ------------------------------------------------------------
+    // One row per day whose Easy puzzle the player finished, newest first:
+    // "10/22/26: 3/3🟢 2/4🟡 1/5🔴", with a score only for the puzzles
+    // they finished (🟣 for a Sunday's Evil).
+    const STATS_DOTS = { Easy: "🟢", Medium: "🟡", Hard: "🔴", Evil: "🟣" };
+    function renderStats() {
+      const days = Object.keys(dailyHistory.days)
+        .filter((dateKey) => {
+          const results = dailyHistory.days[dateKey];
+          return Array.isArray(results) && results[0];
+        })
+        .sort()
+        .reverse();
+      statsListEl.replaceChildren();
+      if (days.length === 0) {
+        const empty = document.createElement("div");
+        empty.className = "stats-empty";
+        empty.textContent = "Finish a Daily puzzle to start your stats";
+        statsListEl.appendChild(empty);
+      }
+      days.forEach((dateKey) => {
+        const [y, m, d] = dateKey.split("-");
+        const row = document.createElement("div");
+        row.className = "stats-row";
+        const date = document.createElement("span");
+        date.className = "stats-date";
+        date.textContent = `${+m}/${+d}/${y.slice(2)}:`;
+        row.appendChild(date);
+        // Each difficulty keeps its own column, left empty for a puzzle
+        // that wasn't finished.
+        dailyHistory.days[dateKey].forEach((r) => {
+          const score = document.createElement("span");
+          score.className = "stats-score";
+          if (r) score.textContent = `${r.found}/${r.total}${STATS_DOTS[r.label] || ""}`;
+          row.appendChild(score);
+        });
+        statsListEl.appendChild(row);
+      });
+      statsListEl.scrollTop = 0;
+      updateStatsScrollbar();
+    }
+
+    // The list scrolls by touch or wheel as usual, and by the scroll bar
+    // down the right of the screen (drawn by hand, since phones hide their
+    // own scroll bars): drag its thumb, or tap the track to jump a page.
+    // It only appears once there's more than a screenful.
+    function updateStatsScrollbar() {
+      const { scrollTop, scrollHeight, clientHeight } = statsListEl;
+      const overflows = scrollHeight > clientHeight + 1;
+      statsBarEl.hidden = !overflows;
+      if (!overflows) return;
+      const track = statsBarEl.clientHeight;
+      const thumb = Math.max(24, (track * clientHeight) / scrollHeight);
+      const top = ((track - thumb) * scrollTop) / (scrollHeight - clientHeight);
+      statsThumbEl.style.height = `${thumb}px`;
+      statsThumbEl.style.transform = `translateY(${top}px)`;
+    }
+    statsListEl.addEventListener("scroll", updateStatsScrollbar);
+    let statsDrag = null;
+    statsThumbEl.addEventListener("pointerdown", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      statsThumbEl.setPointerCapture(e.pointerId);
+      statsDrag = { y: e.clientY, scrollTop: statsListEl.scrollTop };
+      statsThumbEl.classList.add("dragging");
+    });
+    statsThumbEl.addEventListener("pointermove", (e) => {
+      if (!statsDrag) return;
+      const { scrollHeight, clientHeight } = statsListEl;
+      const travel = statsBarEl.clientHeight - statsThumbEl.offsetHeight;
+      if (travel <= 0) return;
+      statsListEl.scrollTop = statsDrag.scrollTop + ((e.clientY - statsDrag.y) * (scrollHeight - clientHeight)) / travel;
+    });
+    const endStatsDrag = () => {
+      statsDrag = null;
+      statsThumbEl.classList.remove("dragging");
+    };
+    statsThumbEl.addEventListener("pointerup", endStatsDrag);
+    statsThumbEl.addEventListener("pointercancel", endStatsDrag);
+    statsBarEl.addEventListener("pointerdown", (e) => {
+      if (e.target !== statsBarEl) return;
+      const above = e.clientY < statsThumbEl.getBoundingClientRect().top;
+      statsListEl.scrollTop += (above ? -1 : 1) * statsListEl.clientHeight * 0.9;
+    });
+
     // The player's score on each Daily puzzle, e.g. "4/4 Easy".
     function renderDailyResults() {
       dailyRowsEl.innerHTML = "";
@@ -561,6 +684,8 @@
       // them (its last screen).
       if (mode === "practice") {
         modeLabelEl.textContent = `Practice (${practiceSolvedToday()} solved)`;
+      } else if (mode === "stats") {
+        modeLabelEl.textContent = "Stats";
       } else if (mode === "tutorial") {
         modeLabelEl.textContent = `Tutorial (${tutorial.index + 1}/${TUTORIAL_LESSONS.length + 1})`;
       } else {
@@ -572,7 +697,8 @@
       const p = currentPuzzle();
       const inTutorial = mode === "tutorial";
       const tutorialDone = inTutorial && tutorialFinished();
-      const showResults = !p && !inTutorial;
+      const inStats = mode === "stats";
+      const showResults = !p && !inTutorial && !inStats;
       screenBodyEl.classList.toggle("tutorial-mode", inTutorial);
       screenBodyEl.parentElement.classList.toggle("tutorial-mode", inTutorial);
       screenBodyEl.classList.toggle("tutorial-done", tutorialDone);
@@ -596,6 +722,8 @@
       }
       screenBodyEl.classList.toggle("show-results", showResults);
       dailyResultsEl.hidden = !showResults;
+      screenBodyEl.classList.toggle("show-stats", inStats);
+      statsViewEl.hidden = !inStats;
 
       giveUpBtn.textContent = "Give up";
       giveUpBtn.classList.remove("next-key");
@@ -607,6 +735,15 @@
         giveUpBtn.disabled = false;
         giveUpBtn.textContent = "Start";
         giveUpBtn.classList.add("next-key");
+        renderKeypadHighlight();
+        return;
+      }
+
+      if (inStats) {
+        // Stats is just the list; the keypad is off.
+        renderStats();
+        renderTiles();
+        setKeypadDisabled(true);
         renderKeypadHighlight();
         return;
       }

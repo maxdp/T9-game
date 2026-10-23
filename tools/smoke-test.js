@@ -112,6 +112,19 @@ async function checkPage(browser, base, url, isTesting) {
   check("Daily shows today's scheduled Easy", (await pattern(page)) === scheduled, scheduled);
   check("Daily header", /^Daily #\d+ \(1\/3\)$/.test(await page.textContent("#screen-mode-label")), await page.textContent("#screen-mode-label"));
 
+  if (await page.$('.mode-option[data-mode="stats"]')) {
+    // Giving up today's Easy finishes it, so Stats lists today.
+    await page.click("#hang-give-up");
+    await switchTo(page, "stats");
+    const today = await page.evaluate(() => {
+      const [y, m, d] = window.T9_PUZZLES.centralDateKey().split("-");
+      return `${+m}/${+d}/${y.slice(2)}:`;
+    });
+    const first = await page.textContent(".stats-row");
+    check("Stats lists today's finished Easy", first.startsWith(today) && first.includes("🟢"), first);
+    await switchTo(page, "daily");
+  }
+
   const hasDebug = !!(await page.$("#debug-win"));
   const hasSunday = !!(await page.$("#sunday-toggle"));
   check(isTesting ? "testing-only 0 key and Sunday switch present" : "no testing-only extras", hasDebug === isTesting && hasSunday === isTesting);
