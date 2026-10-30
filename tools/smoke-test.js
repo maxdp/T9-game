@@ -125,6 +125,18 @@ async function checkPage(browser, base, url, isTesting) {
     await switchTo(page, "daily");
   }
 
+  if (await page.$(".lcd-canvas")) {
+    // The pixel LCD is on and has drawn the screen's text.
+    const lit = await page.evaluate(() => {
+      const c = document.querySelector(".lcd-canvas");
+      const d = c.getContext("2d").getImageData(0, 0, c.width, c.height).data;
+      let white = 0;
+      for (let i = 0; i < d.length; i += 4) if (d[i] > 200 && d[i + 1] > 200 && d[i + 2] > 200) white++;
+      return { on: document.querySelector(".phone-screen").classList.contains("lcd"), white };
+    });
+    check("pixel LCD draws the screen", lit.on && lit.white > 50, `${lit.white} bright pixels`);
+  }
+
   const hasDebug = !!(await page.$("#debug-win"));
   const hasSunday = !!(await page.$("#sunday-toggle"));
   check(isTesting ? "testing-only 0 key and Sunday switch present" : "no testing-only extras", hasDebug === isTesting && hasSunday === isTesting);
