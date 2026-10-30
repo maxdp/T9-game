@@ -416,20 +416,27 @@
     //   { version: 1, days: { "2026-10-22": [result, result, result] } }
     // where each result is { label, found, total } once that puzzle is
     // finished (solved or given up), or null. Without storage it's kept for
-    // this page load only.
+    // this page load only. It's re-read from storage before every change
+    // and every Stats screen, since another tab (say, the live and testing
+    // pages both open) may have added days since this page loaded; writing
+    // back a stale copy would erase them.
     let dailyHistory = { version: 1, days: {} };
-    try {
-      const saved = JSON.parse(localStorage.getItem(HISTORY_KEY));
-      if (saved && saved.version === 1 && saved.days && typeof saved.days === "object") dailyHistory = saved;
-    } catch (e) {
-      // Start with an empty history.
+    function reloadDailyHistory() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(HISTORY_KEY));
+        if (saved && saved.version === 1 && saved.days && typeof saved.days === "object") dailyHistory = saved;
+      } catch (e) {
+        // Keep what's in memory.
+      }
     }
+    reloadDailyHistory();
     function recordDailyHistory() {
       if (!daily || daily.preview) return;
       const results = daily.puzzles.map((p) =>
         p.complete ? { label: p.difficulty, found: p.found.size, total: p.answers.length } : null
       );
       if (!results.some(Boolean)) return;
+      reloadDailyHistory();
       dailyHistory.days[daily.dateKey] = results;
       try {
         localStorage.setItem(HISTORY_KEY, JSON.stringify(dailyHistory));
@@ -579,6 +586,7 @@
     // they finished (🟣 for a Sunday's Evil).
     const STATS_DOTS = { Easy: "🟢", Medium: "🟡", Hard: "🔴", Evil: "🟣" };
     function renderStats() {
+      reloadDailyHistory();
       const days = Object.keys(dailyHistory.days)
         .filter((dateKey) => {
           const results = dailyHistory.days[dateKey];

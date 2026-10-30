@@ -937,6 +937,13 @@
     font-size: calc(var(--g) * 5) !important;
     line-height: 1 !important;
   }
+  /* The Daily results' scores are double size, filling more of the
+     screen. */
+  .phone-screen.lcd #daily-rows,
+  .phone-screen.lcd #daily-rows * {
+    font-size: calc(var(--g) * 18) !important;
+    line-height: calc(var(--g) * 22) !important;
+  }
   .phone-screen.lcd .screen-lists { height: calc(var(--g) * 44); }
   @media (max-width: 339px) {
     .phone-screen.lcd .screen-lists { height: calc(var(--g) * 55); }
@@ -1075,7 +1082,7 @@
     </section>
   </div>
 
-  <div id="version-label">v0.77 · testing</div>
+  <div id="version-label">v0.78 · testing</div>
 
   <!-- Testing build: rules and word list are shared with the live site one
        folder up; this page and its app.js are the testing copies. -->
@@ -1085,7 +1092,7 @@
   <script src="../js/puzzles.js?v=10"></script>
   <script src="../js/daily.js?v=9"></script>
   <script src="js/celebrate.js?v=17"></script>
-  <script src="js/app.js?v=86"></script>
+  <script src="js/app.js?v=88"></script>
   <script src="js/lcd-font.js?v=1"></script>
   <script src="js/lcd.js?v=4"></script>
   <script src="js/background.js?v=5"></script>
