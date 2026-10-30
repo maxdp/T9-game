@@ -17,7 +17,7 @@
      the rule examples' and title's letter colors. */
   :root {
     color-scheme: light;
-    --page-bg: #f3e6ee;
+    --page-bg: #e6e9ef;
     --page-text: #33223b;
     --page-strong: #2b1d36;
     --page-muted: #4a3652;
@@ -36,7 +36,7 @@
   }
   :root[data-theme="dark"] {
     color-scheme: dark;
-    --page-bg: #0d1128;
+    --page-bg: #15182c;
     --page-text: #ece6f2;
     --page-strong: #ffffff;
     --page-muted: #d8cfe4;
@@ -61,8 +61,8 @@
     align-items: center;
     min-height: 100vh;
     margin: 0;
-    /* The sakura scene (js/background.js) covers this; it's the color the
-       page shows until the scene draws. */
+    /* A plain background; the sakura scene (js/background.js, turned off
+       for now) would cover it. */
     background: var(--page-bg);
     color: var(--page-text);
     text-align: center;
@@ -915,21 +915,27 @@
   .lcd-gaps[hidden] { display: none; }
   /* The main font is 9 LCD pixels tall (7 above the baseline, 2 below),
      on 11-pixel lines; the press counts under the tiles use a tiny 5-pixel
-     digit font, and tile letters are the main font at double size. */
+     digit font, and tile letters are the main font at double size. These
+     are !important because text laid out at any other size wouldn't match
+     the bitmaps drawn over it (letters would crowd or gap), and the
+     screen's ordinary styles set sizes with more specific selectors. */
   .phone-screen.lcd,
   .phone-screen.lcd * {
-    font-family: "T9 LCD", monospace;
-    font-size: calc(var(--g) * 9);
-    line-height: calc(var(--g) * 11);
-    font-weight: 400;
-    font-style: normal;
-    letter-spacing: 0;
+    font-family: "T9 LCD", monospace !important;
+    font-size: calc(var(--g) * 9) !important;
+    line-height: calc(var(--g) * 11) !important;
+    font-weight: 400 !important;
+    font-style: normal !important;
+    letter-spacing: 0 !important;
   }
-  .phone-screen.lcd .hang-letter { font-size: calc(var(--g) * 18); line-height: 1; }
+  .phone-screen.lcd .hang-letter {
+    font-size: calc(var(--g) * 18) !important;
+    line-height: 1 !important;
+  }
   .phone-screen.lcd .hang-pressnum {
-    font-family: "T9 LCD Tiny", monospace;
-    font-size: calc(var(--g) * 5);
-    line-height: 1;
+    font-family: "T9 LCD Tiny", monospace !important;
+    font-size: calc(var(--g) * 5) !important;
+    line-height: 1 !important;
   }
   .phone-screen.lcd .screen-lists { height: calc(var(--g) * 44); }
   @media (max-width: 339px) {
@@ -1069,7 +1075,7 @@
     </section>
   </div>
 
-  <div id="version-label">v0.75 · testing</div>
+  <div id="version-label">v0.76 · testing</div>
 
   <!-- Testing build: rules and word list are shared with the live site one
        folder up; this page and its app.js are the testing copies. -->
@@ -1081,7 +1087,7 @@
   <script src="js/celebrate.js?v=17"></script>
   <script src="js/app.js?v=86"></script>
   <script src="js/lcd-font.js?v=1"></script>
-  <script src="js/lcd.js?v=3"></script>
-  <script src="js/background.js?v=4"></script>
+  <script src="js/lcd.js?v=4"></script>
+  <script src="js/background.js?v=5"></script>
 </body>
 </html>

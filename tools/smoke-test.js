@@ -135,6 +135,18 @@ async function checkPage(browser, base, url, isTesting) {
       return { on: document.querySelector(".phone-screen").classList.contains("lcd"), white };
     });
     check("pixel LCD draws the screen", lit.on && lit.white > 50, `${lit.white} bright pixels`);
+    // Every piece of screen text is laid out at one of the bitmap fonts'
+    // exact sizes; any other size crowds or gaps the drawn letters.
+    const offSize = await page.evaluate(() => {
+      const screen = document.querySelector(".phone-screen");
+      const g = parseFloat(screen.style.getPropertyValue("--g"));
+      const sizes = [9, 18, 5].map((n) => n * g);
+      return [...screen.querySelectorAll("*")]
+        .filter((el) => [...el.childNodes].some((n) => n.nodeType === 3 && n.data.trim()))
+        .filter((el) => !sizes.some((v) => Math.abs(v - parseFloat(getComputedStyle(el).fontSize)) < 0.01))
+        .map((el) => el.id || el.className);
+    });
+    check("LCD text at exact bitmap sizes", offSize.length === 0, offSize.join(", "));
   }
 
   const hasDebug = !!(await page.$("#debug-win"));

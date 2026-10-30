@@ -72,6 +72,35 @@
     },
   };
   const ARROW = ["#...", "##..", "###.", "####", "###.", "##..", "#..."];
+  // The status bar's icons, as fixed pixel art (boxes from the page's own
+  // styles round onto the grid unevenly at small sizes).
+  const STATUS_ICONS = {
+    "phone-signal": {
+      align: "left",
+      rows: [
+        ".........##",
+        ".........##",
+        "......##.##",
+        "......##.##",
+        "...##.##.##",
+        "...##.##.##",
+        "##.##.##.##",
+        "##.##.##.##",
+      ],
+    },
+    "phone-battery": {
+      align: "right",
+      rows: [
+        "###########.",
+        "#.........#.",
+        "#.#######.##",
+        "#.#######.##",
+        "#.#######.##",
+        "#.........#.",
+        "###########.",
+      ],
+    },
+  };
 
   // ---- Drawing helpers (all in LCD pixels) --------------------------------
 
@@ -223,6 +252,16 @@
   }
 
   // Bits drawn by CSS pseudo-elements, which aren't in the page to read.
+  // A status icon, against its side of the status bar and centered on it.
+  function paintStatusIcon(icon, cs, rect, opacity) {
+    const color = parseColor(cs.color) || { r: 244, g: 248, b: 255, a: 1 };
+    const w = icon.rows[0].length;
+    const x = icon.align === "left" ? cellX(rect.left) : cellX(rect.right) - w;
+    const y = Math.round(((rect.top + rect.bottom) / 2 - originY) / g - icon.rows.length / 2);
+    const ink = `rgba(${color.r},${color.g},${color.b},${color.a * opacity})`;
+    paintBitmap(icon.rows, x, y, 1, (c) => (c === "#" ? ink : null));
+  }
+
   function paintExtras(el, cs, rect, opacity) {
     if (el.classList.contains("tutorial-arrow")) {
       const rows = el.classList.contains("prev") ? ARROW.map((r) => [...r].reverse().join("")) : ARROW;
@@ -230,14 +269,6 @@
       const y = Math.round(((rect.top + rect.bottom) / 2 - originY) / g - 3.5);
       const alpha = el.disabled ? 0.3 : 1;
       paintBitmap(rows, x, y, 1, (c) => (c === "#" ? `rgba(244,248,255,${alpha * opacity})` : null));
-    } else if (el.classList.contains("phone-battery")) {
-      const { x1, y0, y1 } = boxCells(rect);
-      const color = parseColor(cs.borderTopColor);
-      if (color) {
-        setFill(color, opacity);
-        const h = Math.max(1, Math.round((y1 - y0) / 3));
-        ctx.fillRect(x1, y0 + Math.round((y1 - y0 - h) / 2), 1, h);
-      }
     }
   }
 
@@ -251,6 +282,11 @@
       if (opacity <= 0.01) continue;
       const rect = el.getBoundingClientRect();
       const visible = cs.visibility === "visible";
+      const icon = Object.keys(STATUS_ICONS).find((name) => el.classList.contains(name));
+      if (icon) {
+        if (visible) paintStatusIcon(STATUS_ICONS[icon], cs, rect, opacity);
+        continue;
+      }
       if (visible) {
         paintBox(cs, rect, opacity);
         paintExtras(el, cs, rect, opacity);
