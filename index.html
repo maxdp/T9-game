@@ -17,7 +17,7 @@
      the rule examples' and title's letter colors. */
   :root {
     color-scheme: light;
-    --page-bg: #f3e6ee;
+    --page-bg: #e6e9ef;
     --page-text: #33223b;
     --page-strong: #2b1d36;
     --page-muted: #4a3652;
@@ -36,7 +36,7 @@
   }
   :root[data-theme="dark"] {
     color-scheme: dark;
-    --page-bg: #0d1128;
+    --page-bg: #15182c;
     --page-text: #ece6f2;
     --page-strong: #ffffff;
     --page-muted: #d8cfe4;
@@ -61,8 +61,8 @@
     align-items: center;
     min-height: 100vh;
     margin: 0;
-    /* The sakura scene (js/background.js) covers this; it's the color the
-       page shows until the scene draws. */
+    /* A plain background; the sakura scene (js/background.js, turned off
+       for now) would cover it. */
     background: var(--page-bg);
     color: var(--page-text);
     text-align: center;
@@ -335,14 +335,14 @@
     user-select: none;
   }
 
-  /* Tutorial / Daily / Practice selector above the phone: a pill whose
-     purple thumb slides under the active option. */
+  /* Tutorial / Daily / Practice / Stats selector above the phone: a pill
+     whose purple thumb slides under the active option. */
   .mode-select-wrap { display: flex; justify-content: center; margin: 0 0 10px; }
   .mode-select {
     position: relative;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    width: 276px;
+    grid-template-columns: repeat(4, 1fr);
+    width: min(344px, 94vw);
     padding: 3px;
     border-radius: 999px;
     background: #2a2a44;
@@ -352,7 +352,7 @@
     position: absolute;
     top: 3px;
     left: 3px;
-    width: calc((100% - 6px) / 3);
+    width: calc((100% - 6px) / 4);
     height: calc(100% - 6px);
     border-radius: 999px;
     background: #6c45c9;
@@ -362,6 +362,7 @@
   .mode-select.instant .mode-thumb { transition: none; }
   .mode-select[data-active="1"] .mode-thumb { transform: translateX(100%); }
   .mode-select[data-active="2"] .mode-thumb { transform: translateX(200%); }
+  .mode-select[data-active="3"] .mode-thumb { transform: translateX(300%); }
   .mode-option {
     position: relative;
     z-index: 1;
@@ -567,6 +568,60 @@
     gap: 10px;
   }
   #daily-results[hidden] { display: none; }
+  /* Stats: the player's Daily results by day, filling the screen (over the
+     puzzle's invisible elements, like the Daily results) with a scroll bar
+     down the right once they don't all fit. */
+  .phone-screen-body.show-stats > :not(#stats-view) { visibility: hidden; }
+  #stats-view {
+    position: absolute;
+    inset: 0;
+    display: flex;
+  }
+  #stats-view[hidden] { display: none; }
+  #stats-list {
+    flex: 1;
+    min-width: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: none;
+    padding: 2px 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    line-height: 1.9;
+    color: #dbe8ff;
+    font-variant-numeric: tabular-nums;
+  }
+  #stats-list::-webkit-scrollbar { display: none; }
+  .stats-row {
+    display: grid;
+    grid-template-columns: 5.4em repeat(3, 3.7em);
+    column-gap: 6px;
+    white-space: nowrap;
+  }
+  .stats-date { color: #a9c4ea; text-align: right; }
+  .stats-empty { margin-top: 70px; text-align: center; white-space: normal; line-height: 1.4; }
+  #stats-scrollbar {
+    position: relative;
+    flex: none;
+    width: 10px;
+    margin: 2px 0 2px 4px;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.12);
+    touch-action: none;
+    cursor: pointer;
+  }
+  #stats-scrollbar[hidden] { display: none; }
+  #stats-thumb {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    border-radius: 5px;
+    background: rgba(159, 208, 255, 0.75);
+    touch-action: none;
+    cursor: grab;
+  }
+  #stats-thumb.dragging { background: #9fd0ff; cursor: grabbing; }
   #daily-rows {
     display: flex;
     flex-direction: column;
@@ -828,6 +883,61 @@
     filter: drop-shadow(0 8px 10px rgba(0, 0, 0, 0.5));
   }
   .celebrate-flyer svg { display: block; width: 100%; height: 100%; }
+
+  /* ---- The phone screen as a pixel LCD (js/lcd.js) ----------------------
+     Once the bitmap fonts load, js/lcd.js adds .lcd to the screen and draws
+     it onto a grid of LCD pixels, each --g CSS pixels square. The screen's
+     ordinary content stays underneath, invisible, laid out in the bitmap
+     fonts at whole multiples of --g so the drawing matches it exactly. */
+  @font-face {
+    font-family: "T9 LCD";
+    src: url("fonts/t9-lcd.ttf") format("truetype");
+  }
+  @font-face {
+    font-family: "T9 LCD Tiny";
+    src: url("fonts/t9-lcd-tiny.ttf") format("truetype");
+  }
+  .phone-screen.lcd > .lcd-canvas {
+    position: absolute;
+    left: 0;
+    top: 0;
+    image-rendering: pixelated;
+    pointer-events: none;
+  }
+  .phone-screen.lcd > :not(.lcd-canvas) { opacity: 0; }
+  .phone-screen.lcd > .lcd-gaps { image-rendering: auto; }
+  .lcd-gaps[hidden] { display: none; }
+  /* The main font is 9 LCD pixels tall (7 above the baseline, 2 below),
+     on 11-pixel lines; the press counts under the tiles use a tiny 5-pixel
+     digit font, and tile letters are the main font at double size. These
+     are !important because text laid out at any other size wouldn't match
+     the bitmaps drawn over it (letters would crowd or gap), and the
+     screen's ordinary styles set sizes with more specific selectors. */
+  .phone-screen.lcd,
+  .phone-screen.lcd * {
+    font-family: "T9 LCD", monospace !important;
+    font-size: calc(var(--g) * 9) !important;
+    line-height: calc(var(--g) * 11) !important;
+    font-weight: 400 !important;
+    font-style: normal !important;
+    letter-spacing: 0 !important;
+  }
+  .phone-screen.lcd .hang-letter {
+    font-size: calc(var(--g) * 18) !important;
+    line-height: 1 !important;
+  }
+  .phone-screen.lcd .hang-pressnum {
+    font-family: "T9 LCD Tiny", monospace !important;
+    font-size: calc(var(--g) * 5) !important;
+    line-height: 1 !important;
+  }
+  .phone-screen.lcd .screen-lists { height: calc(var(--g) * 44); }
+  @media (max-width: 339px) {
+    .phone-screen.lcd .screen-lists { height: calc(var(--g) * 55); }
+  }
+  .phone-screen.lcd .phone-screen-body.tutorial-mode .screen-lists,
+  .phone-screen.lcd .phone-screen-body.tutorial-mode::before { height: calc(var(--g) * 22); }
+  .phone-screen.lcd #tutorial-rule > div + div { margin-top: calc(var(--g) * 5); }
 </style>
 </head>
 <body>
@@ -840,6 +950,7 @@
         <button type="button" class="mode-option" role="radio" aria-checked="false" data-mode="tutorial">Tutorial</button>
         <button type="button" class="mode-option" role="radio" aria-checked="false" data-mode="daily">Daily</button>
         <button type="button" class="mode-option" role="radio" aria-checked="true" data-mode="practice">Practice</button>
+        <button type="button" class="mode-option" role="radio" aria-checked="false" data-mode="stats">Stats</button>
       </div>
     </div>
     <p class="subtitle">Tap keys repeatedly to cycle through letters</p>
@@ -873,6 +984,10 @@
               <div id="daily-results" hidden>
                 <div id="daily-rows"></div>
                 <div class="daily-done">Come back tomorrow for a new Daily</div>
+              </div>
+              <div id="stats-view" hidden>
+                <div id="stats-list"></div>
+                <div id="stats-scrollbar" hidden><div id="stats-thumb"></div></div>
               </div>
             </div>
           </div>
@@ -946,7 +1061,7 @@
     </section>
   </div>
 
-  <div id="version-label">v0.73</div>
+  <div id="version-label">v0.77</div>
 
   <script src="js/t9-logic.js?v=58"></script>
   <script src="js/words.js?v=64"></script>
@@ -954,7 +1069,9 @@
   <script src="js/puzzles.js?v=10"></script>
   <script src="js/daily.js?v=9"></script>
   <script src="js/celebrate.js?v=17"></script>
-  <script src="js/app.js?v=84"></script>
-  <script src="js/background.js?v=4"></script>
+  <script src="js/app.js?v=87"></script>
+  <script src="js/lcd-font.js?v=1"></script>
+  <script src="js/lcd.js?v=4"></script>
+  <script src="js/background.js?v=6"></script>
 </body>
 </html>

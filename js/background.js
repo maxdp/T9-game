@@ -1,4 +1,5 @@
-// Page background: paintings of a river lined with cherry trees in bloom
+// Page background (currently off -- see SHOW_SCENE): paintings of a river
+// lined with cherry trees in bloom
 // (by day, and at night with paper lanterns), with petals drifting across
 // in front of them.
 //
@@ -10,10 +11,37 @@
 // the tab is hidden, and anyone who prefers reduced motion gets no
 // drifting petals (and the paintings hold still).
 (function () {
+  // Turned off for now: the page shows a plain background (light or dark),
+  // and this script only runs the dark mode switch. Set to true to bring
+  // the paintings and petals back.
+  const SHOW_SCENE = false;
   const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const THEME_KEY = "t9tangle-theme";
   const root = document.documentElement;
   let night = root.dataset.theme === "dark";
+
+  // ---- Dark mode ------------------------------------------------------------
+  // The switch under the phone. The choice is remembered in this browser
+  // (the page's <head> applies it before anything draws); the CSS fades
+  // between the paintings.
+  const toggle = document.getElementById("dark-toggle");
+  let onThemeChange = () => {};
+  function setNight(on) {
+    night = on;
+    root.dataset.theme = night ? "dark" : "light";
+    if (toggle) toggle.setAttribute("aria-checked", String(night));
+    try {
+      localStorage.setItem(THEME_KEY, night ? "dark" : "light");
+    } catch (e) {
+      // Not remembered; the next visit starts in light mode.
+    }
+    onThemeChange();
+  }
+  if (toggle) {
+    toggle.setAttribute("aria-checked", String(night));
+    toggle.addEventListener("click", () => setNight(!night));
+  }
+  if (!SHOW_SCENE) return;
 
   const wrap = document.createElement("div");
   wrap.className = "sakura-bg";
@@ -114,26 +142,7 @@
     drawPetals();
   }
 
-  // ---- Dark mode ------------------------------------------------------------
-  // The switch under the phone. The choice is remembered in this browser
-  // (the page's <head> applies it before anything draws); the CSS fades
-  // between the paintings.
-  const toggle = document.getElementById("dark-toggle");
-  function setNight(on) {
-    night = on;
-    root.dataset.theme = night ? "dark" : "light";
-    if (toggle) toggle.setAttribute("aria-checked", String(night));
-    try {
-      localStorage.setItem(THEME_KEY, night ? "dark" : "light");
-    } catch (e) {
-      // Not remembered; the next visit starts in light mode.
-    }
-    drawPetals();
-  }
-  if (toggle) {
-    toggle.setAttribute("aria-checked", String(night));
-    toggle.addEventListener("click", () => setNight(!night));
-  }
+  onThemeChange = drawPetals;
 
   let resizeTimer = null;
   window.addEventListener("resize", () => {
